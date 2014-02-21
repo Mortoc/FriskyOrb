@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Levels\LevelSegment.cs">
+    <Files>
+      <File FileName="Assets\Player\Player.cs" Line="9" Column="37" />
+      <File FileName="Assets\Levels\LevelSegment.cs" Line="102" Column="14" />
+      <File FileName="Assets\Levels\Level.cs" Line="96" Column="15" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

@@ -54,6 +54,7 @@
 */
 
 using System;
+using UnityEngine;
 
 
 /* 
@@ -80,7 +81,7 @@ public class MersenneTwister : System.Random
 	/// <c>new <see cref="System.Random"/>().<see cref="Random.Next()"/></c> 
 	/// is used for the seed.
 	/// </remarks>
-	public MersenneTwister () : this(new Random ().Next ())	/* a default initial seed is used   */
+	public MersenneTwister () : this(new System.Random ().Next ())	/* a default initial seed is used   */
 	{
 	}
 
@@ -302,6 +303,21 @@ public class MersenneTwister : System.Random
 	public Single NextSingle ()
 	{
 		return (Single)NextDouble ();
+	}
+
+	/// <summary>
+	/// Returns a pseudo-random unit vector nearly-evently distributed.
+	/// Finds a random point on the unit disc in the xy-plane and then finds the z-height of the sphere at that point. 
+	/// It will choose either positive or negative height to choose either the top or bottom half of the sphere. 
+	/// </summary>
+	/// <returns>The unit vector.</returns>
+	public Vector3 NextUnitVector()
+	{
+		float theta = NextSingle() * 2.0f * Mathf.PI;
+		float rSqr = NextSingle();
+		float r = Mathf.Sqrt(rSqr);
+		float z = Mathf.Sqrt(1.0f - rSqr) * (NextSingle() < 0.5f ? -1.0f : 1.0f);
+		return new Vector3(r * Mathf.Cos (theta), r * Mathf.Sin (theta), z);
 	}
 
 	/// <summary>
