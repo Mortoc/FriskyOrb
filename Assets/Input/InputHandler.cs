@@ -35,6 +35,7 @@ public abstract class InputHandler : MonoBehaviour
 
 	protected void ExecuteAction()
 	{
-		OnAction();
+		if( OnAction != null )
+			OnAction();
 	}
 }

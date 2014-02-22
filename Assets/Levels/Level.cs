@@ -49,10 +49,14 @@ public class Level : MonoBehaviour
 		LevelSegment previous = null;
 		for( int i = 0; i < _viewDistance; ++i ) 
 		{
-			LevelSegment newSegment = GenerateNextSegment();
+			previous = GenerateNextSegment(previous);
 			if( first == null )
-				first = newSegment;
+				first = previous;
 		}
+		first.Next.collider.enabled = true;
+		// Since the first segment has no collider, mark it
+		// no longer current when the 2nd element gets marked.
+		first.Next.OnIsNoLongerCurrent += first.IsNoLongerCurrent;
 
 		// Setup Input
 		_inputHandler = InputHandler.BuildInputHandler();
@@ -63,6 +67,8 @@ public class Level : MonoBehaviour
 		_player.InputHandler = _inputHandler;
 		_player.transform.position = first.Path.GetPoint(0.2f) + Vector3.up;
 		_player.gameObject.name = "Player";
+		_player.Level = this;
+		_player.CurrentSegment = first.Next;
 
 		// Setup Camera
 		_camera = Camera.main.gameObject.AddComponent<CameraController> ();
@@ -72,12 +78,11 @@ public class Level : MonoBehaviour
 	// Called when a segment cleans itself up after the user has passed it
 	public void SegmentDestroyed()
 	{
-		GenerateNextSegment();
+		GenerateNextSegment(_lastSegment);
 	}
 
-	private LevelSegment GenerateNextSegment()
+	private LevelSegment GenerateNextSegment(LevelSegment previous)
 	{
-		LevelSegment previous = _lastSegment;
 		_segmentNumber++;
 
 		// Generate the control points
@@ -94,7 +99,8 @@ public class Level : MonoBehaviour
 		else
 		{
 			// starting from the previous position
-			a = Vector3.Lerp(previous.Path.B.position, previous.Path.B_CP.position, 0.01f); // sample back just a little to avoid cracks
+			// Lerp a back slightly to avoid visual cracks in the meshes
+			a = Vector3.Lerp(previous.Path.B.position, previous.Path.B_CP.position, 0.01f);
 			Vector3 prevBcpDiff = a - previous.Path.B_CP.position;
 			aCP = a + prevBcpDiff;
 
@@ -136,7 +142,7 @@ public class Level : MonoBehaviour
 		}
 
 		// Generate the level segment
-		LevelSegment nextSegment = LevelSegment.Create(this, a, aCP, b, bCP);
+		LevelSegment nextSegment = LevelSegment.Create(this, a, aCP, b, bCP, previous);
 		nextSegment.Previous = previous;
 	
 		if( previous != null )

@@ -299,3 +299,4 @@ MonoBehaviour:
   _viewDistance: 20
   _levelTrackMaterial: {fileID: 2100000, guid: d96e93e390971a44f970aadc824ba8da, type: 2}
   _playerPrefab: {fileID: 11400000, guid: 4f0481420b723f548bf064ae967e3e64, type: 2}
+  _seed: 2

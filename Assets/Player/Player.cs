@@ -8,8 +8,9 @@ public class Player : MonoBehaviour
 	private float _maxSpeed = 10.0f;
 	private float _steerSpeed = 150.0f;
 
-	public LevelSegment CurrentSegment;
-	public InputHandler InputHandler;
+	public Level Level { get; set; }
+	public LevelSegment CurrentSegment { get; set; }
+	public InputHandler InputHandler { get; set; }
 
 	private bool _segmentTIsDirty = true;
 	private float _segmentT = 0.0f;
@@ -20,11 +21,18 @@ public class Player : MonoBehaviour
 		get 
 		{
 			if( !CurrentSegment )
-				return 0.0f;
+				throw new Exception("CurrentSegment got null somehow");
 
 			if( _segmentTIsDirty )
 			{
 				_segmentT = CurrentSegment.Path.GetApproxT( transform.position );
+
+				if( _segmentT >= 1.0f - Mathf.Epsilon )
+				{
+					CurrentSegment.IsNoLongerCurrent();
+					CurrentSegment = CurrentSegment.Next;
+					_segmentT = CurrentSegment.Path.GetApproxT( transform.position );
+				}
 				_segmentTIsDirty = false;
 			}
 
@@ -75,24 +83,6 @@ public class Player : MonoBehaviour
 		if( rigidbody.velocity.sqrMagnitude > _maxSpeed * _maxSpeed )
 		{
 			rigidbody.velocity = MathExt.SetVectorLength(rigidbody.velocity, _maxSpeed);
-		}
-	}
-
-	void OnCollisionStay(Collision collision)
-	{
-		// Keep track of the current LevelSegment we're on
-		if( collision.collider.gameObject.layer == LayerMask.NameToLayer("Level") )
-		{
-			LevelSegment onSegment = collision.collider.gameObject.GetComponent<LevelSegment>();
-			if( onSegment != CurrentSegment )
-			{
-				_segmentTIsDirty = true;
-				
-				if( CurrentSegment )
-					CurrentSegment.IsNoLongerCurrent();
-
-				CurrentSegment = onSegment;
-			}
 		}
 	}
 

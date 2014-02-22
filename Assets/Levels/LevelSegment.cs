@@ -66,37 +66,78 @@ public class LevelSegment : MonoBehaviour
         };
     }
 
-    private Mesh BuildMesh(int detail, bool generateVisComponents)
+	private Mesh BuildCollisionMesh(int detail)
+	{
+		int[] tris = new int[detail * 12];
+		int vertCount = (detail * 4) + 4;
+		Vector3[] verts = new Vector3[vertCount];
+
+		Vector3 offset = Previous.transform.position - transform.position;
+
+		float rSteps = 1.0f / (float) detail;
+		float t = 0.0f;
+		int segmentCount = (detail * 2) + 1;
+		for (int i = 0, v = 0, tri = -6; i < segmentCount; ++i, v += 2, tri += 6)
+		{
+			PathSample thisSample;
+			if( t >= 1.0f )
+			{
+				thisSample = GetPathSample(t - 1.0f);
+			}
+			else
+			{
+				// Sample in to the next segment
+				thisSample = Previous.GetPathSample(t);
+				thisSample.left += offset;
+				thisSample.right += offset;
+			}
+			
+			int v1 = v + 1;
+			verts[v] = thisSample.left;
+			verts[v1] = thisSample.right;
+
+			if (tri >= 0)
+			{
+				int vm2 = v - 2;
+				int vm1 = v - 1;
+				tris[tri] = vm2;
+				tris[tri + 1] = vm1;
+				tris[tri + 2] = v;
+				tris[tri + 3] = v1;
+				tris[tri + 4] = v;
+				tris[tri + 5] = vm1;
+			}
+			
+			t += rSteps;
+		}
+		
+		Mesh result = new Mesh();
+		result.vertices = verts;
+		result.triangles = tris;
+		return result;
+	}
+
+    private Mesh BuildMesh(int detail)
     {
         int[] tris = new int[detail * 6];
         int vertCount = (detail * 2) + 2;
         Vector3[] verts = new Vector3[vertCount];
-		
-		Vector3[] norms = null;
-		Vector2[] uvs = null;
-		if (generateVisComponents) 
-		{
-			norms = new Vector3[vertCount];
-			uvs = new Vector2[vertCount];
-		}
+		Vector3[] norms = new Vector3[vertCount];
+		Vector2[] uvs = new Vector2[vertCount];
 
         float rSteps = 1.0f / (float) detail;
         float t = 0.0f;
         for (int i = 0, v = 0, tri = -6; i < detail + 1; ++i, v += 2, tri += 6)
         {
-            PathSample thisSample = GetPathSample(t);
-            
+			PathSample thisSample = GetPathSample(t);
+
             int v1 = v + 1;
             verts[v] = thisSample.left;
             verts[v1] = thisSample.right;
-
-			if( generateVisComponents )
-			{
-			    norms[v] = Vector3.up;
-			    norms[v1] = Vector3.up;
-			    uvs[v] = new Vector2(1.0f, t);
-			    uvs[v1] = new Vector2(0.0f, t);
-			}
+		    norms[v] = Vector3.up;
+		    norms[v1] = Vector3.up;
+		    uvs[v] = new Vector2(1.0f, t);
+		    uvs[v1] = new Vector2(0.0f, t);
 
             if (tri >= 0)
             {
@@ -118,11 +159,8 @@ public class LevelSegment : MonoBehaviour
 
         Mesh result = new Mesh();
         result.vertices = verts;
-		if( generateVisComponents )
-		{
-	        result.normals = norms;
-	        result.uv = uvs;
-		}
+        result.normals = norms;
+        result.uv = uvs;
         result.triangles = tris;
         result.Optimize();
 
@@ -143,7 +181,7 @@ public class LevelSegment : MonoBehaviour
 	public LevelSegment Previous { get; set; }
 	public LevelSegment Next { get; set; }
 
-	public static LevelSegment Create(Level level, Vector3 pntA, Vector3 cpA, Vector3 pntB, Vector3 cpB)
+	public static LevelSegment Create(Level level, Vector3 pntA, Vector3 cpA, Vector3 pntB, Vector3 cpB, LevelSegment previous)
 	{
 		var levelSegment = new GameObject ("LevelSegment");
 		levelSegment.layer = level.gameObject.layer;
@@ -168,31 +206,49 @@ public class LevelSegment : MonoBehaviour
 
 		var segmentComponent = levelSegment.AddComponent<LevelSegment>();
 		segmentComponent.Level = level;
+		segmentComponent.Previous = previous;
+
+		segmentComponent.SetupComponents();
 
 		return segmentComponent;
 	}
 
-	public void IsNoLongerCurrent()
-	{
-		Scheduler.Run(new YieldForSeconds(1.0f), () => {
-			Level.SegmentDestroyed();
-			GameObject.Destroy (gameObject);
-		});
-	}
-
-    void Start()
-    {
-        var mesh = BuildMesh(50, true);
-        var mf = gameObject.AddComponent<MeshFilter>();
-        mf.sharedMesh = mesh;
-
-        var collisionMesh = BuildMesh(25, false);
-        var col = gameObject.AddComponent<MeshCollider>();
-        col.sharedMesh = collisionMesh;
-
+	private void SetupComponents()
+	{	
+		var mesh = BuildMesh(50);
+		var mf = gameObject.AddComponent<MeshFilter>();
+		mf.sharedMesh = mesh;
+		
+		if( Previous )
+		{
+			var collisionMesh = BuildCollisionMesh(25);
+			var col = gameObject.AddComponent<MeshCollider>();
+			col.sharedMesh = collisionMesh;
+			col.enabled = false;
+		}
+		
 		var meshRenderer = gameObject.AddComponent<MeshRenderer>();
 		meshRenderer.sharedMaterial = Level.LevelTrackMaterial;
-    }
+	}
+
+	public event Action OnIsNoLongerCurrent;
+	public void IsNoLongerCurrent()
+	{
+		if( collider )
+		{
+			collider.enabled = false;
+			Next.collider.enabled = true;
+		}
+		Next.Previous = null; // Clear reference to this
+
+		if( OnIsNoLongerCurrent != null )
+			OnIsNoLongerCurrent();
+
+		Scheduler.Run(new YieldForSeconds(1.0f), () => {
+			Level.SegmentDestroyed();
+			GameObject.Destroy(gameObject);
+		});
+	}
 
 /*    
 	void OnDrawGizmos()
