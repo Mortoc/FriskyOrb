@@ -34,6 +34,7 @@ public class Level : MonoBehaviour
 	private InputHandler _inputHandler;
 
 	private int _segmentNumber = 0;
+	[SerializeField]
 	private int _seed = 2;
 	private MersenneTwister _rand;
 

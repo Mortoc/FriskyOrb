@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour 
 {
 	private float _acceleration = 35.0f;
-	private float _maxSpeed = 15.0f;
-	private float _steerSpeed = 250.0f;
+	private float _maxSpeed = 10.0f;
+	private float _steerSpeed = 150.0f;
 
 	public LevelSegment CurrentSegment;
 	public InputHandler InputHandler;
