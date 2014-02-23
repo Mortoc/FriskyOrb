@@ -181,7 +181,7 @@ public class LevelSegment : MonoBehaviour
 	public LevelSegment Previous { get; set; }
 	public LevelSegment Next { get; set; }
 
-	public static LevelSegment Create(Level level, Vector3 pntA, Vector3 cpA, Vector3 pntB, Vector3 cpB, LevelSegment previous)
+	public static LevelSegment Create(Level level, Vector3 pntA, Vector3 cpA, Vector3 pntB, Vector3 cpB, LevelSegment previous, AnimationCurve leftProfile, AnimationCurve rightProfile)
 	{
 		var levelSegment = new GameObject ("LevelSegment");
 		levelSegment.layer = level.gameObject.layer;
@@ -207,6 +207,8 @@ public class LevelSegment : MonoBehaviour
 		var segmentComponent = levelSegment.AddComponent<LevelSegment>();
 		segmentComponent.Level = level;
 		segmentComponent.Previous = previous;
+		segmentComponent._leftProfile = leftProfile;
+		segmentComponent._rightProfile = rightProfile;
 
 		segmentComponent.SetupComponents();
 

@@ -5,12 +5,29 @@ using System.Collections.Generic;
 public class Level : MonoBehaviour
 {
 	[Serializable]
+	private class SegmentProfile
+	{
+		public float Difficulty = 1.0f;
+		public AnimationCurve Left = new AnimationCurve();
+		public AnimationCurve Right = new AnimationCurve();
+	}
+
+	[Serializable]
+	private class TrackObstacle
+	{
+		public float Difficulty = 1.0f;
+		public GameObject Prefab = null;
+	}
+
+	[Serializable]
 	private class GeneratorVariables
 	{
 		public int StartSegment = 0;
 		public float ApproxSegmentLength = 20.0f;
 		public float SegmentLengthJitter = 5.0f;
 		public float Curviness = 15.0f;
+		public float MaxHeightDifference = 0.0f;
+		public float MaxDifficulty = 1.0f;
 
 		public override string ToString()
 		{
@@ -22,8 +39,10 @@ public class Level : MonoBehaviour
 	private GeneratorVariables[] _tweakables;
 
 	[SerializeField]
-	private int _viewDistance = 3;
+	private SegmentProfile[] _segmentProfiles;
 
+	[SerializeField]
+	private int _viewDistance = 3;
 
 	[SerializeField]
 	private Material _levelTrackMaterial;
@@ -110,6 +129,7 @@ public class Level : MonoBehaviour
 		Vector3 a;
 		Vector3 aCP;
 		Vector3 forwardDirection = Vector3.forward;
+		float previousHeight = 0.0f;
 		if( previous == null )
 		{
 			// starting from zero
@@ -121,6 +141,7 @@ public class Level : MonoBehaviour
 			// starting from the previous position
 			// Lerp a back slightly to avoid visual cracks in the meshes
 			a = Vector3.Lerp(previous.Path.B.position, previous.Path.B_CP.position, 0.01f);
+			previousHeight = previous.Path.B.position.y;
 			Vector3 prevBcpDiff = a - previous.Path.B_CP.position;
 			aCP = a + prevBcpDiff;
 
@@ -131,19 +152,31 @@ public class Level : MonoBehaviour
 		Quaternion segmentRotation = Quaternion.AngleAxis (tweakables.Curviness * rotationRandom * 2.0f, Vector3.up);
 		Vector3 b = a + segmentRotation * (forwardDirection * thisSegmentLength);
 
-		
 		float rotationCPRandom = Mathf.Lerp (-1.0f, 1.0f, _rand.NextSingle());
 		Quaternion curveBRotation = Quaternion.AngleAxis(tweakables.Curviness * rotationCPRandom, Vector3.up);
 		Vector3 bCP = b - curveBRotation * (forwardDirection * halfSegLength);
 
-		// Flatten path
-		a.y = 0.0f;
-		aCP.y = 0.0f;
-		b.y = 0.0f;
-		bCP.y = 0.0f;
+		// Set Path height
+		float elevationChange = 1.0f - (_rand.NextSingle () * 2.0f);
+		elevationChange *= tweakables.MaxHeightDifference;
+		a.y = previousHeight;
+		aCP.y = previousHeight;
+		b.y = previousHeight + elevationChange;
+		bCP.y = previousHeight + elevationChange;
+
+		// Figure out which Profile to use
+		uint highestProfile;
+		for(highestProfile = 0; highestProfile < _segmentProfiles.Length && _segmentProfiles[highestProfile].Difficulty > tweakables.MaxDifficulty; ++highestProfile);
+
+		SegmentProfile profile;
+
+		if( highestProfile > 0 )
+			profile = _segmentProfiles[(int)(_rand.NextUInt32() % highestProfile)];
+		else
+			profile = _segmentProfiles[0];
 
 		// Generate the level segment
-		LevelSegment nextSegment = LevelSegment.Create(this, a, aCP, b, bCP, previous);
+		LevelSegment nextSegment = LevelSegment.Create(this, a, aCP, b, bCP, previous, profile.Left, profile.Right);
 		nextSegment.Previous = previous;
 	
 		if( previous != null )

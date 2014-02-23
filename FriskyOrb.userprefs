@@ -1,15 +1,15 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Player\Actions\JumpAction.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Levels\Level.cs">
     <Files>
-      <File FileName="Assets\Player\Player.cs" Line="103" Column="1" />
-      <File FileName="Assets\Levels\Level.cs" Line="1" Column="1" />
-      <File FileName="Assets\Player\Player.cs" Line="18" Column="10" />
-      <File FileName="Assets\Levels\LevelSegment.cs" Line="218" Column="28" />
+      <File FileName="Assets\Levels\LevelSegment.cs" Line="57" Column="67" />
+      <File FileName="Assets\Player\Player.cs" Line="30" Column="4" />
+      <File FileName="Assets\Levels\Level.cs" Line="170" Column="106" />
+      <File FileName="Assets\Levels\LevelSegment.cs" Line="282" Column="1" />
       <File FileName="Assets\Input\InputHandler.cs" Line="1" Column="1" />
       <File FileName="Assets\Misc\Scheduler\Scheduler.cs" Line="1" Column="1" />
-      <File FileName="Assets\Player\Actions\IPlayerAction.cs" Line="8" Column="36" />
-      <File FileName="Assets\Player\Actions\JumpAction.cs" Line="15" Column="3" />
+      <File FileName="Assets\Player\Actions\IPlayerAction.cs" Line="1" Column="1" />
+      <File FileName="Assets\Camera\CameraController.cs" Line="16" Column="66" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

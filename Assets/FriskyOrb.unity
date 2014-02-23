@@ -294,17 +294,106 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tweakables:
   - StartSegment: 0
-    ApproxSegmentLength: 20
-    SegmentLengthJitter: 5
+    ApproxSegmentLength: 1
+    SegmentLengthJitter: 0
     Curviness: 0
-  - StartSegment: 10
+    MaxHeightDifference: 0
+    MaxDifficulty: 1
+  - StartSegment: 1
     ApproxSegmentLength: 20
     SegmentLengthJitter: 10
-    Curviness: 10
+    Curviness: 5
+    MaxHeightDifference: 0
+    MaxDifficulty: 10
   - StartSegment: 25
-    ApproxSegmentLength: 20
-    SegmentLengthJitter: 10
-    Curviness: 30
+    ApproxSegmentLength: 30
+    SegmentLengthJitter: 5
+    Curviness: 10
+    MaxHeightDifference: 10
+    MaxDifficulty: 100
+  _segmentProfiles:
+  - Difficulty: 1
+    Left:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    Right:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+  - Difficulty: 2
+    Left:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: .14151746
+        value: .495503277
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: .844720066
+        value: .496261269
+        inSlope: .0404630713
+        outSlope: .0404630713
+        tangentMode: 0
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    Right:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: .14151746
+        value: .495503277
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: .844720066
+        value: .496261269
+        inSlope: .0404630713
+        outSlope: .0404630713
+        tangentMode: 0
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
   _viewDistance: 20
   _levelTrackMaterial: {fileID: 2100000, guid: d96e93e390971a44f970aadc824ba8da, type: 2}
   _playerPrefab: {fileID: 11400000, guid: 4f0481420b723f548bf064ae967e3e64, type: 2}

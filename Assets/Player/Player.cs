@@ -32,8 +32,6 @@ public class Player : MonoBehaviour
 		return _isGroundedCached;
 	}
 
-	private bool _hasControl = true;
-
 	private Vector3 _heading = Vector3.forward;
 
 	public Vector3 Heading
