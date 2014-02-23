@@ -4,96 +4,95 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour 
 {
-	private float _acceleration = 35.0f;
-	private float _maxSpeed = 10.0f;
-	private float _steerSpeed = 150.0f;
+	private float _acceleration = 1250.0f;
+	private float _steerSpeed = 100.0f;
 
 	public Level Level { get; set; }
 	public LevelSegment CurrentSegment { get; set; }
 	public InputHandler InputHandler { get; set; }
 
-	private bool _segmentTIsDirty = true;
-	private float _segmentT = 0.0f;
+	public IPlayerAction CurrentAction { get; set; }
 
-	// Get the approximate T-Value for the player along the CurrentSegment
-	public float SegmentT
+	private int _lastGroundedCheck = 0;
+	private bool _isGroundedCached = true;
+	public bool IsGrounded()
 	{
-		get 
+		// Only calculate if we're grounded once per frame
+		if( _lastGroundedCheck != Time.frameCount )
 		{
-			if( !CurrentSegment )
-				throw new Exception("CurrentSegment got null somehow");
-
-			if( _segmentTIsDirty )
-			{
-				_segmentT = CurrentSegment.Path.GetApproxT( transform.position );
-
-				if( _segmentT >= 1.0f - Mathf.Epsilon )
-				{
-					CurrentSegment.IsNoLongerCurrent();
-					CurrentSegment = CurrentSegment.Next;
-					_segmentT = CurrentSegment.Path.GetApproxT( transform.position );
-				}
-				_segmentTIsDirty = false;
-			}
-
-			return _segmentT;
+			SphereCollider playerCollider = GetComponent<SphereCollider> ();
+			float avgScale = (transform.lossyScale.x + transform.lossyScale.y + transform.lossyScale.z) / 3.0f;
+			float rayDistance = avgScale * playerCollider.radius * 1.1f;
+			int groundLayerMask = 1 << LayerMask.NameToLayer("Level");
+			
+			_isGroundedCached = Physics.Raycast(rigidbody.position, Vector3.down, rayDistance, groundLayerMask);
+			_lastGroundedCheck = Time.frameCount;
 		}
+
+		return _isGroundedCached;
+	}
+
+	private bool _hasControl = true;
+
+	private Vector3 _heading = Vector3.forward;
+
+	public Vector3 Heading
+	{
+		get { return _heading; }
 	}
 
 	void Start()
 	{
+		CurrentAction = new JumpAction();
 		rigidbody.useConeFriction = true;
+		InputHandler.OnAction += () => CurrentAction.PerformAction(this);
 	}
 	
 	void FixedUpdate()
 	{
-		_segmentTIsDirty = true;
+		if( IsGrounded() )
+			Steer ();
+
+		RollForward();
 
 		if( CurrentSegment )
 		{
-			Steer ();
-			AddForwardForce();
+			float approxT = CurrentSegment.Path.GetApproxT( rigidbody.position );
+			if( approxT > 0.999f )
+			{
+				LevelSegment oldSegment = CurrentSegment;
+				CurrentSegment = CurrentSegment.Next;
+				oldSegment.IsNoLongerCurrent();
+			}
 		}
+	}
+
+	private void RollForward()
+	{
+		Vector3 rollAxis = Vector3.Cross (Vector3.up, _heading);
+		rigidbody.AddTorque (rollAxis * Time.fixedDeltaTime, ForceMode.Impulse);
+
+		float steerAmount = Mathf.Abs(InputHandler.SteeringAmount());
+		float counterAccel = Mathf.Lerp (0.0f, -0.1f, steerAmount); // reduce accleration while turning hard
+
+		Vector3 accel = _heading * _acceleration * Time.fixedDeltaTime;
+		rigidbody.AddForceAtPosition(accel, (Vector3.up * 0.1f) + rigidbody.position, ForceMode.Acceleration);
+		rigidbody.AddForce (accel * counterAccel, ForceMode.Impulse);
 	}
 
 	private void Steer()
 	{
-		Quaternion steer = Quaternion.AngleAxis(InputHandler.SteeringAmount() * _steerSpeed, Vector3.up);
-		Vector3 curDir = rigidbody.velocity.normalized;
-		Vector3 steerDir = steer * curDir;
-
-		// Steal some of the forward momentum and put it in the new steering direction
-		rigidbody.AddForce (-1.0f * curDir * Time.deltaTime * _steerSpeed, ForceMode.Impulse);
-		rigidbody.AddForce (steerDir * Time.deltaTime * _steerSpeed, ForceMode.Impulse);
+		float steerAmount = InputHandler.SteeringAmount();
+		Quaternion steerRot = Quaternion.AngleAxis (steerAmount * _steerSpeed * Time.fixedDeltaTime, Vector3.up);
+		_heading = steerRot * _heading;
+		Vector3 right = Vector3.Cross (Vector3.up, _heading) * steerAmount;
+		rigidbody.AddForce (right * Time.fixedDeltaTime * 100.0f, ForceMode.Impulse);
 	}
 
-	void AddForwardForce()
+	public event Action<Collision> CollisionEntered;
+	void OnCollisionEnter(Collision collision)
 	{
-		float lookAheadT = SegmentT + 0.05f;
-		Vector3 pointOnPath = CurrentSegment.Path.GetPoint(SegmentT);
-		Vector3 aheadOnPath = lookAheadT > 1.0f ?
-			CurrentSegment.Next.Path.GetPoint( lookAheadT - 1.0f ) : 
-			CurrentSegment.Path.GetPoint( lookAheadT );
-
-		Vector3 forwardOnPath = aheadOnPath - pointOnPath;
-		forwardOnPath.y = 0.0f;
-		forwardOnPath.Normalize();
-		rigidbody.AddForce (forwardOnPath * _acceleration * rigidbody.mass * Time.fixedDeltaTime, ForceMode.Impulse);
-
-		if( rigidbody.velocity.sqrMagnitude > _maxSpeed * _maxSpeed )
-		{
-			rigidbody.velocity = MathExt.SetVectorLength(rigidbody.velocity, _maxSpeed);
-		}
-	}
-
-	void OnDrawGizmos()
-	{
-		if( CurrentSegment )
-		{
-			Gizmos.color = Color.Lerp( Color.red, Color.white, 0.25f );
-			Vector3 pathPoint = CurrentSegment.Path.GetPoint( SegmentT );
-			Gizmos.DrawLine( transform.position, pathPoint );
-			Gizmos.DrawSphere( pathPoint, 0.1f );
-		}
+		if( CollisionEntered != null )
+			CollisionEntered(collision);
 	}
 }

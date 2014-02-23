@@ -7,14 +7,19 @@ public class Level : MonoBehaviour
 	[Serializable]
 	private class GeneratorVariables
 	{
+		public int StartSegment = 0;
 		public float ApproxSegmentLength = 20.0f;
-		public float Curviness = 5.0f;
+		public float SegmentLengthJitter = 5.0f;
+		public float Curviness = 15.0f;
 
-		public int FirstSegmentWithVertical = 20;
+		public override string ToString()
+		{
+			return "Tweakables [StartSegment: " + StartSegment + "]";
+		}
 	}
 
 	[SerializeField]
-	private GeneratorVariables _tweakables;
+	private GeneratorVariables[] _tweakables;
 
 	[SerializeField]
 	private int _viewDistance = 3;
@@ -65,7 +70,7 @@ public class Level : MonoBehaviour
 		GameObject playerObj = Instantiate (_playerPrefab.gameObject) as GameObject;
 		_player = playerObj.GetComponent<Player> ();
 		_player.InputHandler = _inputHandler;
-		_player.transform.position = first.Path.GetPoint(0.2f) + Vector3.up;
+		_player.transform.position = first.Path.GetPoint(0.1f) + Vector3.up;
 		_player.gameObject.name = "Player";
 		_player.Level = this;
 		_player.CurrentSegment = first.Next;
@@ -85,8 +90,23 @@ public class Level : MonoBehaviour
 	{
 		_segmentNumber++;
 
+		GeneratorVariables tweakables = _tweakables[0];
+		foreach( var possibleTweakables in _tweakables )
+		{
+			if( possibleTweakables.StartSegment >= _segmentNumber )
+				break;
+
+			tweakables = possibleTweakables;
+		}
+
 		// Generate the control points
-		float halfSegLength = _tweakables.ApproxSegmentLength * 0.5f;
+		float thisSegmentLength = Mathf.Lerp
+		(
+			tweakables.ApproxSegmentLength - tweakables.SegmentLengthJitter,
+			tweakables.ApproxSegmentLength + tweakables.SegmentLengthJitter,
+			_rand.NextSinglePositive ()
+		);
+		float halfSegLength = thisSegmentLength * 0.5f;
 		Vector3 a;
 		Vector3 aCP;
 		Vector3 forwardDirection = Vector3.forward;
@@ -94,7 +114,7 @@ public class Level : MonoBehaviour
 		{
 			// starting from zero
 			a = Vector3.zero;
-			aCP = a + (Vector3.forward * _rand.NextSingle() * halfSegLength) + _rand.NextUnitVector() * _tweakables.Curviness;
+			aCP = a + Vector3.forward * halfSegLength;
 		}
 		else
 		{
@@ -107,39 +127,20 @@ public class Level : MonoBehaviour
 			forwardDirection = prevBcpDiff.normalized;
 		}
 
-		Vector3 b = a + (forwardDirection * _tweakables.ApproxSegmentLength);
-		Vector3 bCP = b - (forwardDirection * _rand.NextSingle() * halfSegLength) + _rand.NextUnitVector() * _tweakables.Curviness;
+		float rotationRandom = Mathf.Lerp (-1.0f, 1.0f, _rand.NextSingle());
+		Quaternion segmentRotation = Quaternion.AngleAxis (tweakables.Curviness * rotationRandom * 2.0f, Vector3.up);
+		Vector3 b = a + segmentRotation * (forwardDirection * thisSegmentLength);
+
+		
+		float rotationCPRandom = Mathf.Lerp (-1.0f, 1.0f, _rand.NextSingle());
+		Quaternion curveBRotation = Quaternion.AngleAxis(tweakables.Curviness * rotationCPRandom, Vector3.up);
+		Vector3 bCP = b - curveBRotation * (forwardDirection * halfSegLength);
 
 		// Flatten path
 		a.y = 0.0f;
 		aCP.y = 0.0f;
 		b.y = 0.0f;
 		bCP.y = 0.0f;
-
-		// Add hills (sometimes)
-		if( _segmentNumber > _tweakables.FirstSegmentWithVertical )
-		{
-			float upOrDown = b.y < 0.0f ? 1.0f : -1.0f;
-
-			// add hills
-		}
-
-		// Make sure each control point isn't too close to it's point (avoids pinching)
-		float minCPDist = _tweakables.ApproxSegmentLength * 0.5f;
-		float minCPDistSqr = minCPDist * minCPDist;
-		if( (a - aCP).sqrMagnitude < minCPDistSqr )
-		{
-			aCP -= a;
-			aCP = aCP.normalized * minCPDist;
-			aCP += a;
-		}
-		
-		if( (b - bCP).sqrMagnitude < minCPDistSqr )
-		{
-			bCP -= b;
-			bCP = bCP.normalized * minCPDist;
-			bCP += b;
-		}
 
 		// Generate the level segment
 		LevelSegment nextSegment = LevelSegment.Create(this, a, aCP, b, bCP, previous);

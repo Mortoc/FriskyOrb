@@ -54,8 +54,8 @@ public class LevelSegment : MonoBehaviour
         Vector3 pathNorm = Path.GetNormal(t);
 
         float profileT = 1.0f - t;
-        float leftProfileVal = _leftProfile.Evaluate(profileT);
-        float rightProfileVal = _rightProfile.Evaluate(profileT);
+        float leftProfileVal = _leftProfile.Evaluate(profileT) * 1.2f;
+        float rightProfileVal = _rightProfile.Evaluate(profileT) * 1.2f;
         Vector3 left = pathPnt + (pathNorm * leftProfileVal);
         Vector3 right = pathPnt - (pathNorm * rightProfileVal);
 
@@ -215,13 +215,13 @@ public class LevelSegment : MonoBehaviour
 
 	private void SetupComponents()
 	{	
-		var mesh = BuildMesh(50);
+		var mesh = BuildMesh(32);
 		var mf = gameObject.AddComponent<MeshFilter>();
 		mf.sharedMesh = mesh;
 		
 		if( Previous )
 		{
-			var collisionMesh = BuildCollisionMesh(25);
+			var collisionMesh = BuildCollisionMesh(16);
 			var col = gameObject.AddComponent<MeshCollider>();
 			col.sharedMesh = collisionMesh;
 			col.enabled = false;
@@ -250,7 +250,7 @@ public class LevelSegment : MonoBehaviour
 		});
 	}
 
-/*    
+
 	void OnDrawGizmos()
 	{
 		// Draw the handles and tangents
@@ -276,6 +276,6 @@ public class LevelSegment : MonoBehaviour
 		}
 
 		Gizmos.DrawLine(lastPoint, (Path.GetPoint(1.0f)));
-	} */
+	}
 }
 

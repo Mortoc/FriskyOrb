@@ -10,19 +10,16 @@ public class CameraController : MonoBehaviour
 	(
 		0.0f, 1.5f, -2.0f
 	);
-	private float _lookAheadDistance = 10.0f;
+	private float _lookAheadDistance = 5.0f;
 
-	private SmoothedVector _lookAtTarget = new SmoothedVector(0.75f);
-	private SmoothedVector _currentPosition = new SmoothedVector(0.5f);
+	private SmoothedVector _lookAtTarget = new SmoothedVector(0.25f);
+	private SmoothedVector _currentPosition = new SmoothedVector(0.25f);
 	
 	void LateUpdate()
 	{
 		if( Player && Player.CurrentSegment )
 		{
-			float lookAheadT = Player.SegmentT + 0.9f;
-			Vector3 lookAtPos = lookAheadT > 1.0f ?
-				Player.CurrentSegment.Next.Path.GetPoint (lookAheadT - 1.0f) :
-				Player.CurrentSegment.Path.GetPoint (lookAheadT);
+			Vector3 lookAtPos = Player.rigidbody.position + (Player.Heading * _lookAheadDistance);
 
 			_lookAtTarget.AddSample(lookAtPos);
 

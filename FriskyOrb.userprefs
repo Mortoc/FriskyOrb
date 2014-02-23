@@ -1,12 +1,15 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Levels\LevelSegment.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Player\Actions\JumpAction.cs">
     <Files>
-      <File FileName="Assets\Levels\Level.cs" Line="56" Column="38" />
-      <File FileName="Assets\Player\Player.cs" Line="25" Column="4" />
-      <File FileName="Assets\Levels\LevelSegment.cs" Line="233" Column="2" />
-      <File FileName="Assets\Input\InputHandler.cs" Line="37" Column="3" />
-      <File FileName="Assets\Misc\Scheduler\Scheduler.cs" Line="279" Column="1" />
+      <File FileName="Assets\Player\Player.cs" Line="103" Column="1" />
+      <File FileName="Assets\Levels\Level.cs" Line="1" Column="1" />
+      <File FileName="Assets\Player\Player.cs" Line="18" Column="10" />
+      <File FileName="Assets\Levels\LevelSegment.cs" Line="218" Column="28" />
+      <File FileName="Assets\Input\InputHandler.cs" Line="1" Column="1" />
+      <File FileName="Assets\Misc\Scheduler\Scheduler.cs" Line="1" Column="1" />
+      <File FileName="Assets\Player\Actions\IPlayerAction.cs" Line="8" Column="36" />
+      <File FileName="Assets\Player\Actions\JumpAction.cs" Line="15" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
