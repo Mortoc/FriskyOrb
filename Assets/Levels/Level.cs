@@ -7,6 +7,7 @@ public class Level : MonoBehaviour
 	[Serializable]
 	private class SegmentProfile
 	{
+		public string Name = "";
 		public float Difficulty = 1.0f;
 		public AnimationCurve Left = new AnimationCurve();
 		public AnimationCurve Right = new AnimationCurve();
@@ -58,7 +59,6 @@ public class Level : MonoBehaviour
 	private InputHandler _inputHandler;
 
 	private int _segmentNumber = 0;
-	[SerializeField]
 	private int _seed = 2;
 	private MersenneTwister _rand;
 
@@ -66,6 +66,7 @@ public class Level : MonoBehaviour
 
 	void Awake ()
 	{
+		_seed = Mathf.FloorToInt (UnityEngine.Random.value * 1000000.0f);
 		// Generate Level
 		_rand = new MersenneTwister(_seed);
 
@@ -73,14 +74,14 @@ public class Level : MonoBehaviour
 		LevelSegment previous = null;
 		for( int i = 0; i < _viewDistance; ++i ) 
 		{
-			previous = GenerateNextSegment(previous);
+			previous = GenerateNextSegment(previous, true);
 			if( first == null )
 				first = previous;
 		}
-		first.Next.collider.enabled = true;
 		// Since the first segment has no collider, mark it
 		// no longer current when the 2nd element gets marked.
 		first.Next.OnIsNoLongerCurrent += first.IsNoLongerCurrent;
+		first.Next.collider.enabled = true;
 
 		// Setup Input
 		_inputHandler = InputHandler.BuildInputHandler();
@@ -93,19 +94,29 @@ public class Level : MonoBehaviour
 		_player.gameObject.name = "Player";
 		_player.Level = this;
 		_player.CurrentSegment = first.Next;
+		_player.rigidbody.Sleep();
 
 		// Setup Camera
 		_camera = Camera.main.gameObject.AddComponent<CameraController> ();
 		_camera.Player = _player;
+
+		Scheduler.Run (WakePlayer(first));
+	}
+
+	private IEnumerator<IYieldInstruction> WakePlayer(LevelSegment first)
+	{
+		yield return new YieldForSeconds (1.0f);
+		_player.rigidbody.WakeUp ();
+		first.Next.collider.enabled = true;
 	}
 
 	// Called when a segment cleans itself up after the user has passed it
 	public void SegmentDestroyed()
 	{
-		GenerateNextSegment(_lastSegment);
+		GenerateNextSegment(_lastSegment, false);
 	}
 
-	private LevelSegment GenerateNextSegment(LevelSegment previous)
+	private LevelSegment GenerateNextSegment(LevelSegment previous, bool initialSegments)
 	{
 		_segmentNumber++;
 
@@ -166,8 +177,8 @@ public class Level : MonoBehaviour
 
 		// Figure out which Profile to use
 		uint highestProfile;
-		for(highestProfile = 0; highestProfile < _segmentProfiles.Length && _segmentProfiles[highestProfile].Difficulty > tweakables.MaxDifficulty; ++highestProfile);
-
+		for(highestProfile = 0; highestProfile < _segmentProfiles.Length && _segmentProfiles[highestProfile].Difficulty < tweakables.MaxDifficulty; ++highestProfile);
+	
 		SegmentProfile profile;
 
 		if( highestProfile > 0 )
@@ -176,9 +187,21 @@ public class Level : MonoBehaviour
 			profile = _segmentProfiles[0];
 
 		// Generate the level segment
-		LevelSegment nextSegment = LevelSegment.Create(this, a, aCP, b, bCP, previous, profile.Left, profile.Right);
-		nextSegment.Previous = previous;
-	
+		LevelSegment.CreateInfo options = new LevelSegment.CreateInfo ()
+		{
+			id = _segmentNumber,
+			level = this,
+			pntA = a,
+			cpA = aCP,
+			pntB = b,
+			cpB = bCP,
+			leftProfile = profile.Left,
+			rightProfile = profile.Right,
+			previous = previous,
+			async = !initialSegments
+		};
+		LevelSegment nextSegment = LevelSegment.Create(options);
+
 		if( previous != null )
 			previous.Next = nextSegment;
 

@@ -15,10 +15,7 @@ public class JumpAction : IPlayerAction
 	{
 		if( player.IsGrounded() )
 		{
-			Vector3 playerHeading = player.rigidbody.velocity.normalized;
-			Vector3 jumpDirection = (playerHeading + (Vector3.up * 2.0f)) / 3.0f;
-			player.rigidbody.AddForce (jumpDirection * JUMP_STRENGTH, ForceMode.Impulse);
-
+			player.rigidbody.AddForce (Vector3.up * JUMP_STRENGTH, ForceMode.Impulse);
 			return true;
 		}
 		return false;

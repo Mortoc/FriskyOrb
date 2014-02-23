@@ -294,25 +294,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tweakables:
   - StartSegment: 0
-    ApproxSegmentLength: 1
+    ApproxSegmentLength: 10
     SegmentLengthJitter: 0
     Curviness: 0
     MaxHeightDifference: 0
     MaxDifficulty: 1
-  - StartSegment: 1
+  - StartSegment: 2
     ApproxSegmentLength: 20
-    SegmentLengthJitter: 10
-    Curviness: 5
-    MaxHeightDifference: 0
-    MaxDifficulty: 10
-  - StartSegment: 25
-    ApproxSegmentLength: 30
     SegmentLengthJitter: 5
-    Curviness: 10
-    MaxHeightDifference: 10
-    MaxDifficulty: 100
+    Curviness: 15
+    MaxHeightDifference: 0
+    MaxDifficulty: 1
+  - StartSegment: 10
+    ApproxSegmentLength: 30
+    SegmentLengthJitter: 0
+    Curviness: 30
+    MaxHeightDifference: 3
+    MaxDifficulty: 5
+  - StartSegment: 15
+    ApproxSegmentLength: 20
+    SegmentLengthJitter: 5
+    Curviness: 15
+    MaxHeightDifference: 1
+    MaxDifficulty: 20
   _segmentProfiles:
-  - Difficulty: 1
+  - Name: Flat
+    Difficulty: 1
     Left:
       serializedVersion: 2
       m_Curve:
@@ -343,7 +350,8 @@ MonoBehaviour:
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
-  - Difficulty: 2
+  - Name: Sorta Skinny
+    Difficulty: 2
     Left:
       serializedVersion: 2
       m_Curve:
@@ -394,7 +402,182 @@ MonoBehaviour:
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
-  _viewDistance: 20
+  - Name: Bubbly
+    Difficulty: 1
+    Left:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: .142369986
+        value: 1.02527356
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: .496208876
+        value: 1.00083864
+        inSlope: .0011920929
+        outSlope: .0011920929
+        tangentMode: 0
+      - time: .845572591
+        value: 1.02603149
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    Right:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: .152600154
+        value: .566113651
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: .483367056
+        value: .254383028
+        inSlope: -.00849366188
+        outSlope: -.00849366188
+        tangentMode: 0
+      - time: .792716622
+        value: .553951979
+        inSlope: .0404630713
+        outSlope: .0404630713
+        tangentMode: 0
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+  - Name: Jump1
+    Difficulty: 10
+    Left:
+      serializedVersion: 2
+      m_Curve:
+      - time: -.00341005973
+        value: 1.00185788
+        inSlope: .1475932
+        outSlope: .1475932
+        tangentMode: 0
+      - time: .0146126598
+        value: -.250088215
+        inSlope: Infinity
+        outSlope: 0
+        tangentMode: 1
+      - time: .166764617
+        value: .987287164
+        inSlope: Infinity
+        outSlope: 3.54511189
+        tangentMode: 1
+      - time: .317983568
+        value: 1.19794166
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    Right:
+      serializedVersion: 2
+      m_Curve:
+      - time: -.00341005973
+        value: 1.00185788
+        inSlope: .1475932
+        outSlope: .1475932
+        tangentMode: 0
+      - time: .0146126598
+        value: -.250088215
+        inSlope: Infinity
+        outSlope: 0
+        tangentMode: 1
+      - time: .166764617
+        value: .987287164
+        inSlope: Infinity
+        outSlope: 3.54511189
+        tangentMode: 1
+      - time: .317983568
+        value: 1.19794166
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+  - Name: Super Thin
+    Difficulty: 15
+    Left:
+      serializedVersion: 2
+      m_Curve:
+      - time: -.00341005973
+        value: 1.00300539
+        inSlope: .1475932
+        outSlope: .1475932
+        tangentMode: 0
+      - time: .0590946078
+        value: .200921953
+        inSlope: Infinity
+        outSlope: 0
+        tangentMode: 1
+      - time: .958885491
+        value: 1.00133061
+        inSlope: Infinity
+        outSlope: .015438077
+        tangentMode: 1
+      - time: 1
+        value: 1.00114751
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    Right:
+      serializedVersion: 2
+      m_Curve:
+      - time: -.00341005973
+        value: 1.00300539
+        inSlope: .1475932
+        outSlope: .1475932
+        tangentMode: 0
+      - time: .0590946078
+        value: .200921953
+        inSlope: Infinity
+        outSlope: 0
+        tangentMode: 1
+      - time: .958885491
+        value: 1.00133061
+        inSlope: Infinity
+        outSlope: .015438077
+        tangentMode: 1
+      - time: 1
+        value: 1.00114751
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+  _viewDistance: 5
   _levelTrackMaterial: {fileID: 2100000, guid: d96e93e390971a44f970aadc824ba8da, type: 2}
   _playerPrefab: {fileID: 11400000, guid: 4f0481420b723f548bf064ae967e3e64, type: 2}
-  _seed: 2

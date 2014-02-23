@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
+
 using System;
 using System.Collections.Generic;
 
 public class LevelSegment : MonoBehaviour 
 {
+	private int _id = 0;
+
     [SerializeField]
     private AnimationCurve _rightProfile = new AnimationCurve
     (
@@ -44,8 +47,9 @@ public class LevelSegment : MonoBehaviour
 
     private struct PathSample
     {
-        public Vector3 left { get; set; }
-        public Vector3 right { get; set; }
+        public Vector3 Left { get; set; }
+        public Vector3 Right { get; set; }
+		public bool HasSurface { get; set; }
     }
 
     private PathSample GetPathSample(float t)
@@ -54,21 +58,23 @@ public class LevelSegment : MonoBehaviour
         Vector3 pathNorm = Path.GetNormal(t);
 
         float profileT = 1.0f - t;
-        float leftProfileVal = _leftProfile.Evaluate(profileT) * 1.2f;
-        float rightProfileVal = _rightProfile.Evaluate(profileT) * 1.2f;
+        float leftProfileVal = _leftProfile.Evaluate(profileT) * 1.75f;
+        float rightProfileVal = _rightProfile.Evaluate(profileT) * 1.75f;
+		bool hasSurface = leftProfileVal + rightProfileVal > Mathf.Epsilon;
         Vector3 left = pathPnt + (pathNorm * leftProfileVal);
         Vector3 right = pathPnt - (pathNorm * rightProfileVal);
 
         return new PathSample()
         {
-            left = left,
-            right = right
+            Left = left,
+            Right = right,
+			HasSurface = hasSurface
         };
     }
 
 	private Mesh BuildCollisionMesh(int detail)
 	{
-		int[] tris = new int[detail * 12];
+		List<int> tris = new List<int>();
 		int vertCount = (detail * 4) + 4;
 		Vector3[] verts = new Vector3[vertCount];
 
@@ -77,7 +83,7 @@ public class LevelSegment : MonoBehaviour
 		float rSteps = 1.0f / (float) detail;
 		float t = 0.0f;
 		int segmentCount = (detail * 2) + 1;
-		for (int i = 0, v = 0, tri = -6; i < segmentCount; ++i, v += 2, tri += 6)
+		for (int i = 0, v = 0; i < segmentCount; ++i, v += 2)
 		{
 			PathSample thisSample;
 			if( t >= 1.0f )
@@ -88,24 +94,25 @@ public class LevelSegment : MonoBehaviour
 			{
 				// Sample in to the next segment
 				thisSample = Previous.GetPathSample(t);
-				thisSample.left += offset;
-				thisSample.right += offset;
+				thisSample.Left += offset;
+				thisSample.Right += offset;
 			}
 			
 			int v1 = v + 1;
-			verts[v] = thisSample.left;
-			verts[v1] = thisSample.right;
+			verts[v] = thisSample.Left;
+			verts[v1] = thisSample.Right;
 
-			if (tri >= 0)
+			if (i > 0 && thisSample.HasSurface)
 			{
 				int vm2 = v - 2;
 				int vm1 = v - 1;
-				tris[tri] = vm2;
-				tris[tri + 1] = vm1;
-				tris[tri + 2] = v;
-				tris[tri + 3] = v1;
-				tris[tri + 4] = v;
-				tris[tri + 5] = vm1;
+
+				tris.Add(vm2);
+				tris.Add(vm1);
+				tris.Add(v);
+				tris.Add(v1);
+				tris.Add(v);
+				tris.Add(vm1);
 			}
 			
 			t += rSteps;
@@ -113,13 +120,13 @@ public class LevelSegment : MonoBehaviour
 		
 		Mesh result = new Mesh();
 		result.vertices = verts;
-		result.triangles = tris;
+		result.triangles = tris.ToArray();
 		return result;
 	}
 
     private Mesh BuildMesh(int detail)
     {
-        int[] tris = new int[detail * 6];
+        List<int> tris = new List<int>();
         int vertCount = (detail * 2) + 2;
         Vector3[] verts = new Vector3[vertCount];
 		Vector3[] norms = new Vector3[vertCount];
@@ -127,29 +134,29 @@ public class LevelSegment : MonoBehaviour
 
         float rSteps = 1.0f / (float) detail;
         float t = 0.0f;
-        for (int i = 0, v = 0, tri = -6; i < detail + 1; ++i, v += 2, tri += 6)
+        for (int i = 0, v = 0; i < detail + 1; ++i, v += 2)
         {
 			PathSample thisSample = GetPathSample(t);
 
             int v1 = v + 1;
-            verts[v] = thisSample.left;
-            verts[v1] = thisSample.right;
+            verts[v] = thisSample.Left;
+            verts[v1] = thisSample.Right;
 		    norms[v] = Vector3.up;
 		    norms[v1] = Vector3.up;
 		    uvs[v] = new Vector2(1.0f, t);
 		    uvs[v1] = new Vector2(0.0f, t);
 
-            if (tri >= 0)
+            if (i > 0 && thisSample.HasSurface)
             {
                 int vm2 = v - 2;
                 int vm1 = v - 1;
 
-                tris[tri] = vm2;
-                tris[tri + 1] = vm1;
-                tris[tri + 2] = v;
-                tris[tri + 3] = v1;
-                tris[tri + 4] = v;
-                tris[tri + 5] = vm1;
+				tris.Add(vm2);
+				tris.Add(vm1);
+				tris.Add(v);
+				tris.Add(v1);
+				tris.Add(v);
+				tris.Add(vm1);
             }
 
             t += rSteps;
@@ -161,7 +168,7 @@ public class LevelSegment : MonoBehaviour
         result.vertices = verts;
         result.normals = norms;
         result.uv = uvs;
-        result.triangles = tris;
+        result.triangles = tris.ToArray();
         result.Optimize();
 
         return result;
@@ -181,54 +188,91 @@ public class LevelSegment : MonoBehaviour
 	public LevelSegment Previous { get; set; }
 	public LevelSegment Next { get; set; }
 
-	public static LevelSegment Create(Level level, Vector3 pntA, Vector3 cpA, Vector3 pntB, Vector3 cpB, LevelSegment previous, AnimationCurve leftProfile, AnimationCurve rightProfile)
+	public class CreateInfo
+	{
+		public int id = 0;
+		public Level level = null;
+		public Vector3 pntA;
+		public Vector3 cpA;
+		public Vector3 pntB;
+		public Vector3 cpB;
+		public LevelSegment previous = null;
+		public AnimationCurve leftProfile = null;
+		public AnimationCurve rightProfile = null;
+		public bool async = true;
+
+	}
+	public static LevelSegment Create(CreateInfo options)
 	{
 		var levelSegment = new GameObject ("LevelSegment");
-		levelSegment.layer = level.gameObject.layer;
-		levelSegment.transform.position = (pntA + pntB) * 0.5f;
-		levelSegment.transform.parent = level.transform;
+		levelSegment.layer = options.level.gameObject.layer;
+		levelSegment.transform.position = (options.pntA + options.pntB) * 0.5f;
+		levelSegment.transform.parent = options.level.transform;
 
 		var a = new GameObject ("A");
-		a.transform.position = pntA;
+		a.transform.position = options.pntA;
 		a.transform.parent = levelSegment.transform;
 
 		var aCP = new GameObject ("A_CP");
-		aCP.transform.position = cpA;
+		aCP.transform.position = options.cpA;
 		aCP.transform.parent = levelSegment.transform;
 
 		var b = new GameObject ("B");
-		b.transform.position = pntB;
+		b.transform.position = options.pntB;
 		b.transform.parent = levelSegment.transform;
 
 		var bCP = new GameObject ("B_CP");
-		bCP.transform.position = cpB;
+		bCP.transform.position = options.cpB;
 		bCP.transform.parent = levelSegment.transform;
 
 		var segmentComponent = levelSegment.AddComponent<LevelSegment>();
-		segmentComponent.Level = level;
-		segmentComponent.Previous = previous;
-		segmentComponent._leftProfile = leftProfile;
-		segmentComponent._rightProfile = rightProfile;
+		segmentComponent.Level = options.level;
+		segmentComponent.Previous = options.previous;
+		if( options.leftProfile != null )
+			segmentComponent._leftProfile = options.leftProfile;
+		if( options.rightProfile != null )
+			segmentComponent._rightProfile = options.rightProfile;
 
-		segmentComponent.SetupComponents();
+		segmentComponent._id = options.id;
+		segmentComponent.SetupComponents(options.async);
 
 		return segmentComponent;
 	}
 
-	private void SetupComponents()
-	{	
-		var mesh = BuildMesh(32);
+	private void SetupComponents(bool async)
+	{
+		if( async )
+		{
+			Scheduler.Run( SetupComponentsCoroutine() );
+		}
+		else
+		{
+			IEnumerator<IYieldInstruction> setup = SetupComponentsCoroutine();
+			while( setup.MoveNext() );
+		}
+	}
+
+	// Spread out setting up the components of this segment over a few frames
+	private IEnumerator<IYieldInstruction> SetupComponentsCoroutine()
+	{
+		var mesh = BuildMesh(48);
+		yield return Yield.UntilNextFrame;
+
 		var mf = gameObject.AddComponent<MeshFilter>();
 		mf.sharedMesh = mesh;
-		
+		yield return Yield.UntilNextFrame;
+
 		if( Previous )
 		{
-			var collisionMesh = BuildCollisionMesh(16);
+			var collisionMesh = BuildCollisionMesh(24);
+			yield return Yield.UntilNextFrame;
+
 			var col = gameObject.AddComponent<MeshCollider>();
 			col.sharedMesh = collisionMesh;
 			col.enabled = false;
+			yield return Yield.UntilNextFrame;
 		}
-		
+
 		var meshRenderer = gameObject.AddComponent<MeshRenderer>();
 		meshRenderer.sharedMaterial = Level.LevelTrackMaterial;
 	}
