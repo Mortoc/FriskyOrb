@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 public class MobileInputHandler : InputHandler 
 {
+	void Awake()
+	{
+		Screen.sleepTimeout = SleepTimeout.NeverSleep;
+	}
+
 	void Update()
 	{
 		if( Input.touchCount > 0 )
@@ -13,7 +18,7 @@ public class MobileInputHandler : InputHandler
 	#region implemented abstract members of InputHandler
 	public override float SteeringAmount ()
 	{
-		return Input.acceleration.x;
+		return Mathf.Clamp(3.0f * Input.acceleration.x, -1.0f, 1.0f);
 	}
 	#endregion
 }

@@ -1,15 +1,20 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Levels\Level.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Multiply.shader">
     <Files>
-      <File FileName="Assets\Levels\LevelSegment.cs" Line="57" Column="67" />
-      <File FileName="Assets\Player\Player.cs" Line="30" Column="4" />
-      <File FileName="Assets\Levels\Level.cs" Line="170" Column="106" />
-      <File FileName="Assets\Levels\LevelSegment.cs" Line="282" Column="1" />
+      <File FileName="Assets\Levels\LevelSegment.cs" Line="255" Column="75" />
+      <File FileName="Assets\Levels\Level.cs" Line="1" Column="1" />
+      <File FileName="Assets\Player\Player.cs" Line="76" Column="64" />
       <File FileName="Assets\Input\InputHandler.cs" Line="1" Column="1" />
-      <File FileName="Assets\Misc\Scheduler\Scheduler.cs" Line="1" Column="1" />
       <File FileName="Assets\Player\Actions\IPlayerAction.cs" Line="1" Column="1" />
-      <File FileName="Assets\Camera\CameraController.cs" Line="16" Column="66" />
+      <File FileName="Assets\Camera\CameraController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Player\Actions\JumpAction.cs" Line="1" Column="1" />
+      <File FileName="Assets\GUI\LevelGui.cs" Line="1" Column="1" />
+      <File FileName="Assets\Input\PCInputHandler.cs" Line="1" Column="1" />
+      <File FileName="Assets\Input\MobileInputHandler.cs" Line="1" Column="1" />
+      <File FileName="Assets\Art\Palette.cs" Line="9" Column="23" />
+      <File FileName="Assets\Art\Shaders\MobileSpecular.shader" Line="1" Column="1" />
+      <File FileName="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Multiply.shader" Line="13" Column="23" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

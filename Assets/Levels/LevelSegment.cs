@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class LevelSegment : MonoBehaviour 
 {
-	private int _id = 0;
+	//private int _id = 0;
 
     [SerializeField]
     private AnimationCurve _rightProfile = new AnimationCurve
@@ -233,7 +233,7 @@ public class LevelSegment : MonoBehaviour
 		if( options.rightProfile != null )
 			segmentComponent._rightProfile = options.rightProfile;
 
-		segmentComponent._id = options.id;
+		//segmentComponent._id = options.id;
 		segmentComponent.SetupComponents(options.async);
 
 		return segmentComponent;
@@ -289,6 +289,8 @@ public class LevelSegment : MonoBehaviour
 
 		if( OnIsNoLongerCurrent != null )
 			OnIsNoLongerCurrent();
+
+		Level.NewSegmentReached();
 
 		Scheduler.Run(new YieldForSeconds(1.0f), () => {
 			Level.SegmentDestroyed();

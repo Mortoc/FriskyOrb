@@ -80,7 +80,9 @@ public class Level : MonoBehaviour
 		}
 		// Since the first segment has no collider, mark it
 		// no longer current when the 2nd element gets marked.
-		first.Next.OnIsNoLongerCurrent += first.IsNoLongerCurrent;
+		first.Next.OnIsNoLongerCurrent += () => {
+			first.IsNoLongerCurrent();
+		};
 		first.Next.collider.enabled = true;
 
 		// Setup Input
@@ -94,26 +96,24 @@ public class Level : MonoBehaviour
 		_player.gameObject.name = "Player";
 		_player.Level = this;
 		_player.CurrentSegment = first.Next;
-		_player.rigidbody.Sleep();
 
 		// Setup Camera
 		_camera = Camera.main.gameObject.AddComponent<CameraController> ();
 		_camera.Player = _player;
 
-		Scheduler.Run (WakePlayer(first));
+		SegmentCompletedCount = 1;
 	}
 
-	private IEnumerator<IYieldInstruction> WakePlayer(LevelSegment first)
-	{
-		yield return new YieldForSeconds (1.0f);
-		_player.rigidbody.WakeUp ();
-		first.Next.collider.enabled = true;
-	}
-
+	public uint SegmentCompletedCount { get; private set; }
 	// Called when a segment cleans itself up after the user has passed it
 	public void SegmentDestroyed()
 	{
 		GenerateNextSegment(_lastSegment, false);
+	}
+
+	public void NewSegmentReached()
+	{
+		SegmentCompletedCount++;
 	}
 
 	private LevelSegment GenerateNextSegment(LevelSegment previous, bool initialSegments)

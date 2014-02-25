@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
 	private SmoothedVector _lookAtTarget = new SmoothedVector(0.25f);
 	private SmoothedVector _currentPosition = new SmoothedVector(0.25f);
 	
-	void LateUpdate()
+	void FixedUpdate()
 	{
 		if( Player && Player.CurrentSegment )
 		{

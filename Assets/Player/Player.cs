@@ -39,6 +39,7 @@ public class Player : MonoBehaviour
 		get { return _heading; }
 	}
 
+
 	void Start()
 	{
 		CurrentAction = new JumpAction();
@@ -68,15 +69,15 @@ public class Player : MonoBehaviour
 
 	private void RollForward()
 	{
-		Vector3 rollAxis = Vector3.Cross (Vector3.up, _heading);
-		rigidbody.AddTorque (rollAxis * Time.fixedDeltaTime, ForceMode.Impulse);
+		//Vector3 rollAxis = Vector3.Cross (Vector3.up, _heading);
+		//rigidbody.AddTorque (rollAxis * Time.fixedDeltaTime, ForceMode.Impulse);
 
 		float steerAmount = Mathf.Abs(InputHandler.SteeringAmount());
 		float counterAccel = Mathf.Lerp (0.0f, -0.1f, steerAmount); // reduce accleration while turning hard
 
 		Vector3 accel = _heading * _acceleration * Time.fixedDeltaTime;
-		rigidbody.AddForceAtPosition(accel, (Vector3.up * 0.1f) + rigidbody.position, ForceMode.Acceleration);
-		rigidbody.AddForce (accel * counterAccel, ForceMode.Impulse);
+		rigidbody.AddForce(accel, ForceMode.Acceleration);
+		rigidbody.AddForce(accel * counterAccel, ForceMode.Impulse);
 	}
 
 	private void Steer()

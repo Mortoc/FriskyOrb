@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class JumpAction : IPlayerAction
 {
-	private const float JUMP_STRENGTH = 20.0f;
+	private const float JUMP_STRENGTH = 40.0f;
 
 
 	#region IPlayerAction implementation
