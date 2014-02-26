@@ -5,6 +5,11 @@ using System.Collections.Generic;
 
 public class LevelSegment : MonoBehaviour 
 {
+	private const float PATH_WIDTH = 1.75f;
+	private const float PATH_THICKNESS = 0.33f;
+    private const int SEGMENT_DETAIL = 72;
+    private const int COLLISION_DETAIL_DENOMINATOR = 4;
+
 	//private int _id = 0;
 
     [SerializeField]
@@ -49,6 +54,7 @@ public class LevelSegment : MonoBehaviour
     {
         public Vector3 Left { get; set; }
         public Vector3 Right { get; set; }
+		public Vector3 Center { get; set; }
 		public bool HasSurface { get; set; }
     }
 
@@ -58,8 +64,8 @@ public class LevelSegment : MonoBehaviour
         Vector3 pathNorm = Path.GetNormal(t);
 
         float profileT = 1.0f - t;
-        float leftProfileVal = _leftProfile.Evaluate(profileT) * 1.75f;
-        float rightProfileVal = _rightProfile.Evaluate(profileT) * 1.75f;
+        float leftProfileVal = _leftProfile.Evaluate(profileT) * PATH_WIDTH;
+        float rightProfileVal = _rightProfile.Evaluate(profileT) * PATH_WIDTH;
 		bool hasSurface = leftProfileVal + rightProfileVal > Mathf.Epsilon;
         Vector3 left = pathPnt + (pathNorm * leftProfileVal);
         Vector3 right = pathPnt - (pathNorm * rightProfileVal);
@@ -68,6 +74,7 @@ public class LevelSegment : MonoBehaviour
         {
             Left = left,
             Right = right,
+			Center = pathPnt,
 			HasSurface = hasSurface
         };
     }
@@ -120,43 +127,137 @@ public class LevelSegment : MonoBehaviour
 		
 		Mesh result = new Mesh();
 		result.vertices = verts;
-		result.triangles = tris.ToArray();
+		result.SetTriangles(tris.ToArray(), 0);
+        result.Optimize();
 		return result;
 	}
 
     private Mesh BuildMesh(int detail)
     {
-        List<int> tris = new List<int>();
-        int vertCount = (detail * 2) + 2;
+		Vector3 pathOffset = Vector3.up * PATH_THICKNESS;
+        List<int> quads = new List<int>();
+        int vertCount = (detail + 1) * 8;
         Vector3[] verts = new Vector3[vertCount];
 		Vector3[] norms = new Vector3[vertCount];
+        Vector4[] tangents = new Vector4[vertCount];
 		Vector2[] uvs = new Vector2[vertCount];
 
         float rSteps = 1.0f / (float) detail;
         float t = 0.0f;
-        for (int i = 0, v = 0; i < detail + 1; ++i, v += 2)
+
+        for (int i = 0, v = 0; i < detail + 1; ++i, v += 8)
         {
 			PathSample thisSample = GetPathSample(t);
+            
+            float tanSampleDist = 0.01f;
+            float tanSample = t + tanSampleDist;
+            Vector3 tangent;
+            if (tanSample < 1.0f)
+                tangent = (thisSample.Center - Path.GetPoint(tanSample)).normalized;
+            else
+                tangent = (Path.GetPoint(t - (2.0f * tanSampleDist)) - thisSample.Center).normalized;
+
+            for (int tan = v; tan < 8; ++tan)
+                tangents[tan] = new Vector4(tangent.x, tangent.y, tangent.z, 1.0f);
 
             int v1 = v + 1;
-            verts[v] = thisSample.Left;
+			int v2 = v + 2;
+			int v3 = v + 3;
+			int v4 = v + 4;
+			int v5 = v + 5;
+			int v6 = v + 6;
+			int v7 = v + 7;
+
+			// Position Top Face
+			verts[v] = thisSample.Left;
             verts[v1] = thisSample.Right;
+
+			// Position Right Face
+			verts[v2] = verts[v1];
+			verts[v3] = thisSample.Right - pathOffset;
+
+			// Position Bottom Face
+			verts[v4] = verts[v3];
+			verts[v5] = thisSample.Left - pathOffset;
+
+			// Position Left Face
+			verts[v6] = verts[v];
+			verts[v7] = verts[v5];
+
+			// Normals Top Face
 		    norms[v] = Vector3.up;
 		    norms[v1] = Vector3.up;
-		    uvs[v] = new Vector2(1.0f, t);
-		    uvs[v1] = new Vector2(0.0f, t);
+			
+			// Normals Right Face
+			Vector3 rightNorm = (thisSample.Right - thisSample.Center).normalized;
+			norms[v2] = rightNorm;
+			norms[v3] = rightNorm;
+			
+			// Normals Bottom Face
+			norms[v4] = Vector3.down;
+			norms[v5] = Vector3.down;
+			
+			// Normals Left Face
+			Vector3 leftNorm = (thisSample.Center - thisSample.Left).normalized;
+            norms[v6] = leftNorm;
+            norms[v7] = leftNorm;
+
+
+            float topU = 0.5f;
+            float rightU = 0.6f;
+            float bottomU = 0.9f;
+            float leftU = 1.0f;
+
+            // UVs top face
+		    uvs[v] = new Vector2(0.0f, t);
+		    uvs[v1] = new Vector2(topU, t);
+
+            // UVs right face
+            uvs[v2] = uvs[v1];
+            uvs[v3] = new Vector2(rightU, t);
+
+            // UVs bottom face
+            uvs[v4] = uvs[v3];
+            uvs[v5] = new Vector2(bottomU, t);
+
+            // UVs bottom face
+            uvs[v6] = uvs[v5];
+            uvs[v7] = new Vector2(leftU, t);
 
             if (i > 0 && thisSample.HasSurface)
             {
-                int vm2 = v - 2;
-                int vm1 = v - 1;
+                int vm1 = v - 1; // last v7
+                int vm2 = v - 2; // last v6
+                int vm3 = v - 3; // last v5
+                int vm4 = v - 4; // last v4
+                int vm5 = v - 5; // last v3
+                int vm6 = v - 6; // last v2
+                int vm7 = v - 7; // last v1
+                int vm8 = v - 8; // last v
 
-				tris.Add(vm2);
-				tris.Add(vm1);
-				tris.Add(v);
-				tris.Add(v1);
-				tris.Add(v);
-				tris.Add(vm1);
+                // Top Face
+                quads.Add(v);
+				quads.Add(vm8);
+				quads.Add(vm7);
+				quads.Add(v1);
+
+                // Right Face
+                quads.Add(v2);
+                quads.Add(vm6);
+                quads.Add(vm5);
+                quads.Add(v3);
+
+                // Bottom Face
+                quads.Add(v4);
+                quads.Add(vm4);
+                quads.Add(vm3);
+                quads.Add(v5);
+
+                // Left Face
+                quads.Add(v6);
+                quads.Add(v7);
+                quads.Add(vm1);
+                quads.Add(vm2);
             }
 
             t += rSteps;
@@ -168,7 +269,8 @@ public class LevelSegment : MonoBehaviour
         result.vertices = verts;
         result.normals = norms;
         result.uv = uvs;
-        result.triangles = tris.ToArray();
+        result.tangents = tangents;
+        result.SetIndices(quads.ToArray(), MeshTopology.Quads, 0);
         result.Optimize();
 
         return result;
@@ -255,23 +357,25 @@ public class LevelSegment : MonoBehaviour
 	// Spread out setting up the components of this segment over a few frames
 	private IEnumerator<IYieldInstruction> SetupComponentsCoroutine()
 	{
-		var mesh = BuildMesh(48);
+        // Don't generate a collision mesh for the first segment
+        if (Previous)
+        {
+            var collisionMesh = BuildCollisionMesh(SEGMENT_DETAIL / COLLISION_DETAIL_DENOMINATOR);
+            yield return Yield.UntilNextFrame;
+
+            var col = gameObject.AddComponent<MeshCollider>();
+            col.sharedMesh = collisionMesh;
+            col.enabled = false;
+            yield return Yield.UntilNextFrame;
+        }
+
+		var mesh = BuildMesh(SEGMENT_DETAIL);
 		yield return Yield.UntilNextFrame;
 
 		var mf = gameObject.AddComponent<MeshFilter>();
 		mf.sharedMesh = mesh;
 		yield return Yield.UntilNextFrame;
 
-		if( Previous )
-		{
-			var collisionMesh = BuildCollisionMesh(24);
-			yield return Yield.UntilNextFrame;
-
-			var col = gameObject.AddComponent<MeshCollider>();
-			col.sharedMesh = collisionMesh;
-			col.enabled = false;
-			yield return Yield.UntilNextFrame;
-		}
 
 		var meshRenderer = gameObject.AddComponent<MeshRenderer>();
 		meshRenderer.sharedMaterial = Level.LevelTrackMaterial;

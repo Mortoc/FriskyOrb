@@ -7,8 +7,10 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Level
-  m_Shader: {fileID: 4800000, guid: 31035846fbb9ce645a82d25a6c6292d7, type: 3}
-  m_ShaderKeywords: []
+  m_Shader: {fileID: 4800000, guid: c11e4baa7e3444bfc834ac5f9152fa93, type: 3}
+  m_ShaderKeywords:
+  - GLOW11_GLOW_MAINTEX
+  - GLOW11_MULTIPLY_GLOWCOLOR
   m_CustomRenderQueue: -1
   m_SavedProperties:
     serializedVersion: 2
@@ -17,14 +19,14 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
+          m_Texture: {fileID: 2800000, guid: 0f6377872e339455d9912675771556d1, type: 3}
+          m_Scale: {x: 1, y: 5}
           m_Offset: {x: 0, y: 0}
       data:
         first:
           name: _BumpMap
         second:
-          m_Texture: {fileID: 0}
+          m_Texture: {fileID: 2800000, guid: 47d38cdabb516b64cb199cfd28162a2b, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -34,15 +36,54 @@ Material:
           m_Texture: {fileID: 8900000, guid: f72031966eaf8cc4aaf1c3483aff0adc, type: 2}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _Detail
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _SparkleTex
+        second:
+          m_Texture: {fileID: 2800000, guid: a181ca8e3c62f3e4b8f183f6c586b032, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _GlowTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 0f6377872e339455d9912675771556d1, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _EnvSide
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _EnvTop
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
     m_Floats:
       data:
         first:
+          name: _Reflection
+        second: .767857134
+      data:
+        first:
           name: _Shininess
-        second: .078125
+        second: .0372818038
       data:
         first:
           name: _rim_power
-        second: .5
+        second: 7.96428585
       data:
         first:
           name: _base_height
@@ -71,23 +112,95 @@ Material:
         first:
           name: _FresnelPower
         second: 5
+      data:
+        first:
+          name: _Gloss
+        second: 4.46428585
+      data:
+        first:
+          name: _FrezPow
+        second: .892857134
+      data:
+        first:
+          name: _FrezFalloff
+        second: 10
+      data:
+        first:
+          name: _hdrInt
+        second: 1
+      data:
+        first:
+          name: _FlakeScale
+        second: 1
+      data:
+        first:
+          name: _FlakePower
+        second: .571428597
+      data:
+        first:
+          name: _OuterFlakePower
+        second: 1.73214269
+      data:
+        first:
+          name: _AlphaPower
+        second: 1
+      data:
+        first:
+          name: _OpaqueReflection
+        second: 1
+      data:
+        first:
+          name: _duoPower
+        second: 64
+      data:
+        first:
+          name: _GlowStrength
+        second: .5
+      data:
+        first:
+          name: _EnvTimer
+        second: 1
+      data:
+        first:
+          name: _FrequencyX
+        second: 1
+      data:
+        first:
+          name: _FrequencyZ
+        second: 1
+      data:
+        first:
+          name: _ScaleX
+        second: .5
+      data:
+        first:
+          name: _ScaleZ
+        second: 1
+      data:
+        first:
+          name: _Speed
+        second: .5
+      data:
+        first:
+          name: _Rimpower
+        second: 2
     m_Colors:
       data:
         first:
           name: _Color
-        second: {r: .29411763, g: .29411763, b: .29411763, a: 1}
+        second: {r: 0, g: .188235298, b: .749019623, a: 1}
       data:
         first:
           name: _SpecColor
-        second: {r: .5, g: .5, b: .5, a: 1}
+        second: {r: .155709356, g: .156461045, b: .264705896, a: 1}
       data:
         first:
           name: _Vertex_color
-        second: {r: .0235294122, g: 0, b: .160784319, a: 0}
+        second: {r: .760784328, g: .184313729, b: .423529416, a: 1}
       data:
         first:
           name: _rim_color
-        second: {r: .0235294122, g: 0, b: .160784319, a: 0}
+        second: {r: 1, g: 1, b: 1, a: 0}
       data:
         first:
           name: _top_color
@@ -103,4 +216,20 @@ Material:
       data:
         first:
           name: _ReflectColor
+        second: {r: .404411793, g: .404411793, b: .404411793, a: 1}
+      data:
+        first:
+          name: _paintColor2
+        second: {r: .760784328, g: .184313729, b: .423529416, a: 1}
+      data:
+        first:
+          name: _TintColor
+        second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _Color2
         second: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
+      data:
+        first:
+          name: _GlowColor
+        second: {r: 0, g: .188235298, b: .749019623, a: 1}

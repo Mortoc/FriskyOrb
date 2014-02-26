@@ -86,7 +86,7 @@ GameObject:
   - 92: {fileID: 115080386}
   - 124: {fileID: 115080385}
   - 81: {fileID: 115080384}
-  - 114: {fileID: 115080389}
+  - 114: {fileID: 115080390}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -132,7 +132,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 1
-  far clip plane: 100
+  far clip plane: 300
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -155,7 +155,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
---- !u!114 &115080389
+--- !u!114 &115080390
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -163,16 +163,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 115080383}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97b4768c3683045e4bfdb2e78272970c, type: 3}
+  m_Script: {fileID: -923714165, guid: 19b0cf21764734b05961b2e048d1c7c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  threshhold: .25
-  intensity: .75
-  blurSize: 1
-  resolution: 1
-  blurIterations: 2
-  blurType: 0
-  fastBloomShader: {fileID: 4800000, guid: 68a00c837b82e4c6d92e7da765dc5f1d, type: 3}
+  _blurMode: 0
+  _reuseDepth: 0
+  _rerenderResolution: 1
+  _highPrecsion: 0
+  settings:
+    downsampleSteps: 2
+    baseResolution: 2
+    downsampleResolution: 4
+    iterations: 3
+    blurSpread: .600000024
+    innerStrength: 1.20000005
+    outerStrength: 1
+    boostStrength: 1.25
+    blendMode: 0
+    downsampleBlendMode: 100
+    falloff:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    falloffScale: 1
+    radius: 4
+    normalize: 1
 --- !u!1 &423251095
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,8 +526,8 @@ MonoBehaviour:
         inSlope: Infinity
         outSlope: .0938397422
         tangentMode: 1
-      - time: .400104135
-        value: .992292345
+      - time: .430899322
+        value: .997424603
         inSlope: Infinity
         outSlope: 1.91943216
         tangentMode: 1
@@ -525,8 +551,8 @@ MonoBehaviour:
         inSlope: Infinity
         outSlope: .0938397422
         tangentMode: 1
-      - time: .400104135
-        value: .992292345
+      - time: .42491138
+        value: 1.00084615
         inSlope: Infinity
         outSlope: 1.91943216
         tangentMode: 1
@@ -537,7 +563,7 @@ MonoBehaviour:
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
-  _viewDistance: 6
+  _viewDistance: 20
   _levelTrackMaterial: {fileID: 2100000, guid: d96e93e390971a44f970aadc824ba8da, type: 2}
   _playerPrefab: {fileID: 11400000, guid: 6a07642956a95ff49bf45ba2da1205a3, type: 2}
 --- !u!114 &1014443284

@@ -11,7 +11,7 @@ public class MobileInputHandler : InputHandler
 
 	void Update()
 	{
-		if( Input.touchCount > 0 )
+		if( Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began )
 			ExecuteAction();
 	}
 

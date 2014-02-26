@@ -4,8 +4,14 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour 
 {
+    [SerializeField]
 	private float _acceleration = 1250.0f;
+    [SerializeField]
 	private float _steerSpeed = 100.0f;
+
+    
+    public FX JumpFX;
+
 
 	public Level Level { get; set; }
 	public LevelSegment CurrentSegment { get; set; }
@@ -33,6 +39,7 @@ public class Player : MonoBehaviour
 	}
 
 	private Vector3 _heading = Vector3.forward;
+    private JumpAction _jumpAction;
 
 	public Vector3 Heading
 	{
@@ -42,15 +49,21 @@ public class Player : MonoBehaviour
 
 	void Start()
 	{
-		CurrentAction = new JumpAction();
+        _jumpAction = new JumpAction(this);
 		rigidbody.useConeFriction = true;
-		InputHandler.OnAction += () => CurrentAction.PerformAction(this);
+        InputHandler.OnAction += () =>
+        {
+            //if (CurrentAction != null)
+            //    CurrentAction.PerformAction();
+            _jumpAction.PerformAction();
+        };
 	}
 	
 	void FixedUpdate()
 	{
 		if( IsGrounded() )
 		{
+            _jumpAction.UserLanded();
 			Steer ();
 			RollForward();
 		}
