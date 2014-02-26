@@ -6,27 +6,15 @@ public class ExplodeyBarrellFX : FX
     [SerializeField]
     private float _explosionForce = 100.0f;
     [SerializeField]
-    private float _explosionRadius = 1.0f;
-    [SerializeField]
     private float _fragmentLife = 5.0f;
 
     public override void PerformFX()
     {
-        var fragmentCount = 0.0f;
-        var fragPositionAccum = Vector3.zero;
+        particleSystem.Emit(100);
         var fragments = GetComponentsInChildren<Rigidbody>();
-
         foreach (var fragment in fragments)
         {
-            fragmentCount += 1.0f;
-            fragPositionAccum += fragment.position;
-        }
-
-        Vector3 avgPosition = fragPositionAccum / fragmentCount;
-
-        foreach (var fragment in fragments)
-        {
-            fragment.AddExplosionForce(_explosionForce, avgPosition, _explosionRadius);
+            fragment.AddForce(_explosionForce * UnityEngine.Random.onUnitSphere, ForceMode.Impulse);
         }
 
         Scheduler.Run(CleanupFragments(fragments));
@@ -42,5 +30,7 @@ public class ExplodeyBarrellFX : FX
             GameObject.Destroy(fragment.gameObject);
             yield return Yield.UntilNextFrame;
         }
+
+        GameObject.Destroy(gameObject);
     }
 }

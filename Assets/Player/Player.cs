@@ -122,8 +122,6 @@ public class Player : MonoBehaviour
 
         float hillFactor = 1.0f + ((1.0f - Vector3.Dot(_heading, HeadingOverGroundSlope())) * _hillClimbAssist);
 
-        Debug.DrawLine(rigidbody.position, rigidbody.position + (3.0f * _heading), Color.red);
-        Debug.DrawLine(rigidbody.position, rigidbody.position + (3.0f * HeadingOverGroundSlope()), Color.blue);
         Vector3 accel = HeadingOverGroundSlope() * _acceleration * Time.fixedDeltaTime * hillFactor;
         rigidbody.AddForce(accel, ForceMode.Acceleration);
         rigidbody.AddForce(accel * counterAccel, ForceMode.Impulse);    

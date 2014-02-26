@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: ExplodeyBarrell
-  m_Shader: {fileID: 4800000, guid: 8912568cc364544c684c9fc88c4e5286, type: 3}
+  m_Shader: {fileID: 4800000, guid: 63c5b6ec681485340b45d2b306f4ed30, type: 3}
   m_ShaderKeywords:
   - GLOW11_MULTIPLY_GLOWCOLOR
   - GLOW11_GLOW_GLOWTEX
@@ -24,25 +24,86 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
+          name: _Cube
+        second:
+          m_Texture: {fileID: 8900000, guid: f72031966eaf8cc4aaf1c3483aff0adc, type: 2}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _SparkleTex
+        second:
+          m_Texture: {fileID: 2800000, guid: a181ca8e3c62f3e4b8f183f6c586b032, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
           name: _GlowTex
         second:
           m_Texture: {fileID: 2800000, guid: df3440b5ad39fc0418022c1e8209db6e, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _DecalMap
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
     m_Floats:
       data:
         first:
+          name: _Reflection
+        second: .196428567
+      data:
+        first:
           name: _Shininess
-        second: .078125
+        second: 3.71176338
+      data:
+        first:
+          name: _Gloss
+        second: 1.71428573
+      data:
+        first:
+          name: _FrezPow
+        second: 0
+      data:
+        first:
+          name: _FrezFalloff
+        second: .892857134
+      data:
+        first:
+          name: _FlakeScale
+        second: 1
+      data:
+        first:
+          name: _FlakePower
+        second: .553571403
+      data:
+        first:
+          name: _OuterFlakePower
+        second: 8.96428585
       data:
         first:
           name: _GlowStrength
+        second: .5
+      data:
+        first:
+          name: _decalPower
         second: .5
     m_Colors:
       data:
         first:
           name: _Color
-        second: {r: .588, g: .588, b: .588, a: 1}
+        second: {r: .760784328, g: .184313729, b: .423529416, a: 1}
+      data:
+        first:
+          name: _SpecColor
+        second: {r: .308823526, g: .206639275, b: .249042273, a: 1}
+      data:
+        first:
+          name: _paintColor2
+        second: {r: .760784328, g: .184313729, b: .423529416, a: 1}
       data:
         first:
           name: _GlowColor

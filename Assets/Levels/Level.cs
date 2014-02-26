@@ -8,16 +8,10 @@ public class Level : MonoBehaviour
     private class SegmentProfile
     {
         public string Name = "";
+        public bool AllowsDoodads = true;
         public float Difficulty = 1.0f;
         public AnimationCurve Left = new AnimationCurve();
         public AnimationCurve Right = new AnimationCurve();
-    }
-
-    [Serializable]
-    private class TrackObstacle
-    {
-        public float Difficulty = 1.0f;
-        public GameObject Prefab = null;
     }
 
     [Serializable]
@@ -29,6 +23,8 @@ public class Level : MonoBehaviour
         public float SegmentLengthJitter = 5.0f;
         public float Curviness = 15.0f;
         public float MaxHeightDifference = 0.0f;
+        public float ChanceOfDoodad = 1.0f; // values over 1 will have a chance for multiple doodads
+        public float MaxDoodadDifficulty = 1.0f;
         public float MaxDifficulty = 1.0f;
 
         public override string ToString()
@@ -40,9 +36,11 @@ public class Level : MonoBehaviour
     [Serializable]
     private class Doodad
     {
+        public string Name = "";
         public GameObject Prefab = null;
         public float Difficulty = 1.0f;
     }
+
     [SerializeField]
     private Doodad[] _doodads;
 
@@ -225,10 +223,14 @@ public class Level : MonoBehaviour
             leftProfile = profile.Left,
             rightProfile = profile.Right,
             previous = previous,
-            async = !initialSegments
         };
         LevelSegment nextSegment = LevelSegment.Create(options);
+        
+        if (!initialSegments)
+            nextSegment.FadeIn();
 
+        PlaceDoodads(nextSegment, tweakables, profile);
+        
         if (previous != null)
             previous.Next = nextSegment;
 
@@ -236,4 +238,46 @@ public class Level : MonoBehaviour
         return nextSegment;
     }
 
+    private void PlaceDoodads(LevelSegment segment, GeneratorVariables tweakables, SegmentProfile profile)
+    {
+        // No doodads? Good, we're done here...
+        if (!profile.AllowsDoodads)
+            return;
+
+        // Get all tweakables that can be used in this segment
+        int startIdx = 0;
+        int endIdx = 0;
+        for (; endIdx < _doodads.Length && _doodads[endIdx].Difficulty <= tweakables.MaxDoodadDifficulty; ++endIdx);
+
+        // There are no doodads usable on this segment, we're done
+        if (endIdx == 0)
+            return;
+
+        // How many doodads are we using?
+        float doodadCountRand = tweakables.ChanceOfDoodad;
+        float doodadRemaineder = doodadCountRand - Mathf.Floor(doodadCountRand);
+        int doodadCount = Mathf.FloorToInt(doodadCountRand);
+        if (_rand.NextSingle() < doodadRemaineder)
+            doodadCount++;
+
+        // Create the doodads
+        float recpDoodadCount = 1.0f / (float)doodadCount;
+        for(int i = 0; i < doodadCount; ++i)
+        {
+            Doodad doodad = _doodads[_rand.Next(startIdx, endIdx)];
+            float doodadT = ((float)i + 1.0f) * recpDoodadCount * _rand.NextSingle();
+
+            LevelSegment.PathSample pathSample = segment.GetPathSample(doodadT);
+            if (pathSample.HasSurface)
+            {
+                Vector3 doodadPosition = Vector3.Lerp(pathSample.Left, pathSample.Right, Mathf.Lerp(0.2f, 0.8f, _rand.NextSingle()));
+                GameObject doodadObj = Instantiate(doodad.Prefab) as GameObject;
+                doodadObj.transform.parent = segment.transform;
+                doodadObj.transform.localPosition = doodadPosition;
+
+                foreach (var doodadRigidbody in doodadObj.GetComponentsInChildren<Rigidbody>())
+                    doodadRigidbody.Sleep();
+            }
+        }
+    }
 }

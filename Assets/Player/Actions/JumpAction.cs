@@ -44,6 +44,11 @@ public class JumpAction : IPlayerAction
         // before landing again?
         if (_availablejumpCount > 0)
         {
+            // Cost another jump if the user wasn't grounded
+            // when doing this jump
+            if (!_hasJumped && !_player.IsGrounded())
+                _availablejumpCount--;
+
             _hasJumped = true;
             _ignoreLandedStartTime = Time.time;
             _availablejumpCount--;

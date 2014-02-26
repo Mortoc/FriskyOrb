@@ -14,7 +14,7 @@ GameObject:
   - 135: {fileID: 13500000}
   - 114: {fileID: 11400000}
   - 108: {fileID: 10800000}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Orb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33,7 +33,7 @@ GameObject:
   - 199: {fileID: 19900000}
   - 108: {fileID: 10800002}
   - 114: {fileID: 11400002}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: JumpEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -190,6 +190,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _acceleration: 1250
   _steerSpeed: 100
+  _hillClimbAssist: .5
+  _counterSteerAccel: -.100000001
   JumpFX: {fileID: 11400002}
 --- !u!114 &11400002
 MonoBehaviour:

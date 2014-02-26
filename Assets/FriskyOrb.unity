@@ -339,7 +339,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ddf47dad4326034cbf911830111efc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _doodads: []
+  _doodads:
+  - Name: Explodey Barrell
+    Prefab: {fileID: 100000, guid: 962878a1b337fda47a6146a3f911df2c, type: 2}
+    Difficulty: 1.10000002
   _tweakables:
   - Name: Start
     StartSegment: 0
@@ -347,6 +350,8 @@ MonoBehaviour:
     SegmentLengthJitter: 0
     Curviness: 0
     MaxHeightDifference: 0
+    ChanceOfDoodad: 1
+    MaxDoodadDifficulty: 1
     MaxDifficulty: 1
   - Name: Learn To Steer
     StartSegment: 2
@@ -354,6 +359,8 @@ MonoBehaviour:
     SegmentLengthJitter: 5
     Curviness: 5
     MaxHeightDifference: 0
+    ChanceOfDoodad: 0
+    MaxDoodadDifficulty: 0
     MaxDifficulty: 1
   - Name: Basic Elevation Changes
     StartSegment: 8
@@ -361,6 +368,8 @@ MonoBehaviour:
     SegmentLengthJitter: 5
     Curviness: 10
     MaxHeightDifference: 3
+    ChanceOfDoodad: .25
+    MaxDoodadDifficulty: 3
     MaxDifficulty: 5
   - Name: End Game
     StartSegment: 15
@@ -368,9 +377,12 @@ MonoBehaviour:
     SegmentLengthJitter: 10
     Curviness: 15
     MaxHeightDifference: 5
+    ChanceOfDoodad: 2.5
+    MaxDoodadDifficulty: 3
     MaxDifficulty: 10000
   _segmentProfiles:
   - Name: Flat
+    AllowsDoodads: 1
     Difficulty: 1
     Left:
       serializedVersion: 2
@@ -403,6 +415,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
   - Name: Sorta Skinny
+    AllowsDoodads: 1
     Difficulty: 2
     Left:
       serializedVersion: 2
@@ -455,6 +468,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
   - Name: Bubbly
+    AllowsDoodads: 1
     Difficulty: 1
     Left:
       serializedVersion: 2
@@ -517,6 +531,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
   - Name: Jump1
+    AllowsDoodads: 0
     Difficulty: 10
     Left:
       serializedVersion: 2
@@ -531,8 +546,8 @@ MonoBehaviour:
         inSlope: Infinity
         outSlope: .0938397422
         tangentMode: 1
-      - time: .669562101
-        value: .999128997
+      - time: .561778903
+        value: .983491182
         inSlope: Infinity
         outSlope: 7.30071497
         tangentMode: 1
@@ -556,8 +571,8 @@ MonoBehaviour:
         inSlope: Infinity
         outSlope: .0938397422
         tangentMode: 1
-      - time: .669562101
-        value: .999128997
+      - time: .561778903
+        value: .983491182
         inSlope: Infinity
         outSlope: 7.30071497
         tangentMode: 1
@@ -569,6 +584,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
   - Name: Skinny
+    AllowsDoodads: 0
     Difficulty: 50
     Left:
       serializedVersion: 2
@@ -620,7 +636,7 @@ MonoBehaviour:
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
-  _viewDistance: 5
+  _viewDistance: 8
   _levelTrackMaterial: {fileID: 2100000, guid: d96e93e390971a44f970aadc824ba8da, type: 2}
   _playerPrefab: {fileID: 11400000, guid: 6a07642956a95ff49bf45ba2da1205a3, type: 2}
 --- !u!114 &1014443284
