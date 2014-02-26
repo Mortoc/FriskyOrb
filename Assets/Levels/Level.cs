@@ -23,6 +23,7 @@ public class Level : MonoBehaviour
     [Serializable]
     private class GeneratorVariables
     {
+        public string Name = "";
         public int StartSegment = 0;
         public float ApproxSegmentLength = 20.0f;
         public float SegmentLengthJitter = 5.0f;
@@ -32,14 +33,14 @@ public class Level : MonoBehaviour
 
         public override string ToString()
         {
-            return "Tweakables [StartSegment: " + StartSegment + "]";
+            return Name + " [StartSegment: " + StartSegment + "]";
         }
     }
 
     [Serializable]
     private class Doodad
     {
-        public GameObject Prefab;
+        public GameObject Prefab = null;
         public float Difficulty = 1.0f;
     }
     [SerializeField]
@@ -176,6 +177,22 @@ public class Level : MonoBehaviour
         float rotationCPRandom = Mathf.Lerp(-1.0f, 1.0f, _rand.NextSingle());
         Quaternion curveBRotation = Quaternion.AngleAxis(tweakables.Curviness * rotationCPRandom, Vector3.up);
         Vector3 bCP = b - curveBRotation * (forwardDirection * halfSegLength);
+
+        // Prevent creases (if the CPs overlap on any axes, you can get some weird creases in the geometry)
+        float halfSegLengthSqr = halfSegLength * halfSegLength;
+        if ((a - aCP).sqrMagnitude > halfSegLengthSqr)
+        {
+            aCP = aCP - a;
+            aCP = MathExt.SetVectorLength(aCP, halfSegLength);
+            aCP += a;
+        }
+
+        if( (b - bCP).sqrMagnitude > halfSegLengthSqr )
+        {
+            bCP = bCP - b;
+            bCP = MathExt.SetVectorLength(bCP, halfSegLength);
+            bCP += b;
+        }
 
         // Set Path height
         float elevationChange = 1.0f - (_rand.NextSingle() * 2.0f);

@@ -6,9 +6,11 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Player1
-  m_Shader: {fileID: 4800000, guid: 255f56d7ec2df5d4aa3aed17875cc52d, type: 3}
-  m_ShaderKeywords: []
+  m_Name: PlayerGlowPanels
+  m_Shader: {fileID: 4800000, guid: d81347abe0c704bc58fbcd7af748453c, type: 3}
+  m_ShaderKeywords:
+  - GLOW11_GLOW_GLOWCOLOR
+  - GLOW11_MULTIPLY_GLOWCOLOR
   m_CustomRenderQueue: -1
   m_SavedProperties:
     serializedVersion: 2
@@ -27,6 +29,20 @@ Material:
           m_Texture: {fileID: 2800000, guid: 47d38cdabb516b64cb199cfd28162a2b, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _GlowTex
+        second:
+          m_Texture: {fileID: 2800000, guid: fe8e19273eb6b1445ab9efcf7ae63d03, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _ParallaxMap
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
     m_Floats:
       data:
         first:
@@ -36,6 +52,14 @@ Material:
         first:
           name: _rim_power
         second: 1.08928561
+      data:
+        first:
+          name: _GlowStrength
+        second: 1
+      data:
+        first:
+          name: _Parallax
+        second: .0199999996
     m_Colors:
       data:
         first:
@@ -47,17 +71,21 @@ Material:
         second: {r: 1, g: 1, b: 1, a: 1}
       data:
         first:
-          name: _Emission
-        second: {r: 1, g: 1, b: 1, a: 1}
-      data:
-        first:
           name: _Vertex_color
-        second: {r: 0, g: 0, b: 0, a: 0}
+        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
       data:
         first:
           name: _rim_color
         second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
       data:
         first:
-          name: _DiffuseColor
+          name: _GlowColor
         second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+      data:
+        first:
+          name: _Emission
+        second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _DiffuseColor
+        second: {r: 0, g: .188235298, b: .749019623, a: 1}

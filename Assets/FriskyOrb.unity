@@ -339,31 +339,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ddf47dad4326034cbf911830111efc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _doodads: []
   _tweakables:
-  - StartSegment: 0
+  - Name: Start
+    StartSegment: 0
     ApproxSegmentLength: 10
     SegmentLengthJitter: 0
     Curviness: 0
     MaxHeightDifference: 0
     MaxDifficulty: 1
-  - StartSegment: 2
-    ApproxSegmentLength: 20
+  - Name: Learn To Steer
+    StartSegment: 2
+    ApproxSegmentLength: 10
     SegmentLengthJitter: 5
-    Curviness: 15
+    Curviness: 5
     MaxHeightDifference: 0
     MaxDifficulty: 1
-  - StartSegment: 10
+  - Name: Basic Elevation Changes
+    StartSegment: 8
     ApproxSegmentLength: 30
-    SegmentLengthJitter: 0
-    Curviness: 30
+    SegmentLengthJitter: 5
+    Curviness: 10
     MaxHeightDifference: 3
     MaxDifficulty: 5
-  - StartSegment: 15
+  - Name: End Game
+    StartSegment: 15
     ApproxSegmentLength: 20
-    SegmentLengthJitter: 5
+    SegmentLengthJitter: 10
     Curviness: 15
-    MaxHeightDifference: 1
-    MaxDifficulty: 20
+    MaxHeightDifference: 5
+    MaxDifficulty: 10000
   _segmentProfiles:
   - Name: Flat
     Difficulty: 1
@@ -526,10 +531,10 @@ MonoBehaviour:
         inSlope: Infinity
         outSlope: .0938397422
         tangentMode: 1
-      - time: .430899322
-        value: .997424603
+      - time: .669562101
+        value: .999128997
         inSlope: Infinity
-        outSlope: 1.91943216
+        outSlope: 7.30071497
         tangentMode: 1
       - time: 1
         value: 1
@@ -551,10 +556,10 @@ MonoBehaviour:
         inSlope: Infinity
         outSlope: .0938397422
         tangentMode: 1
-      - time: .42491138
-        value: 1.00084615
+      - time: .669562101
+        value: .999128997
         inSlope: Infinity
-        outSlope: 1.91943216
+        outSlope: 7.30071497
         tangentMode: 1
       - time: 1
         value: 1
@@ -563,7 +568,59 @@ MonoBehaviour:
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
-  _viewDistance: 20
+  - Name: Skinny
+    Difficulty: 50
+    Left:
+      serializedVersion: 2
+      m_Curve:
+      - time: -.00341005973
+        value: 1.00185788
+        inSlope: .1475932
+        outSlope: .1475932
+        tangentMode: 0
+      - time: .206227228
+        value: .24636957
+        inSlope: Infinity
+        outSlope: .0938397422
+        tangentMode: 1
+      - time: .78162241
+        value: .999128997
+        inSlope: Infinity
+        outSlope: .0281457007
+        tangentMode: 1
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    Right:
+      serializedVersion: 2
+      m_Curve:
+      - time: -.00341005973
+        value: 1.00185788
+        inSlope: .1475932
+        outSlope: .1475932
+        tangentMode: 0
+      - time: .206227228
+        value: .24636957
+        inSlope: Infinity
+        outSlope: .0938397422
+        tangentMode: 1
+      - time: .78162241
+        value: .999128997
+        inSlope: Infinity
+        outSlope: .0281457007
+        tangentMode: 1
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+  _viewDistance: 5
   _levelTrackMaterial: {fileID: 2100000, guid: d96e93e390971a44f970aadc824ba8da, type: 2}
   _playerPrefab: {fileID: 11400000, guid: 6a07642956a95ff49bf45ba2da1205a3, type: 2}
 --- !u!114 &1014443284

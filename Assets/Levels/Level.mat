@@ -192,7 +192,7 @@ Material:
       data:
         first:
           name: _SpecColor
-        second: {r: .155709356, g: .156461045, b: .264705896, a: 1}
+        second: {r: .426470578, g: .426470578, b: .426470578, a: 1}
       data:
         first:
           name: _Vertex_color
