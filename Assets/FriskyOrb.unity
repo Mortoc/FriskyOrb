@@ -16,8 +16,8 @@ RenderSettings:
   m_FogColor: {r: 0, g: 0, b: 0, a: .0196078438}
   m_FogMode: 3
   m_FogDensity: .0250000004
-  m_LinearFogStart: 0
-  m_LinearFogEnd: 300
+  m_LinearFogStart: 10
+  m_LinearFogEnd: 100
   m_AmbientLight: {r: .16911763, g: .16911763, b: .16911763, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: .5
@@ -87,6 +87,8 @@ GameObject:
   - 124: {fileID: 115080385}
   - 81: {fileID: 115080384}
   - 114: {fileID: 115080390}
+  - 114: {fileID: 115080389}
+  - 82: {fileID: 115080391}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -131,7 +133,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 1
+  near clip plane: .100000001
   far clip plane: 300
   field of view: 60
   orthographic: 0
@@ -155,6 +157,24 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!114 &115080389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 115080383}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec92b071d2d424aecb3e46f28eb63174, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  adaptationSpeed: .0199999996
+  limitMinimum: .200000003
+  limitMaximum: .600000024
+  shaderLum: {fileID: 4800000, guid: befbb4b9c320b4b18a08ef7afb93b6c9, type: 3}
+  shaderReduce: {fileID: 4800000, guid: 57b33a14b6d5347c5a85c36f6cb3b280, type: 3}
+  shaderAdapt: {fileID: 4800000, guid: 257bc83cbeb544540bd0e558aa9b1383, type: 3}
+  shaderApply: {fileID: 4800000, guid: f4901f25d4e1542589348bbb89563d8e, type: 3}
 --- !u!114 &115080390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,7 +197,7 @@ MonoBehaviour:
     iterations: 3
     blurSpread: .600000024
     innerStrength: 1.20000005
-    outerStrength: 1
+    outerStrength: 1.5
     boostStrength: 1.25
     blendMode: 0
     downsampleBlendMode: 100
@@ -199,6 +219,64 @@ MonoBehaviour:
     falloffScale: 1
     radius: 4
     normalize: 1
+--- !u!82 &115080391
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 115080383}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
 --- !u!1 &423251095
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,47 +417,108 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ddf47dad4326034cbf911830111efc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _powerupPrefab: {fileID: 11400000, guid: 718c381df9473d34eb4dc2f9f2cdad0f, type: 2}
   _doodads:
   - Name: Explodey Barrell
-    Prefab: {fileID: 100000, guid: 962878a1b337fda47a6146a3f911df2c, type: 2}
+    Prefab: {fileID: 100004, guid: d6ccf97073699374893ef96af0822074, type: 2}
     Difficulty: 1.10000002
   _tweakables:
   - Name: Start
     StartSegment: 0
-    ApproxSegmentLength: 10
+    ApproxSegmentLength: 20
     SegmentLengthJitter: 0
     Curviness: 0
-    MaxHeightDifference: 0
-    ChanceOfDoodad: 1
-    MaxDoodadDifficulty: 1
-    MaxDifficulty: 1
-  - Name: Learn To Steer
-    StartSegment: 2
-    ApproxSegmentLength: 10
-    SegmentLengthJitter: 5
-    Curviness: 5
     MaxHeightDifference: 0
     ChanceOfDoodad: 0
     MaxDoodadDifficulty: 0
     MaxDifficulty: 1
-  - Name: Basic Elevation Changes
-    StartSegment: 8
-    ApproxSegmentLength: 30
+    ChanceOfPowerupString: 0
+    PowerupStringAvgLength: 0
+    PowerupStringLengthJitter: 0
+  - Name: Learn To Steer
+    StartSegment: 1
+    ApproxSegmentLength: 20
     SegmentLengthJitter: 5
+    Curviness: 5
+    MaxHeightDifference: 3
+    ChanceOfDoodad: 0
+    MaxDoodadDifficulty: 0
+    MaxDifficulty: 0
+    ChanceOfPowerupString: .25
+    PowerupStringAvgLength: 20
+    PowerupStringLengthJitter: 5
+  - Name: Basic Elevation Changes
+    StartSegment: 10
+    ApproxSegmentLength: 22
+    SegmentLengthJitter: 2
     Curviness: 10
     MaxHeightDifference: 3
     ChanceOfDoodad: .25
     MaxDoodadDifficulty: 3
-    MaxDifficulty: 5
-  - Name: End Game
-    StartSegment: 15
+    MaxDifficulty: 1
+    ChanceOfPowerupString: .5
+    PowerupStringAvgLength: 6
+    PowerupStringLengthJitter: 0
+  - Name: Fairly Curvy
+    StartSegment: 20
+    ApproxSegmentLength: 15
+    SegmentLengthJitter: 5
+    Curviness: 10
+    MaxHeightDifference: 1
+    ChanceOfDoodad: 0
+    MaxDoodadDifficulty: 0
+    MaxDifficulty: 1
+    ChanceOfPowerupString: .5
+    PowerupStringAvgLength: 8
+    PowerupStringLengthJitter: 2
+  - Name: Difficult Segments + Jumps
+    StartSegment: 30
+    ApproxSegmentLength: 15
+    SegmentLengthJitter: 5
+    Curviness: 5
+    MaxHeightDifference: 2
+    ChanceOfDoodad: 0
+    MaxDoodadDifficulty: 0
+    MaxDifficulty: 10000
+    ChanceOfPowerupString: .5
+    PowerupStringAvgLength: 8
+    PowerupStringLengthJitter: 2
+  - Name: Doodads
+    StartSegment: 40
+    ApproxSegmentLength: 20
+    SegmentLengthJitter: 10
+    Curviness: 10
+    MaxHeightDifference: 3
+    ChanceOfDoodad: 1
+    MaxDoodadDifficulty: 3
+    MaxDifficulty: 1
+    ChanceOfPowerupString: .5
+    PowerupStringAvgLength: 8
+    PowerupStringLengthJitter: 2
+  - Name: Gettin Harder
+    StartSegment: 50
     ApproxSegmentLength: 20
     SegmentLengthJitter: 10
     Curviness: 15
     MaxHeightDifference: 5
-    ChanceOfDoodad: 2.5
+    ChanceOfDoodad: 0
+    MaxDoodadDifficulty: 0
+    MaxDifficulty: 10000
+    ChanceOfPowerupString: .25
+    PowerupStringAvgLength: 4
+    PowerupStringLengthJitter: 1
+  - Name: End Game
+    StartSegment: 60
+    ApproxSegmentLength: 20
+    SegmentLengthJitter: 10
+    Curviness: 15
+    MaxHeightDifference: 5
+    ChanceOfDoodad: 1.5
     MaxDoodadDifficulty: 3
     MaxDifficulty: 10000
+    ChanceOfPowerupString: .25
+    PowerupStringAvgLength: 4
+    PowerupStringLengthJitter: 1
   _segmentProfiles:
   - Name: Flat
     AllowsDoodads: 1
@@ -636,7 +775,7 @@ MonoBehaviour:
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
-  _viewDistance: 8
+  _viewDistance: 10
   _levelTrackMaterial: {fileID: 2100000, guid: d96e93e390971a44f970aadc824ba8da, type: 2}
   _playerPrefab: {fileID: 11400000, guid: 6a07642956a95ff49bf45ba2da1205a3, type: 2}
 --- !u!114 &1014443284
@@ -662,10 +801,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28c9882125574df4ebab40cd876ebf42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Background: {r: 0, g: 0, b: 0, a: 0}
-  DarkBlue: {r: .0235294122, g: 0, b: .160784319, a: 0}
-  Pink: {r: .760784328, g: .184313729, b: .423529416, a: 1}
+  Background: {r: 0, g: 0, b: 0, a: 1}
+  DarkBlue: {r: .0235294122, g: 0, b: .160784319, a: 1}
+  Pink: {r: 1, g: 0, b: .988235295, a: 1}
   Orange: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
   Yellow: {r: .929411769, g: .866666675, b: 0, a: 1}
   Green: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
   Blue: {r: 0, g: .188235298, b: .749019623, a: 1}
+  Red: {r: 1, g: 0, b: .258823544, a: 1}
+--- !u!1 &2056844206
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 2056844208}
+  - 114: {fileID: 2056844207}
+  m_Layer: 0
+  m_Name: Music
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2056844207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2056844206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7176c662300123d47901b8ca4aee1542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _music: {fileID: 0}
+--- !u!4 &2056844208
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2056844206}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: .646283269, y: -2.28397846, z: 30.9398689}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}

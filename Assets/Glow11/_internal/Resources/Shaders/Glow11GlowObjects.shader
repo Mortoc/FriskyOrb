@@ -12,7 +12,7 @@ Shader "Hidden/Glow 11/GlowObjects" {
 Subshader {
     Tags { "RenderEffect"="Glow11" "RenderType"="Glow11" }
     Pass {
-        Lighting Off  Fog { Mode off } 
+        Lighting Off
         Name "OpaqueGlow"
         CGPROGRAM            
             #include "../../Glow11GlowObjectsCG.cginc"
@@ -29,7 +29,7 @@ Subshader {
 Subshader {
     Tags { "RenderEffect"="Glow11Transparent" "RenderType"="Glow11Transparent" "Queue"="Transparent" }
     Pass {    
-        Cull Off Lighting Off ZWrite Off ZTest LEqual Fog { Mode off } 
+        Cull Off Lighting Off ZWrite Off ZTest LEqual
         Blend SrcAlpha OneMinusSrcAlpha
         CGPROGRAM
             #define ALPHA 1
@@ -46,7 +46,7 @@ Subshader {
 Subshader {
     Tags { "RenderEffect"="Glow11TransparentCutout" "RenderType"="Glow11TransparentCutout" "Queue"="AlphaTest"}
     Pass {
-        Lighting Off ZTest LEqual Fog { Mode off } 
+        Lighting Off ZTest LEqual 
         AlphaTest Greater [_Cutoff]
         CGPROGRAM    
             #define ALPHA 1        

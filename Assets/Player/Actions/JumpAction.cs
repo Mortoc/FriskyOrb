@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class JumpAction : IPlayerAction
 {
     private const float JUMP_STEER_STRENGTH = 50.0f;
-    private const float JUMP_STRENGTH = 60.0f;
+    private const float JUMP_STRENGTH = 45.0f;
     private FX _jumpEffect;
 
     private Player _player;
@@ -15,9 +15,11 @@ public class JumpAction : IPlayerAction
     private int _jumpCount = 2;
     private int _availablejumpCount;
 
+    private float _minTimeBetweenJumps = 0.4f;
+
     // Filter out any "landed" actions that happen immediately after the jump started
     private float _ignoreLandedFilterTime = 0.5f;
-    private float _ignoreLandedStartTime = -1.0f;
+    private float _initialJumpTime = -1.0f;
     private bool _hasJumped = false;
 
     public JumpAction(Player player)
@@ -30,7 +32,7 @@ public class JumpAction : IPlayerAction
 
     public void UserLanded()
     {
-        if (_hasJumped && Time.time - _ignoreLandedFilterTime > _ignoreLandedStartTime)
+        if (_hasJumped && Time.time - _ignoreLandedFilterTime > _initialJumpTime)
         {
             _hasJumped = false;
             _player.rigidbody.drag = _playerDrag;
@@ -42,15 +44,19 @@ public class JumpAction : IPlayerAction
     {
         // Have we done all the jumps available
         // before landing again?
-        if (_availablejumpCount > 0)
+        //Debug.Log("Checking if we can jump: availableJumps: " + _availablejumpCount + ", minTime since last jump: " + _minTimeBetweenJumps + ", time since last jump: " + (Time.time - _initialJumpTime));
+        if (_availablejumpCount > 0 && Time.time - _minTimeBetweenJumps > _initialJumpTime)
         {
             // Cost another jump if the user wasn't grounded
             // when doing this jump
             if (!_hasJumped && !_player.IsGrounded())
+            {
+                //Debug.Log("Cost an extra jump cause we weren't grounded");
                 _availablejumpCount--;
+            }
 
             _hasJumped = true;
-            _ignoreLandedStartTime = Time.time;
+            _initialJumpTime = Time.time;
             _availablejumpCount--;
 
             ApplyJump();
@@ -69,6 +75,14 @@ public class JumpAction : IPlayerAction
     private void ApplyJump()
     {
         _player.rigidbody.drag = 0.0f;
+        
+        if( _player.rigidbody.velocity.y < 0.0f )
+        {
+            Vector3 vel = _player.rigidbody.velocity;
+            vel.y = 0.0f;
+            _player.rigidbody.velocity = vel;
+        }
+
         _player.rigidbody.AddForce(Vector3.up * JUMP_STRENGTH, ForceMode.Impulse);
 
         _jumpEffect.PerformFX();

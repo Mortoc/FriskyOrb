@@ -79,8 +79,8 @@ PlayerSettings:
   productGUID: ecce1250aac8ba14bbfc136bc9e85a6c
   iPhoneBundleVersion: 1.0
   AndroidBundleVersionCode: 1
-  AndroidMinSdkVersion: 17
-  AndroidPreferredInstallLocation: 1
+  AndroidMinSdkVersion: 14
+  AndroidPreferredInstallLocation: 0
   aotOptions: 
   apiCompatibilityLevel: 2
   iPhoneStrippingLevel: 0

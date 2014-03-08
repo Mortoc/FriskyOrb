@@ -48,16 +48,16 @@ Material:
       data:
         first:
           name: _Vertex_color
-        second: {r: 0, g: 0, b: 0, a: 0}
+        second: {r: .485294104, g: .258659303, b: 0, a: 1}
       data:
         first:
           name: _rim_color
         second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
       data:
         first:
-          name: _Emission
-        second: {r: 1, g: 1, b: 1, a: 1}
-      data:
-        first:
           name: _DiffuseColor
         second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+      data:
+        first:
+          name: _Emission
+        second: {r: 1, g: 1, b: 1, a: 1}

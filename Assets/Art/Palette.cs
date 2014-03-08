@@ -12,6 +12,7 @@ public class Palette : MonoBehaviour
 	public Color Yellow;
 	public Color Green;
 	public Color Blue;
+	public Color Red;
 
 	void Awake()
 	{

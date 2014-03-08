@@ -61,6 +61,11 @@ public class LevelSegment : MonoBehaviour
 
     public PathSample GetPathSample(float t)
     {
+        if (t > 1.0f && Next)
+            return Next.GetPathSample(t - 1.0f);
+        else if (t < 0.0f && Previous)
+            return Previous.GetPathSample(t + 1.0f);
+
         Vector3 pathPnt = transform.InverseTransformPoint(Path.GetPoint(t));
         Vector3 pathNorm = Path.GetNormal(t);
 
@@ -376,36 +381,11 @@ public class LevelSegment : MonoBehaviour
 
         Level.NewSegmentReached();
 
-        Scheduler.Run(new YieldForSeconds(1.0f), () =>
+        Scheduler.Run(new YieldForSeconds(10.0f), () =>
         {
             Level.SegmentDestroyed();
             GameObject.Destroy(gameObject);
         });
-    }
-
-    public void FadeIn()
-    {
-        Scheduler.Run(FadeInCoroutine());
-    }
-
-    private float _fadeInTime = 2.0f;
-    private IEnumerator<IYieldInstruction> FadeInCoroutine()
-    {
-        var mainMaterial = renderer.material;
-        Color targetColor = mainMaterial.GetColor("_Color");
-        Color targetGlowColor = mainMaterial.GetColor("_GlowColor");
-
-        float recprTime = 1.0f / _fadeInTime;
-        for (float t = 0.0f; t < _fadeInTime; t += Time.deltaTime)
-        {
-            float lerpT = t * recprTime;
-            mainMaterial.SetColor("_Color", Color.Lerp(Color.black, targetColor, lerpT));
-            mainMaterial.SetColor("_GlowColor", Color.Lerp(Color.black, targetGlowColor, lerpT));
-            yield return Yield.UntilNextFrame;
-        }
-
-        mainMaterial.SetColor("_Color", targetColor);
-        mainMaterial.SetColor("_GlowColor", targetGlowColor);
     }
 
     void OnDrawGizmos()

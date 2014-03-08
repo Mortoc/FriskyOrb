@@ -7,10 +7,10 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Level
-  m_Shader: {fileID: 4800000, guid: c11e4baa7e3444bfc834ac5f9152fa93, type: 3}
+  m_Shader: {fileID: 4800000, guid: 7d7376f741cc340cbb78d370d39a80d3, type: 3}
   m_ShaderKeywords:
-  - GLOW11_GLOW_MAINTEX
   - GLOW11_MULTIPLY_GLOWCOLOR
+  - GLOW11_GLOW_MAINTEX
   m_CustomRenderQueue: -1
   m_SavedProperties:
     serializedVersion: 2
@@ -19,14 +19,14 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 2800000, guid: 0f6377872e339455d9912675771556d1, type: 3}
+          m_Texture: {fileID: 2800000, guid: a4bb9240f1d233449b1bd69a989d6997, type: 3}
           m_Scale: {x: 1, y: 5}
           m_Offset: {x: 0, y: 0}
       data:
         first:
           name: _BumpMap
         second:
-          m_Texture: {fileID: 2800000, guid: 47d38cdabb516b64cb199cfd28162a2b, type: 3}
+          m_Texture: {fileID: 2800000, guid: 19245bf97cefb9c4394880b398eefe1c, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -55,7 +55,7 @@ Material:
           name: _GlowTex
         second:
           m_Texture: {fileID: 2800000, guid: 0f6377872e339455d9912675771556d1, type: 3}
-          m_Scale: {x: 1, y: 1}
+          m_Scale: {x: 1, y: 5}
           m_Offset: {x: 0, y: 0}
       data:
         first:
@@ -79,7 +79,7 @@ Material:
       data:
         first:
           name: _Shininess
-        second: .0372818038
+        second: .0370903164
       data:
         first:
           name: _rim_power
@@ -155,7 +155,7 @@ Material:
       data:
         first:
           name: _GlowStrength
-        second: .5
+        second: 4.19000006
       data:
         first:
           name: _EnvTimer
@@ -184,15 +184,23 @@ Material:
         first:
           name: _Rimpower
         second: 2
+      data:
+        first:
+          name: _FogStart
+        second: 0
+      data:
+        first:
+          name: _FogEnd
+        second: 5
     m_Colors:
       data:
         first:
           name: _Color
-        second: {r: 0, g: .188235298, b: .749019623, a: 1}
+        second: {r: 1, g: 1, b: 1, a: 1}
       data:
         first:
           name: _SpecColor
-        second: {r: .426470578, g: .426470578, b: .426470578, a: 1}
+        second: {r: 1, g: 1, b: 1, a: 1}
       data:
         first:
           name: _Vertex_color
@@ -216,7 +224,7 @@ Material:
       data:
         first:
           name: _ReflectColor
-        second: {r: .404411793, g: .404411793, b: .404411793, a: 1}
+        second: {r: .0459795967, g: .0248702429, b: .16911763, a: 0}
       data:
         first:
           name: _paintColor2
@@ -233,3 +241,15 @@ Material:
         first:
           name: _GlowColor
         second: {r: 0, g: .188235298, b: .749019623, a: 1}
+      data:
+        first:
+          name: _FogColor
+        second: {r: 0, g: 0, b: 0, a: 1}
+      data:
+        first:
+          name: _RimColor
+        second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _EmisColor
+        second: {r: .200000003, g: .200000003, b: .200000003, a: 0}

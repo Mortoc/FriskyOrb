@@ -31,7 +31,12 @@ public class SmoothedVector
 		}
 	}
 
-	public Vector3 GetSmoothedPosition()
+    public bool HasSamples
+    {
+        get { return _samples.Count > 0; }
+    }
+
+	public Vector3 GetSmoothedVector()
 	{
 		float recpCount = 1.0f / (float)_samples.Count;
 		Vector3 avg = Vector3.zero;

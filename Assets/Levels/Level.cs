@@ -27,11 +27,18 @@ public class Level : MonoBehaviour
         public float MaxDoodadDifficulty = 1.0f;
         public float MaxDifficulty = 1.0f;
 
+        public float ChanceOfPowerupString = 0.25f;
+        public float PowerupStringAvgLength = 4.0f;
+        public float PowerupStringLengthJitter = 1.0f;
+
         public override string ToString()
         {
             return Name + " [StartSegment: " + StartSegment + "]";
         }
     }
+
+    [SerializeField]
+    private Powerup _powerupPrefab;
 
     [Serializable]
     private class Doodad
@@ -225,11 +232,8 @@ public class Level : MonoBehaviour
             previous = previous,
         };
         LevelSegment nextSegment = LevelSegment.Create(options);
-        
-        if (!initialSegments)
-            nextSegment.FadeIn();
 
-        PlaceDoodads(nextSegment, tweakables, profile);
+        PlaceDoodads(nextSegment, tweakables, profile, thisSegmentLength);
         
         if (previous != null)
             previous.Next = nextSegment;
@@ -238,8 +242,43 @@ public class Level : MonoBehaviour
         return nextSegment;
     }
 
-    private void PlaceDoodads(LevelSegment segment, GeneratorVariables tweakables, SegmentProfile profile)
+    private void PlaceDoodads(LevelSegment segment, GeneratorVariables tweakables, SegmentProfile profile, float segmentGeneratedLength)
     {
+
+        // Create the Powerups
+        if (_rand.NextSingle() < tweakables.ChanceOfPowerupString)
+        {
+            float powerupHeight = 0.3f;
+            float spacingT = 1.25f;
+            float spacingThisSegmentT = spacingT / segmentGeneratedLength;
+            float jitter = tweakables.PowerupStringLengthJitter * Mathf.Lerp(-1.0f, 1.0f, _rand.NextSingle());
+            int powerupCount = Mathf.FloorToInt(tweakables.PowerupStringAvgLength + jitter);
+            float overallLengthT = (float)powerupCount * spacingThisSegmentT;
+
+            float startOffsetT = _rand.NextSingle();
+            float endOffsetT = startOffsetT + overallLengthT;
+
+            float offsetWidth = Mathf.Lerp(0.2f, 0.8f, _rand.NextSingle());
+            float step = 1.0f / powerupCount;
+            float lerpVal = 0.0f;
+
+            for (int i = 0; i < powerupCount; ++i)
+            {
+                float pathT = Mathf.Lerp(startOffsetT, endOffsetT, lerpVal);
+                if (pathT != Mathf.Clamp01(pathT))
+                    break;
+
+                var pathSample = segment.GetPathSample(pathT);
+                
+                lerpVal += step;
+
+                var powerupPosition = Vector3.Lerp(pathSample.Left, pathSample.Right, offsetWidth) + Vector3.up * powerupHeight;
+                var powerup = (Powerup)Instantiate(_powerupPrefab);
+                powerup.transform.parent = segment.transform;
+                powerup.transform.localPosition = powerupPosition;
+            }
+        }
+
         // No doodads? Good, we're done here...
         if (!profile.AllowsDoodads)
             return;
@@ -270,13 +309,22 @@ public class Level : MonoBehaviour
             LevelSegment.PathSample pathSample = segment.GetPathSample(doodadT);
             if (pathSample.HasSurface)
             {
+                bool segmentColliderWasEnabled = segment.collider.enabled;
                 Vector3 doodadPosition = Vector3.Lerp(pathSample.Left, pathSample.Right, Mathf.Lerp(0.2f, 0.8f, _rand.NextSingle()));
-                GameObject doodadObj = Instantiate(doodad.Prefab) as GameObject;
-                doodadObj.transform.parent = segment.transform;
-                doodadObj.transform.localPosition = doodadPosition;
+                RaycastHit rh;
+                Ray ray = new Ray(segment.transform.TransformPoint(doodadPosition) + Vector3.up, Vector3.down * 2.0f);
+                segment.collider.enabled = true;
+                if (Physics.Raycast(ray, out rh, 2.0f))
+                {
+                    GameObject doodadObj = Instantiate(doodad.Prefab) as GameObject;
+                    doodadObj.transform.parent = segment.transform;
+                    doodadObj.transform.localPosition = doodadPosition;
+                    doodadObj.transform.up = rh.normal;
 
-                foreach (var doodadRigidbody in doodadObj.GetComponentsInChildren<Rigidbody>())
-                    doodadRigidbody.Sleep();
+                    foreach (var doodadRigidbody in doodadObj.GetComponentsInChildren<Rigidbody>())
+                        doodadRigidbody.Sleep();
+                }
+                segment.collider.enabled = segmentColliderWasEnabled;
             }
         }
     }
