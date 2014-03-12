@@ -71,7 +71,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dde9cc75d222b954cb3be6c8ac198e89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spinRate: 120
+  _collectAnimateTime: 1
+  _collectAnimationRandomOffsetAmount: .5
+  _spinRate: 200
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83,6 +85,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dde9cc75d222b954cb3be6c8ac198e89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _collectAnimateTime: 1
+  _collectAnimationRandomOffsetAmount: 1
   _spinRate: 360
 --- !u!135 &13500000
 SphereCollider:

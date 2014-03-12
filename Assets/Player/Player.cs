@@ -73,13 +73,27 @@ public class Player : MonoBehaviour
     private JumpAction _jumpAction;
 
 
+    [SerializeField]
+    private float _powerupsUntilFull = 100.0f;
+    private float _currentPowerups = 0.0f;
     public void CollectedPowerup()
     {
+        _currentPowerups += 1.0f;
+    }
 
+    public float PowerupPercent
+    {
+        get
+        {
+            var result = Mathf.Clamp01(_currentPowerups / _powerupsUntilFull);
+            Debug.Log("Powerup:  " + result.ToString("f2"));
+            return result;
+        }
     }
 
     void Start()
     {
+        GameObject.FindObjectOfType<LevelGui>().Player = this;
         _groundMask = 1 << LayerMask.NameToLayer("Level");
         _jumpAction = new JumpAction(this);
         rigidbody.useConeFriction = true;

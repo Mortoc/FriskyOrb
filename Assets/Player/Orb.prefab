@@ -5269,6 +5269,7 @@ MonoBehaviour:
   _fallToDeathThreshold: 3
   JumpFX: {fileID: 11400002}
   DeathFX: {fileID: 11400004}
+  _powerupsUntilFull: 100
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

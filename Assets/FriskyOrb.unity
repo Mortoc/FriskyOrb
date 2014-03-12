@@ -775,7 +775,7 @@ MonoBehaviour:
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
-  _viewDistance: 10
+  _viewDistance: 16
   _levelTrackMaterial: {fileID: 2100000, guid: d96e93e390971a44f970aadc824ba8da, type: 2}
   _playerPrefab: {fileID: 11400000, guid: 6a07642956a95ff49bf45ba2da1205a3, type: 2}
 --- !u!114 &1014443284
