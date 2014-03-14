@@ -5,5 +5,5 @@ public interface IPlayerAction
 {
 	// Attempt to perform the action on the player
 	// and return whether it was performed.
-	bool PerformAction();
+	void PerformAction();
 }

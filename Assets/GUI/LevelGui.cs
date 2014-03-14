@@ -7,7 +7,7 @@ public class LevelGui : MonoBehaviour
     public GUISkin _skin;
     public Player Player { get; set; }
     
-    void Start)(
+    void Start()
     {
         _level = GetComponent<Level>();
 
@@ -23,7 +23,13 @@ public class LevelGui : MonoBehaviour
         GUILayout.Space(5.0f);
         if (GUILayout.Button("Reset", GUILayout.Width(Screen.width * .15f), GUILayout.Height(Screen.height * 0.075f)))
         {
-            Application.LoadLevel(0);
+
+            if (!PlayerPrefs.HasKey("best_score") || PlayerPrefs.GetInt("best_score") < _level.SegmentCompletedCount)
+            {
+                PlayerPrefs.SetInt("best_score", _level.SegmentCompletedCount);
+                PlayerPrefs.SetInt("best_score_level_seed", _level.Seed);
+            }
+            Application.LoadLevel("MainMenu");
         }
 
         GUILayout.FlexibleSpace();

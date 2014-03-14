@@ -40,7 +40,7 @@ public class JumpAction : IPlayerAction
         }
     }
 
-    public bool PerformAction()
+    public void PerformAction()
     {
         // Have we done all the jumps available
         // before landing again?
@@ -67,9 +67,7 @@ public class JumpAction : IPlayerAction
             {
                 SteerDuringJump();
             }
-            return true;
         }
-        return false;
     }
 
     private void ApplyJump()

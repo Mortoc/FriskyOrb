@@ -83,12 +83,7 @@ public class Player : MonoBehaviour
 
     public float PowerupPercent
     {
-        get
-        {
-            var result = Mathf.Clamp01(_currentPowerups / _powerupsUntilFull);
-            Debug.Log("Powerup:  " + result.ToString("f2"));
-            return result;
-        }
+        get { return Mathf.Clamp01(_currentPowerups / _powerupsUntilFull); }
     }
 
     void Start()
@@ -97,13 +92,8 @@ public class Player : MonoBehaviour
         _groundMask = 1 << LayerMask.NameToLayer("Level");
         _jumpAction = new JumpAction(this);
         rigidbody.useConeFriction = true;
-        InputHandler.OnAction += () =>
-        {
-            //if (CurrentAction != null)
-            //    CurrentAction.PerformAction();
-            _jumpAction.PerformAction();
-        };
-
+        InputHandler.OnAction += _jumpAction.PerformAction;
+        
         _groundEffectParticles.transform.parent = null;
         _initialGroundParticleOffset = transform.position - _groundEffectParticles.transform.position;
     }
@@ -134,7 +124,6 @@ public class Player : MonoBehaviour
             {
                 pointOnSegment = CurrentSegment.Path.GetPoint(approxT);
             }
-
 
             if( pointOnSegment.y > rigidbody.position.y + _fallToDeathThreshold)
             {

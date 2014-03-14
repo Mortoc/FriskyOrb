@@ -75,6 +75,10 @@ public class Level : MonoBehaviour
 
     private int _segmentNumber = 0;
     private int _seed = 2;
+    public int Seed
+    {
+        get { return _seed; }
+    }
     private MersenneTwister _rand;
 
     private LevelSegment _lastSegment;
@@ -120,7 +124,7 @@ public class Level : MonoBehaviour
         SegmentCompletedCount = 1;
     }
 
-    public uint SegmentCompletedCount { get; private set; }
+    public int SegmentCompletedCount { get; private set; }
     // Called when a segment cleans itself up after the user has passed it
     public void SegmentDestroyed()
     {
