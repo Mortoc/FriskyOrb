@@ -9,8 +9,6 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _steerSpeed = 100.0f;
     [SerializeField]
-    private float _hillClimbAssist = 0.5f;
-    [SerializeField]
     private float _counterSteerAccel = -0.1f;
     [SerializeField]
     private ParticleSystem _groundEffectParticles = null;
@@ -72,6 +70,7 @@ public class Player : MonoBehaviour
     }
     private JumpAction _jumpAction;
 
+    private float _startingGravity = 0.0f;
 
     [SerializeField]
     private float _powerupsUntilFull = 100.0f;
@@ -86,8 +85,12 @@ public class Player : MonoBehaviour
         get { return Mathf.Clamp01(_currentPowerups / _powerupsUntilFull); }
     }
 
+    private Level _level;
+
     void Start()
     {
+        _level = (Level)GameObject.FindObjectOfType<Level>();
+        _startingGravity = Physics.gravity.magnitude;
         GameObject.FindObjectOfType<LevelGui>().Player = this;
         _groundMask = 1 << LayerMask.NameToLayer("Level");
         _jumpAction = new JumpAction(this);
@@ -139,6 +142,15 @@ public class Player : MonoBehaviour
         DeathFX.transform.parent = null;
         DeathFX.PerformFX();
         Destroy(gameObject);
+
+
+        if (!PlayerPrefs.HasKey("best_score") || PlayerPrefs.GetInt("best_score") < _level.SegmentCompletedCount)
+        {
+            PlayerPrefs.SetInt("best_score", _level.SegmentCompletedCount);
+            PlayerPrefs.SetInt("best_score_level_seed", _level.Seed);
+        }
+
+        _level.GetComponent<EndOfLevelGui>().enabled = true;
     }
 
     private void RollForward()
@@ -149,9 +161,7 @@ public class Player : MonoBehaviour
         float steerAmount = Mathf.Abs(InputHandler.SteeringAmount());
         float counterAccel = Mathf.Lerp(0.0f, _counterSteerAccel, steerAmount); // reduce accleration while turning hard
 
-        float hillFactor = 1.0f + ((1.0f - Vector3.Dot(_heading, HeadingOverGroundSlope())) * _hillClimbAssist);
-
-        Vector3 accel = HeadingOverGroundSlope() * _acceleration * Time.fixedDeltaTime * hillFactor;
+        Vector3 accel = HeadingOverGroundSlope() * _acceleration * Time.fixedDeltaTime;
         rigidbody.AddForce(accel, ForceMode.Acceleration);
         rigidbody.AddForce(accel * counterAccel, ForceMode.Impulse);    
     }
@@ -197,6 +207,8 @@ public class Player : MonoBehaviour
 
             Quaternion slopeRotation = Quaternion.AngleAxis(cosTheta * 90.0f, Vector3.Cross(Vector3.up, headingFlat));
             _headingSloped = slopeRotation * _heading;
+
+            Physics.gravity = avgNormal * _startingGravity * -1.0f;
         }
         else
         {

@@ -20,18 +20,7 @@ public class LevelGui : MonoBehaviour
         GUILayout.BeginArea(new Rect(0.0f, 0.0f, Screen.width, Screen.height));
         GUILayout.Space(5.0f);
         GUILayout.BeginHorizontal();
-        GUILayout.Space(5.0f);
-        if (GUILayout.Button("Reset", GUILayout.Width(Screen.width * .15f), GUILayout.Height(Screen.height * 0.075f)))
-        {
-
-            if (!PlayerPrefs.HasKey("best_score") || PlayerPrefs.GetInt("best_score") < _level.SegmentCompletedCount)
-            {
-                PlayerPrefs.SetInt("best_score", _level.SegmentCompletedCount);
-                PlayerPrefs.SetInt("best_score_level_seed", _level.Seed);
-            }
-            Application.LoadLevel("MainMenu");
-        }
-
+       
         GUILayout.FlexibleSpace();
 
         GUILayout.Label("Score: " + _level.SegmentCompletedCount, GUILayout.Width(Screen.width * .15f), GUILayout.Height(Screen.height * 0.075f));

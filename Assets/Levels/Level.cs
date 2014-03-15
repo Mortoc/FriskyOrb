@@ -85,7 +85,11 @@ public class Level : MonoBehaviour
 
     void Awake()
     {
-        _seed = Mathf.FloorToInt(UnityEngine.Random.value * 1000000.0f);
+        if (PlayerPrefs.HasKey("next_level_seed"))
+            _seed = PlayerPrefs.GetInt("next_level_seed");
+        else
+            _seed = UnityEngine.Random.Range(-10000, 10000);
+
         // Generate Level
         _rand = new MersenneTwister(_seed);
 

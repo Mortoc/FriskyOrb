@@ -388,6 +388,7 @@ GameObject:
   - 114: {fileID: 1014443283}
   - 114: {fileID: 1014443284}
   - 114: {fileID: 1014443285}
+  - 114: {fileID: 1014443286}
   m_Layer: 8
   m_Name: Level
   m_TagString: Untagged
@@ -497,9 +498,9 @@ MonoBehaviour:
     PowerupStringLengthJitter: 2
   - Name: Gettin Harder
     StartSegment: 50
-    ApproxSegmentLength: 20
-    SegmentLengthJitter: 10
-    Curviness: 15
+    ApproxSegmentLength: 25
+    SegmentLengthJitter: 12
+    Curviness: 10
     MaxHeightDifference: 5
     ChanceOfDoodad: 0
     MaxDoodadDifficulty: 0
@@ -809,6 +810,18 @@ MonoBehaviour:
   Green: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
   Blue: {r: 0, g: .188235298, b: .749019623, a: 1}
   Red: {r: 1, g: 0, b: .258823544, a: 1}
+--- !u!114 &1014443286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1014443281}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8538d230f3568994fac1076e9bdf6905, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _skin: {fileID: 11400000, guid: 2d831c5a0b6294b439ddbd36bade89ae, type: 2}
 --- !u!1 &2056844206
 GameObject:
   m_ObjectHideFlags: 0
