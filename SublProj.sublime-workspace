@@ -1,0 +1,294 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "Assets/Player/Player.cs",
+			"settings":
+			{
+				"buffer_size": 6930,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 242.0,
+		"selected_items":
+		[
+			[
+				"markdown",
+				"Markdown Preview: Python Markdown: Preview in Browser"
+			],
+			[
+				"syntax ruby",
+				"Set Syntax: Ruby"
+			],
+			[
+				"Package Insta",
+				"Package Control: Install Package"
+			],
+			[
+				"Markdown",
+				"Markdown Preview: Python Markdown: Preview in Browser"
+			],
+			[
+				"Markdown Preview",
+				"Markdown Preview: Python Markdown: Preview in Browser"
+			],
+			[
+				"Package ins",
+				"Package Control: Install Package"
+			],
+			[
+				"syntax json",
+				"Set Syntax: JSON"
+			],
+			[
+				"Package install",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 576.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/Morto_000/Documents/Projects/FriskyOrb/Assets/Player.meta",
+		"/C/Users/Morto_000/Documents/Projects/Crisply/crisply/log/development.log",
+		"/C/Users/Morto_000/Documents/scripts/vagrant-connect.bat",
+		"/C/Users/Morto_000/Desktop/vagrant-connect.bat",
+		"/C/Users/Morto_000/Documents/Projects/Crisply/crisply/id_rsa.pub",
+		"/C/Users/Morto_000/Documents/Projects/Crisply/crisply/config/locales/en.yml",
+		"/C/Users/Morto_000/.ssh/id_rsa.pub",
+		"/C/Users/Morto_000/.ssh/github_rsa.pub",
+		"/C/Users/Morto_000/.ssh/github_rsa",
+		"/C/Windows/System32/drivers/etc/hosts",
+		"/C/Users/Morto_000/Desktop/hosts",
+		"/C/Users/Morto_000/Documents/Projects/Crisply/vagrant_chef_solo/Vagrantfile",
+		"/C/Users/Morto_000/Documents/Projects/Crisply/vagrant_chef_solo/README.md",
+		"/C/Users/Morto_000/Documents/Projects/Crisply/crisply/Vagrantfile",
+		"/C/Users/Morto_000/Documents/Projects/Crisply/vagrant_chef_solo/utils/Vagrantfile",
+		"/C/Users/Morto_000/Documents/Projects/Crisply/vagrant_chef_solo/.gitignore",
+		"/C/Users/Morto_000/Documents/Projects/Crisply/vagrant_chef_solo/id_rsa.pub",
+		"/C/Users/Morto_000/Documents/Projects/Crisply/vagrant_chef_solo/data_bags/users/chris.json",
+		"/C/Users/Morto_000/Desktop/GitHub.appref-ms",
+		"/C/Users/Morto_000/Documents/Projects/bubble_app/lib/tasks/pull_activity_test_data.rake",
+		"/C/Users/Morto_000/Documents/Projects/bubble_app/app/jobs/bubble_app/v3/periodic_update_job.rb",
+		"/C/Users/Morto_000/Documents/Projects/bubble_app/lib/parse_paper_trail.rb",
+		"/C/Users/Morto_000/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/Morto_000/AppData/Roaming/Sublime Text 3/Packages/Default/Default (Windows).sublime-keymap",
+		"/C/Users/Morto_000/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings"
+	],
+	"find":
+	{
+		"height": 22.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"ad74f1f8c0a3eea7f5053825bcdec68f",
+			"grabber",
+			"Create your Crisply Account",
+			".101",
+			"56.101",
+			"joshdev",
+			"HOST_NFS_PATH",
+			"ruby",
+			"CRISPY_APP_PORT",
+			"ctrl+p"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			".100",
+			"56.1",
+			"mortocdev",
+			"mortocdeb"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "Assets/Player/Player.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6930,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								110,
+								110
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C#/C#.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 22.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.5,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.git":
+	{
+		"height": 417.0
+	},
+	"project": "SublProj.sublime-project",
+	"replace":
+	{
+		"height": 40.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"player",
+				"Player\\Player.cs"
+			],
+			[
+				"gem",
+				"Gemfile"
+			],
+			[
+				"pull_ac",
+				"lib\\tasks\\pull_activity_test_data.rake"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 273.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

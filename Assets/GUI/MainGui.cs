@@ -34,7 +34,7 @@ public class MainGui : MonoBehaviour
         GUILayout.Space(10.0f);
         GUILayout.BeginHorizontal();
         GUILayout.Space(10.0f);
-        GUILayout.Label("FriskyFuckingOrb", _skin.FindStyle("Header"));
+        GUILayout.Label("FriskyOrb", _skin.FindStyle("Header"));
         GUILayout.FlexibleSpace();
 
         GUILayout.FlexibleSpace();

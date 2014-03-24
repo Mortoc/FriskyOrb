@@ -33,15 +33,20 @@ half _Shininess;
 struct Input {
 	float2 uv_MainTex;
 	fixed4 color : COLOR;
+	float3 viewDir;
 };
 
 void surf (Input IN, inout SurfaceOutput o) {
+
+	float3 fresnelBasis = float3(0,0,1);
+	float fresnel = 1.0 - dot(IN.viewDir, fresnelBasis);
+
 	fixed4 tex = tex2D(_MainTex, IN.uv_MainTex);
-	o.Albedo = tex.rgb;
-	o.Gloss = tex.a;
+	o.Albedo = tex.rgb * fresnel;
+	o.Gloss = tex.a * fresnel;
 	o.Alpha = tex.a;
 	o.Specular = _Shininess;
-	o.Emission = IN.color;
+	o.Emission = IN.color * fresnel;
 }
 ENDCG
 }

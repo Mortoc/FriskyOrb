@@ -7,7 +7,14 @@ public class PCInputHandler : InputHandler
 	void Update()
 	{
 		if( Input.GetKeyDown(KeyCode.Space) )
-			ExecuteAction();
+        {
+            ExecuteAction();
+        }
+		
+        if( Input.GetMouseButtonDown(0) )
+        {
+            ExecuteTouchAt(Input.mousePosition);
+        }
 	}
 
 	#region implemented abstract members of InputHandler
@@ -16,4 +23,5 @@ public class PCInputHandler : InputHandler
 		return Input.GetAxis("Steering");
 	}
 	#endregion
+
 }

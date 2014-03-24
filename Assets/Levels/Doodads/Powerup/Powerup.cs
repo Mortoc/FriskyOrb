@@ -58,7 +58,7 @@ public class Powerup : MonoBehaviour
             yield return 0;
         }
 
-        player.CollectedPowerup();
+        GameObject.FindObjectOfType<PowerupBar>().CollectedPowerup();
         GameObject.Destroy(this.gameObject);
     }
 }

@@ -8,6 +8,11 @@ public class ExplodeyBarrell : MonoBehaviour
     [SerializeField]
     private GameObject _explodeFX;
 
+    void Start()
+    {
+        rigidbody.Sleep();
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Player"))

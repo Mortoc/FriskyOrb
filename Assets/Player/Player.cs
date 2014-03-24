@@ -17,8 +17,13 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _fallToDeathThreshold = 10.0f;
 
+    [SerializeField]
+    private Transform _blackHoleSphere;
+    private float _blackHoleSphereOffset;
+
     public FX JumpFX;
     public FX DeathFX;
+    public FX PowerupFX;
 
     public Level Level { get; set; }
     public LevelSegment CurrentSegment { get; set; }
@@ -72,19 +77,6 @@ public class Player : MonoBehaviour
 
     private float _startingGravity = 0.0f;
 
-    [SerializeField]
-    private float _powerupsUntilFull = 100.0f;
-    private float _currentPowerups = 0.0f;
-    public void CollectedPowerup()
-    {
-        _currentPowerups += 1.0f;
-    }
-
-    public float PowerupPercent
-    {
-        get { return Mathf.Clamp01(_currentPowerups / _powerupsUntilFull); }
-    }
-
     private Level _level;
 
     void Start()
@@ -99,6 +91,15 @@ public class Player : MonoBehaviour
         
         _groundEffectParticles.transform.parent = null;
         _initialGroundParticleOffset = transform.position - _groundEffectParticles.transform.position;
+
+        
+        _blackHoleSphereOffset = (_blackHoleSphere.position - transform.position).magnitude;
+    }
+
+    void Update()
+    {
+        Vector3 playerToCameraDir = (Camera.main.transform.position - transform.position).normalized;
+        _blackHoleSphere.position = transform.position + _blackHoleSphereOffset * playerToCameraDir;
     }
 
     void FixedUpdate()
@@ -118,7 +119,7 @@ public class Player : MonoBehaviour
             {
                 float tOnNext = CurrentSegment.Next.Path.GetApproxT(rigidbody.position);
                 pointOnSegment = CurrentSegment.Next.Path.GetPoint(tOnNext);
-
+                
                 LevelSegment oldSegment = CurrentSegment;
                 CurrentSegment = CurrentSegment.Next;
                 oldSegment.IsNoLongerCurrent();
@@ -142,7 +143,6 @@ public class Player : MonoBehaviour
         DeathFX.transform.parent = null;
         DeathFX.PerformFX();
         Destroy(gameObject);
-
 
         if (!PlayerPrefs.HasKey("best_score") || PlayerPrefs.GetInt("best_score") < _level.SegmentCompletedCount)
         {

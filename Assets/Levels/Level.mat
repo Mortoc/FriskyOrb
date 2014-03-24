@@ -155,7 +155,7 @@ Material:
       data:
         first:
           name: _GlowStrength
-        second: 4.19000006
+        second: .25
       data:
         first:
           name: _EnvTimer

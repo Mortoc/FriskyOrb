@@ -50,7 +50,7 @@ GameObject:
   - 4: {fileID: 400004}
   - 198: {fileID: 19800002}
   - 199: {fileID: 19900002}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GroundEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,7 +69,7 @@ GameObject:
   - 23: {fileID: 2300020}
   - 54: {fileID: 5400106}
   - 65: {fileID: 6500104}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment96
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - 23: {fileID: 2300022}
   - 54: {fileID: 5400108}
   - 65: {fileID: 6500106}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment95
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ GameObject:
   - 23: {fileID: 2300024}
   - 54: {fileID: 5400022}
   - 65: {fileID: 6500020}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment85
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ GameObject:
   - 23: {fileID: 2300026}
   - 54: {fileID: 5400024}
   - 65: {fileID: 6500022}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment84
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145,7 +145,7 @@ GameObject:
   - 23: {fileID: 2300028}
   - 54: {fileID: 5400002}
   - 65: {fileID: 6500000}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment83
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,7 +164,7 @@ GameObject:
   - 23: {fileID: 2300030}
   - 54: {fileID: 5400004}
   - 65: {fileID: 6500002}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment82
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   - 23: {fileID: 2300032}
   - 54: {fileID: 5400006}
   - 65: {fileID: 6500004}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment81
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -202,7 +202,7 @@ GameObject:
   - 23: {fileID: 2300034}
   - 54: {fileID: 5400008}
   - 65: {fileID: 6500006}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment80
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -221,7 +221,7 @@ GameObject:
   - 23: {fileID: 2300036}
   - 54: {fileID: 5400010}
   - 65: {fileID: 6500008}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment78
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -240,7 +240,7 @@ GameObject:
   - 23: {fileID: 2300038}
   - 54: {fileID: 5400012}
   - 65: {fileID: 6500010}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment77
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -259,7 +259,7 @@ GameObject:
   - 23: {fileID: 2300040}
   - 54: {fileID: 5400014}
   - 65: {fileID: 6500012}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment76
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -278,7 +278,7 @@ GameObject:
   - 23: {fileID: 2300042}
   - 54: {fileID: 5400016}
   - 65: {fileID: 6500014}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment73
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -297,7 +297,7 @@ GameObject:
   - 23: {fileID: 2300044}
   - 54: {fileID: 5400018}
   - 65: {fileID: 6500016}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment67
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -316,7 +316,7 @@ GameObject:
   - 23: {fileID: 2300046}
   - 54: {fileID: 5400020}
   - 65: {fileID: 6500018}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment66
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -335,7 +335,7 @@ GameObject:
   - 23: {fileID: 2300048}
   - 54: {fileID: 5400052}
   - 65: {fileID: 6500050}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment53
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -354,7 +354,7 @@ GameObject:
   - 23: {fileID: 2300050}
   - 54: {fileID: 5400026}
   - 65: {fileID: 6500024}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment52
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -373,7 +373,7 @@ GameObject:
   - 23: {fileID: 2300052}
   - 54: {fileID: 5400028}
   - 65: {fileID: 6500026}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment51
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -392,7 +392,7 @@ GameObject:
   - 23: {fileID: 2300054}
   - 54: {fileID: 5400030}
   - 65: {fileID: 6500028}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment50
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -411,7 +411,7 @@ GameObject:
   - 23: {fileID: 2300056}
   - 54: {fileID: 5400032}
   - 65: {fileID: 6500030}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment48
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -430,7 +430,7 @@ GameObject:
   - 23: {fileID: 2300058}
   - 54: {fileID: 5400034}
   - 65: {fileID: 6500032}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment47
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -449,7 +449,7 @@ GameObject:
   - 23: {fileID: 2300060}
   - 54: {fileID: 5400036}
   - 65: {fileID: 6500034}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment42
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -468,7 +468,7 @@ GameObject:
   - 23: {fileID: 2300062}
   - 54: {fileID: 5400038}
   - 65: {fileID: 6500036}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment41
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -487,7 +487,7 @@ GameObject:
   - 23: {fileID: 2300064}
   - 54: {fileID: 5400040}
   - 65: {fileID: 6500038}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment40
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -506,7 +506,7 @@ GameObject:
   - 23: {fileID: 2300066}
   - 54: {fileID: 5400042}
   - 65: {fileID: 6500040}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment39
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -525,7 +525,7 @@ GameObject:
   - 23: {fileID: 2300068}
   - 54: {fileID: 5400044}
   - 65: {fileID: 6500042}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment38
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -544,7 +544,7 @@ GameObject:
   - 23: {fileID: 2300070}
   - 54: {fileID: 5400046}
   - 65: {fileID: 6500044}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment37
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -563,7 +563,7 @@ GameObject:
   - 23: {fileID: 2300072}
   - 54: {fileID: 5400048}
   - 65: {fileID: 6500046}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment35
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -582,7 +582,7 @@ GameObject:
   - 23: {fileID: 2300074}
   - 54: {fileID: 5400050}
   - 65: {fileID: 6500048}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment34
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -601,7 +601,7 @@ GameObject:
   - 23: {fileID: 2300076}
   - 54: {fileID: 5400054}
   - 65: {fileID: 6500052}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment31
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -620,7 +620,7 @@ GameObject:
   - 23: {fileID: 2300078}
   - 54: {fileID: 5400056}
   - 65: {fileID: 6500054}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment25
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -639,7 +639,7 @@ GameObject:
   - 23: {fileID: 2300080}
   - 54: {fileID: 5400058}
   - 65: {fileID: 6500056}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment24
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -658,7 +658,7 @@ GameObject:
   - 23: {fileID: 2300082}
   - 54: {fileID: 5400060}
   - 65: {fileID: 6500058}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment22
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -677,7 +677,7 @@ GameObject:
   - 23: {fileID: 2300084}
   - 54: {fileID: 5400062}
   - 65: {fileID: 6500060}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment21
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -696,7 +696,7 @@ GameObject:
   - 23: {fileID: 2300086}
   - 54: {fileID: 5400064}
   - 65: {fileID: 6500062}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment20
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -715,7 +715,7 @@ GameObject:
   - 23: {fileID: 2300088}
   - 54: {fileID: 5400066}
   - 65: {fileID: 6500064}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment19
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -734,7 +734,7 @@ GameObject:
   - 23: {fileID: 2300090}
   - 54: {fileID: 5400082}
   - 65: {fileID: 6500080}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment18
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -753,7 +753,7 @@ GameObject:
   - 23: {fileID: 2300092}
   - 54: {fileID: 5400068}
   - 65: {fileID: 6500066}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment17
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -772,7 +772,7 @@ GameObject:
   - 23: {fileID: 2300094}
   - 54: {fileID: 5400070}
   - 65: {fileID: 6500068}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -791,7 +791,7 @@ GameObject:
   - 23: {fileID: 2300096}
   - 54: {fileID: 5400072}
   - 65: {fileID: 6500070}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -810,7 +810,7 @@ GameObject:
   - 23: {fileID: 2300098}
   - 54: {fileID: 5400074}
   - 65: {fileID: 6500072}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -829,7 +829,7 @@ GameObject:
   - 23: {fileID: 2300100}
   - 54: {fileID: 5400076}
   - 65: {fileID: 6500074}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -848,7 +848,7 @@ GameObject:
   - 23: {fileID: 2300102}
   - 54: {fileID: 5400078}
   - 65: {fileID: 6500076}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -867,7 +867,7 @@ GameObject:
   - 23: {fileID: 2300002}
   - 54: {fileID: 5400080}
   - 65: {fileID: 6500078}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment110
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -886,7 +886,7 @@ GameObject:
   - 23: {fileID: 2300004}
   - 54: {fileID: 5400094}
   - 65: {fileID: 6500092}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment109
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -905,7 +905,7 @@ GameObject:
   - 23: {fileID: 2300006}
   - 54: {fileID: 5400084}
   - 65: {fileID: 6500082}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment108
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -924,7 +924,7 @@ GameObject:
   - 23: {fileID: 2300008}
   - 54: {fileID: 5400086}
   - 65: {fileID: 6500084}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment107
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -943,7 +943,7 @@ GameObject:
   - 23: {fileID: 2300010}
   - 54: {fileID: 5400088}
   - 65: {fileID: 6500086}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment106
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -962,7 +962,7 @@ GameObject:
   - 23: {fileID: 2300012}
   - 54: {fileID: 5400090}
   - 65: {fileID: 6500088}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment105
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -981,7 +981,7 @@ GameObject:
   - 23: {fileID: 2300014}
   - 54: {fileID: 5400092}
   - 65: {fileID: 6500090}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment104
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1000,7 +1000,7 @@ GameObject:
   - 23: {fileID: 2300016}
   - 54: {fileID: 5400096}
   - 65: {fileID: 6500094}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment102
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1019,7 +1019,7 @@ GameObject:
   - 23: {fileID: 2300018}
   - 54: {fileID: 5400098}
   - 65: {fileID: 6500096}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment101
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1038,7 +1038,7 @@ GameObject:
   - 23: {fileID: 2300104}
   - 54: {fileID: 5400100}
   - 65: {fileID: 6500098}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment07
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1057,7 +1057,7 @@ GameObject:
   - 23: {fileID: 2300106}
   - 54: {fileID: 5400102}
   - 65: {fileID: 6500100}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1076,7 +1076,7 @@ GameObject:
   - 23: {fileID: 2300108}
   - 54: {fileID: 5400104}
   - 65: {fileID: 6500102}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1095,7 +1095,7 @@ GameObject:
   - 23: {fileID: 2300110}
   - 54: {fileID: 5400110}
   - 65: {fileID: 6500108}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1114,7 +1114,7 @@ GameObject:
   - 23: {fileID: 2300112}
   - 54: {fileID: 5400112}
   - 65: {fileID: 6500110}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1133,7 +1133,7 @@ GameObject:
   - 23: {fileID: 2300114}
   - 54: {fileID: 5400114}
   - 65: {fileID: 6500112}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: OrbFragment01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1149,8 +1149,25 @@ GameObject:
   m_Component:
   - 4: {fileID: 400120}
   - 114: {fileID: 11400004}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: ExplodeEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &100122
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400122}
+  - 33: {fileID: 3300116}
+  - 23: {fileID: 2300116}
+  m_Layer: 9
+  m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1162,13 +1179,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 2}
+  m_LocalRotation: {x: .240905702, y: 0, z: 0, w: -.97054857}
+  m_LocalPosition: {x: -.569999993, y: 1.25999999, z: -7.76000023}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400002}
   - {fileID: 400004}
   - {fileID: 400120}
+  - {fileID: 400122}
   m_Father: {fileID: 0}
 --- !u!4 &400002
 Transform:
@@ -1886,6 +1904,17 @@ Transform:
   - {fileID: 400010}
   - {fileID: 400008}
   - {fileID: 400006}
+  m_Father: {fileID: 400000}
+--- !u!4 &400122
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100122}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: .0136373043, y: .015961362, z: -.0515560284}
+  m_LocalScale: {x: .533779383, y: .533779383, z: .533779383}
+  m_Children: []
   m_Father: {fileID: 400000}
 --- !u!23 &2300000
 Renderer:
@@ -3220,6 +3249,27 @@ Renderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
+--- !u!23 &2300116
+Renderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100122}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 2100000, guid: 29139e5f1be087e4b893bbcfbd5a375d, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &3300000
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -3626,6 +3676,13 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100118}
   m_Mesh: {fileID: 4300000, guid: a68949a685bbc514689bffa1c20e6f57, type: 3}
+--- !u!33 &3300116
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100122}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!54 &5400000
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -5263,13 +5320,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _acceleration: 1250
   _steerSpeed: 100
-  _hillClimbAssist: .5
   _counterSteerAccel: -.100000001
   _groundEffectParticles: {fileID: 19800002}
   _fallToDeathThreshold: 3
+  _blackHoleSphere: {fileID: 400122}
   JumpFX: {fileID: 11400002}
   DeathFX: {fileID: 11400004}
-  _powerupsUntilFull: 100
+  PowerupFX: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

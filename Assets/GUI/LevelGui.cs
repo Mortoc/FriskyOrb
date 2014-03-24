@@ -27,34 +27,6 @@ public class LevelGui : MonoBehaviour
         GUILayout.Space(5.0f);
         GUILayout.EndHorizontal();
         GUILayout.EndArea();
-
-        DrawPowerupBar();
     }
 
-    private void DrawPowerupBar()
-    {
-        float height = 0.25f;
-        float powerupPercent = Player.PowerupPercent;
-        GUILayout.BeginArea(new Rect(0.0f, 0.0f, Screen.width, Screen.height));
-        GUILayout.FlexibleSpace();
-        GUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
-
-        GUILayout.Label("", GUI.skin.GetStyle("Powerup Bar Background"), GUILayout.Width(Screen.width * 0.05f), GUILayout.Height(Screen.height * height));
-
-        GUILayout.EndHorizontal();
-        GUILayout.FlexibleSpace();
-        GUILayout.EndArea();
-
-        GUILayout.BeginArea(new Rect(0.0f, 0.0f, Screen.width, Screen.height));
-        GUILayout.FlexibleSpace();
-        GUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
-
-        GUILayout.Label("", GUI.skin.GetStyle("Powerup Bar"), GUILayout.Width(Screen.width * 0.05f), GUILayout.Height(Screen.height * height * powerupPercent));
-
-        GUILayout.EndHorizontal();
-        GUILayout.FlexibleSpace();
-        GUILayout.EndArea();
-    }
 }
