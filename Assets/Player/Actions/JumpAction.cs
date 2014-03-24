@@ -22,15 +22,20 @@ public class JumpAction : IPlayerAction
     private float _initialJumpTime = -1.0f;
     private bool _hasJumped = false;
 
+    private InputHandler _inputHandler;
+
     public JumpAction(Player player)
     {
         _player = player;
         _jumpEffect = _player.JumpFX;
         _availablejumpCount = _jumpCount;
         _playerDrag = player.rigidbody.drag;
+
+        _inputHandler = GameObject.FindObjectOfType<InputHandler>();
+        
     }
 
-    public void UserLanded()
+    public void PlayerLanded()
     {
         if (_hasJumped && Time.time - _ignoreLandedFilterTime > _initialJumpTime)
         {
@@ -49,7 +54,7 @@ public class JumpAction : IPlayerAction
         {
             // Cost another jump if the user wasn't grounded
             // when doing this jump
-            if (!_hasJumped && !_player.IsGrounded())
+            if (!_hasJumped && !_player.IsGrounded)
             {
                 //Debug.Log("Cost an extra jump cause we weren't grounded");
                 _availablejumpCount--;
@@ -88,7 +93,7 @@ public class JumpAction : IPlayerAction
 
     private void SteerDuringJump()
     {
-        float steerAmount = _player.InputHandler.SteeringAmount();
+        float steerAmount = _inputHandler.SteeringAmount();
         Quaternion steerRot = Quaternion.AngleAxis(steerAmount * 2.0f * Mathf.PI * Time.fixedDeltaTime, Vector3.up);
 
         Vector3 heading = _player.rigidbody.velocity;

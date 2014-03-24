@@ -4,14 +4,17 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour
 {
+    public event Action OnFixedUpdate;
+    public event Action OnGrounded;
+    public event Action OnUngrounded;
+
+    public event Action<Collision> CollisionEntered;
+    public event Action<Collision> CollisionExited;
+    public event Action<Collision> CollisionStay;
+
     [SerializeField]
-    private float _acceleration = 1250.0f;
-    [SerializeField]
-    private float _steerSpeed = 100.0f;
-    [SerializeField]
-    private float _counterSteerAccel = -0.1f;
-    [SerializeField]
-    private ParticleSystem _groundEffectParticles = null;
+    private ParticleSystem _groundEffectParticles;
+
     private Vector3 _initialGroundParticleOffset;
 
     [SerializeField]
@@ -25,14 +28,68 @@ public class Player : MonoBehaviour
     public FX DeathFX;
     public FX PowerupFX;
 
-    public Level Level { get; set; }
+    public Level Level { get; private set; }
     public LevelSegment CurrentSegment { get; set; }
-    public InputHandler InputHandler { get; set; }
 
-    public IPlayerAction CurrentAction { get; set; }
+    private IPlayerController _controller;
+    public IPlayerController Controller 
+    { 
+        get { return _controller; }
+        set 
+        {
+            if( _controller != null ) 
+                _controller.Disable();
+            
+            _controller = value;
+            _controller.Enable();
+        } 
+    }
 
     private Vector3 _headingSloped = Vector3.zero;
     private int _groundMask;
+
+    public bool IsGrounded { get; private set; }
+
+    private void UpdateIsGrounded()
+    {
+        bool grounded = Physics.Raycast(rigidbody.position, Vector3.down, ((SphereCollider)collider).radius, _groundMask);
+
+        if (grounded && !IsGrounded)
+            OnGrounded();
+        else if (!grounded && IsGrounded)
+            OnUngrounded();
+
+        IsGrounded = grounded;
+    }
+
+    public Vector3 HeadingOverGroundSlope()
+    {
+        return _headingSloped;
+    }
+
+    public Vector3 Heading { get; set; }
+
+    private float _startingGravity = 0.0f;
+
+    void Start()
+    {
+        Heading = Vector3.forward;
+        OnFixedUpdate += UpdateIsGrounded;
+        Controller = new PlayerMovementController(this);
+
+        OnGrounded += BecameGrounded;
+        OnUngrounded += BecameUngrounded;
+
+        Level = GameObject.FindObjectOfType<Level>();
+        _startingGravity = Physics.gravity.magnitude;
+        _groundMask = 1 << LayerMask.NameToLayer("Level");
+        
+        _initialGroundParticleOffset = transform.position - _groundEffectParticles.transform.position;
+
+        _blackHoleSphereOffset = (_blackHoleSphere.position - transform.position).magnitude;
+
+        GameObject.FindObjectOfType<LevelGui>().Player = this;
+    }
 
     private void BecameGrounded()
     {
@@ -44,58 +101,6 @@ public class Player : MonoBehaviour
         _groundEffectParticles.enableEmission = false;
     }
 
-    private int _frameForGrounded = -1;
-    private bool _isGrounded = false;
-    public bool IsGrounded()
-    {
-        if (Time.frameCount > _frameForGrounded)
-        {
-            bool grounded = Physics.Raycast(rigidbody.position, Vector3.down, ((SphereCollider)collider).radius, _groundMask);
-
-            if (grounded && !_isGrounded)
-                BecameGrounded();
-            else if (!grounded && _isGrounded)
-                BecameUngrounded();
-
-            _frameForGrounded = Time.frameCount;
-            _isGrounded = grounded;
-        }
-        return _isGrounded;
-    }
-
-    public Vector3 HeadingOverGroundSlope()
-    {
-        return _headingSloped;
-    }
-
-    private Vector3 _heading = Vector3.forward;
-    public Vector3 Heading 
-    { 
-        get { return _heading;  } 
-    }
-    private JumpAction _jumpAction;
-
-    private float _startingGravity = 0.0f;
-
-    private Level _level;
-
-    void Start()
-    {
-        _level = (Level)GameObject.FindObjectOfType<Level>();
-        _startingGravity = Physics.gravity.magnitude;
-        GameObject.FindObjectOfType<LevelGui>().Player = this;
-        _groundMask = 1 << LayerMask.NameToLayer("Level");
-        _jumpAction = new JumpAction(this);
-        rigidbody.useConeFriction = true;
-        InputHandler.OnAction += _jumpAction.PerformAction;
-        
-        _groundEffectParticles.transform.parent = null;
-        _initialGroundParticleOffset = transform.position - _groundEffectParticles.transform.position;
-
-        
-        _blackHoleSphereOffset = (_blackHoleSphere.position - transform.position).magnitude;
-    }
-
     void Update()
     {
         Vector3 playerToCameraDir = (Camera.main.transform.position - transform.position).normalized;
@@ -104,12 +109,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (IsGrounded())
-        {
-            _jumpAction.UserLanded();
-            Steer();
-            RollForward();
-        }
+        OnFixedUpdate();
 
         if (CurrentSegment)
         {
@@ -144,45 +144,21 @@ public class Player : MonoBehaviour
         DeathFX.PerformFX();
         Destroy(gameObject);
 
-        if (!PlayerPrefs.HasKey("best_score") || PlayerPrefs.GetInt("best_score") < _level.SegmentCompletedCount)
+        if (!PlayerPrefs.HasKey("best_score") || PlayerPrefs.GetInt("best_score") < Level.SegmentCompletedCount)
         {
-            PlayerPrefs.SetInt("best_score", _level.SegmentCompletedCount);
-            PlayerPrefs.SetInt("best_score_level_seed", _level.Seed);
+            PlayerPrefs.SetInt("best_score", Level.SegmentCompletedCount);
+            PlayerPrefs.SetInt("best_score_level_seed", Level.Seed);
         }
 
-        _level.GetComponent<EndOfLevelGui>().enabled = true;
+        Level.GetComponent<EndOfLevelGui>().enabled = true;
     }
 
-    private void RollForward()
-    {
-        Vector3 rollAxis = Vector3.Cross(Vector3.up, _heading);
-        rigidbody.AddTorque(rollAxis * Time.fixedDeltaTime, ForceMode.Impulse);
-
-        float steerAmount = Mathf.Abs(InputHandler.SteeringAmount());
-        float counterAccel = Mathf.Lerp(0.0f, _counterSteerAccel, steerAmount); // reduce accleration while turning hard
-
-        Vector3 accel = HeadingOverGroundSlope() * _acceleration * Time.fixedDeltaTime;
-        rigidbody.AddForce(accel, ForceMode.Acceleration);
-        rigidbody.AddForce(accel * counterAccel, ForceMode.Impulse);    
-    }
-
-    private void Steer()
-    {
-        float steerAmount = InputHandler.SteeringAmount();
-        Quaternion steerRot = Quaternion.AngleAxis(steerAmount * _steerSpeed * Time.fixedDeltaTime, Vector3.up);
-        _heading = steerRot * _heading;
-        Vector3 right = Vector3.Cross(Vector3.up, _heading) * steerAmount;
-        rigidbody.AddForce(right * Time.fixedDeltaTime * 100.0f, ForceMode.Impulse);
-    }
-
-    public event Action<Collision> CollisionEntered;
     void OnCollisionEnter(Collision collision)
     {
         if (CollisionEntered != null)
             CollisionEntered(collision);
     }
-    
-    public event Action<Collision> CollisionExited;
+
     void OnCollisionExit(Collision collision)
     {
         if (CollisionExited != null)
@@ -193,7 +169,7 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Level"))
         {
-            Vector3 headingFlat = _heading;
+            Vector3 headingFlat = Heading;
             headingFlat.y = 0.0f;
             headingFlat.Normalize();
 
@@ -206,15 +182,13 @@ public class Player : MonoBehaviour
             float cosTheta = Vector3.Dot(headingFlat, avgNormal);
 
             Quaternion slopeRotation = Quaternion.AngleAxis(cosTheta * 90.0f, Vector3.Cross(Vector3.up, headingFlat));
-            _headingSloped = slopeRotation * _heading;
+            _headingSloped = slopeRotation * Heading;
 
             Physics.gravity = avgNormal * _startingGravity * -1.0f;
         }
-        else
-        {
-            // If there is no ground here, just use heading
-            _headingSloped = _heading;
-        }
+
+        if (CollisionStay != null)
+            CollisionStay(collision);
     }
 }
  

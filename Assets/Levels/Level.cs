@@ -71,7 +71,6 @@ public class Level : MonoBehaviour
     private Player _playerPrefab;
     private Player _player;
     private CameraController _camera;
-    private InputHandler _inputHandler;
 
     private int _segmentNumber = 0;
     private int _seed = 2;
@@ -109,16 +108,13 @@ public class Level : MonoBehaviour
         };
         first.Next.collider.enabled = true;
 
-        // Setup Input
-        _inputHandler = InputHandler.BuildInputHandler();
+        InputHandler.BuildInputHandler();
 
         // Setup Player
         GameObject playerObj = Instantiate(_playerPrefab.gameObject) as GameObject;
         _player = playerObj.GetComponent<Player>();
-        _player.InputHandler = _inputHandler;
         _player.transform.position = first.Path.GetPoint(0.1f) + Vector3.up;
         _player.gameObject.name = "Player";
-        _player.Level = this;
         _player.CurrentSegment = first.Next;
 
         // Setup Camera
