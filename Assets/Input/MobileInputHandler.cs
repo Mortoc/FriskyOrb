@@ -21,7 +21,7 @@ public class MobileInputHandler : InputHandler
     #region implemented abstract members of InputHandler
     public override float SteeringAmount()
     {
-        return Mathf.Clamp(3.0f * Input.acceleration.x, -1.0f, 1.0f);
+        return Mathf.Clamp(3.5f * Input.acceleration.x, -1.0f, 1.0f);
     }
     #endregion
 }

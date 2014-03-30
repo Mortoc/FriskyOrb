@@ -94,7 +94,7 @@ SkinnedMeshRenderer:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_CastShadows: 0
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
@@ -110,12 +110,12 @@ SkinnedMeshRenderer:
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 1
-  m_Mesh: {fileID: 4300000, guid: 0d0a3bbe8d2c4fb49a49c5020e5a7905, type: 3}
+  m_Mesh: {fileID: 4300002, guid: 0d0a3bbe8d2c4fb49a49c5020e5a7905, type: 3}
   m_Bones: []
   m_BlendShapeWeights:
   - 0
   - 0
-  - 0
+  - 100
   m_RootBone: {fileID: 0}
   m_AABB:
     m_Center: {x: -.0365638733, y: .100484982, z: .0500000231}

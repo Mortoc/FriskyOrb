@@ -4,6 +4,23 @@ using System.Collections.Generic;
 
 public class Level : MonoBehaviour
 {
+    public static void Start(int levelSeed)
+    {
+        PlayerPrefs.SetInt("next_level_seed", levelSeed);
+        Application.LoadLevel("FriskyOrb");
+    }
+
+    public static void StartRandom()
+    {
+        var seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+        Start(seed);
+    }
+
+    public static void Replay()
+    {
+        Start(PlayerPrefs.GetInt("next_level_seed"));
+    }
+
     [Serializable]
     private class SegmentProfile
     {
@@ -223,7 +240,7 @@ public class Level : MonoBehaviour
             profile = _segmentProfiles[0];
 
         // Generate the level segment
-        LevelSegment.CreateInfo options = new LevelSegment.CreateInfo()
+        LevelSegment.CreationInfo options = new LevelSegment.CreationInfo()
         {
             id = _segmentNumber,
             level = this,
@@ -326,7 +343,10 @@ public class Level : MonoBehaviour
                     doodadObj.transform.up = rh.normal;
 
                     foreach (var doodadRigidbody in doodadObj.GetComponentsInChildren<Rigidbody>())
+                    {
+                        doodadRigidbody.useGravity = false;
                         doodadRigidbody.Sleep();
+                    }
                 }
                 segment.collider.enabled = segmentColliderWasEnabled;
             }

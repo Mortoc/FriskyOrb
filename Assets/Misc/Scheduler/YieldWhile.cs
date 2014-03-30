@@ -15,22 +15,20 @@ using System.Collections.Generic;
 // Example:
 // 		yield return new YieldWhile( () => (transform.position - otherPosition).magnitude > 2.0f );
 
-public class YieldWhile : IYieldInstruction
+public class YieldWhile : IUpdateYield
 {
-	public delegate bool YieldCondition();
-	
-	private readonly YieldCondition mCondition;
-	
-	public YieldWhile(YieldCondition condition)
+	private readonly Func<bool> _condition;
+
+    public YieldWhile(Func<bool> condition)
 	{
 		if( condition == null )
 			throw new ArgumentNullException("condition");
-		
-		mCondition = condition;
+
+        _condition = condition;
 	}
 	
 	public bool Ready
 	{
-		get { return !mCondition(); }
+        get { return !_condition(); }
 	}
 }

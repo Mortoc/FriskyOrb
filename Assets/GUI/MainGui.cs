@@ -4,12 +4,6 @@ using System.Text;
 
 public class MainGui : MonoBehaviour
 {
-    private void StartLevel(int seed)
-    {
-        PlayerPrefs.SetInt("next_level_seed", seed);
-        Application.LoadLevel("FriskyOrb");
-    }
-
     private string EncodeLevelSeedToName(int seed)
     {
         string str = seed.ToString();
@@ -45,7 +39,7 @@ public class MainGui : MonoBehaviour
         float buttonHeight = Screen.height * 0.1f;
         if (GUILayout.Button("New Track", GUILayout.Width(buttonWidth), GUILayout.Height(buttonHeight)))
         {
-            StartLevel(UnityEngine.Random.Range(int.MinValue, int.MaxValue));
+            Level.StartRandom();
         }
 
         GUILayout.FlexibleSpace();
@@ -54,7 +48,7 @@ public class MainGui : MonoBehaviour
         {
             if (GUILayout.Button(_personalBest, GUILayout.Width(buttonWidth), GUILayout.Height(buttonHeight)))
             {
-                StartLevel(PlayerPrefs.GetInt("best_score_level_seed"));
+                Level.Start(PlayerPrefs.GetInt("best_score_level_seed"));
             }
         }
         GUILayout.FlexibleSpace();

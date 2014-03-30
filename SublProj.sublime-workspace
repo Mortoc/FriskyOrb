@@ -8,10 +8,26 @@
 	"buffers":
 	[
 		{
+			"file": "Assets/Player/Controllers/IPlayerController.cs",
+			"settings":
+			{
+				"buffer_size": 72,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "Assets/Player/Player.cs",
 			"settings":
 			{
-				"buffer_size": 6930,
+				"buffer_size": 5616,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Assets/Player/Controllers/DefaultController.cs",
+			"settings":
+			{
+				"buffer_size": 2139,
 				"line_ending": "Windows"
 			}
 		}
@@ -19,9 +35,13 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 242.0,
+		"height": 380.0,
 		"selected_items":
 		[
+			[
+				"Package",
+				"Package Control: Install Package"
+			],
 			[
 				"markdown",
 				"Markdown Preview: Python Markdown: Preview in Browser"
@@ -76,6 +96,19 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Morto_000/Documents/Projects/FriskyOrb/Assets/Misc/Interfaces/IFixedUpdateable.cs",
+		"/C/Users/Morto_000/Documents/Projects/FriskyOrb/Assets/Player/Actions/IPlayerAction.cs",
+		"/C/Users/Morto_000/Documents/Projects/FriskyOrb/Assets/Glow11/Shaders/Unity/Illumin-Parallax.shader",
+		"/C/Users/Morto_000/Documents/Projects/FriskyOrb/Assets/Input/InputHandler.cs",
+		"/C/Users/Morto_000/Documents/Projects/FriskyOrb/Assets/Player/Controllers/IPlayerController.cs",
+		"/C/Users/Morto_000/Documents/Projects/FriskyOrb/Assets/Player/Actions/JumpAction.cs",
+		"/C/Users/Morto_000/Documents/Projects/FriskyOrb/Assets/Player/Controllers/DefaultController.cs",
+		"/C/Users/Morto_000/Documents/Projects/FriskyOrb/Assets/Player/Player.cs",
+		"/C/Users/Morto_000/Documents/Projects/FriskyOrb/Assets/Levels/Level.cs",
+		"/C/Users/Morto_000/Documents/Projects/FriskyOrb/Assets/Art/Shaders/Madfinger/Environment/MADFINGER-lightprobe-VirtualVertexGlossy-Add.shader",
+		"/C/Users/Morto_000/Documents/Projects/FriskyOrb/Assets/Player/Orb.prefab.meta",
+		"/C/Users/Morto_000/Documents/Projects/FriskyOrb/Assets/Player/Player.cs.meta",
+		"/C/Users/Morto_000/Documents/Projects/FriskyOrb/SublProj.sublime-project",
 		"/C/Users/Morto_000/Documents/Projects/FriskyOrb/Assets/Player.meta",
 		"/C/Users/Morto_000/Documents/Projects/Crisply/crisply/log/development.log",
 		"/C/Users/Morto_000/Documents/scripts/vagrant-connect.bat",
@@ -104,7 +137,7 @@
 	],
 	"find":
 	{
-		"height": 22.0
+		"height": 34.0
 	},
 	"find_in_files":
 	{
@@ -119,6 +152,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"_heading",
+			"IsGrounded",
+			"InputHandler",
+			"_counterSteerAccel",
+			"_steerSpeed",
+			"_acceleration",
 			"ad74f1f8c0a3eea7f5053825bcdec68f",
 			"grabber",
 			"Create your Crisply Account",
@@ -150,24 +189,88 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "Assets/Player/Player.cs",
+					"file": "Assets/Player/Controllers/IPlayerController.cs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6930,
+						"buffer_size": 72,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								110,
-								110
+								72,
+								72
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C#/C#.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Assets/Player/Player.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5616,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1856,
+								1856
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C#/C#.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 555.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 2,
+					"file": "Assets/Player/Controllers/DefaultController.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2139,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1001,
+								1001
 							]
 						],
 						"settings":
@@ -180,14 +283,9 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				}
-			]
-		},
-		{
-			"sheets":
-			[
 			]
 		}
 	],
@@ -197,7 +295,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 30.0
 	},
 	"layout":
 	{
@@ -249,6 +347,22 @@
 		"selected_items":
 		[
 			[
+				"ifixed",
+				"Misc\\Interfaces\\IFixedUpdateable.cs"
+			],
+			[
+				"iplayercon",
+				"Player\\Controllers\\IPlayerController.cs"
+			],
+			[
+				"jump",
+				"Player\\Actions\\JumpAction.cs"
+			],
+			[
+				"level",
+				"Levels\\Level.cs"
+			],
+			[
 				"player",
 				"Player\\Player.cs"
 			],
@@ -286,7 +400,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 273.0,
+	"side_bar_width": 188.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

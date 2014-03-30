@@ -21,16 +21,16 @@ using System.Collections.Generic;
 /*
  * Example Usage: (A hypothetical game character with a taunt ability)
  * 
- * private ITask mTauntTask = null; 
+ * private ITask _tauntTask = null; 
  * public void TauntEnemy(Enemy enemy) 
  * {
- *      if( mTauntTask != null )
- *          mTauntTask.Exit(); // Only taunt one enemy at a time
+ *      if( _tauntTask != null )
+ *          _tauntTask.Exit(); // Only taunt one enemy at a time
  *          
- *      mTauntTask = Scheduler.Run( TauntCoroutine(enemy) );
+ *      _tauntTask = Scheduler.Run( TauntCoroutine(enemy) );
  *      
  *      // OnExit callback will be called no matter how the coroutine ends
- *      mTauntTask.OnExit(() =>
+ *      _tauntTask.OnExit(() =>
  *      {
  *          enemy.UnlockDirection();
  *          enemy.UnlockTarget();
@@ -54,13 +54,10 @@ using System.Collections.Generic;
  * public void UnitSilenced()
  * {
  *      // We can control the coroutine from external events without having to add new code inside the coroutine
- *      if( mTauntTask != null )
- *          mTauntTask.Exit();
+ *      if( _tauntTask != null )
+ *          _tauntTask.Exit();
  * }
 */
-
-
-
 
 public class Scheduler : MonoBehaviour
 {
@@ -79,10 +76,10 @@ public class Scheduler : MonoBehaviour
 		Run(SingleInstructionCallback(yieldInstruction, action));
 	}
 	
-	private static IEnumerator<IYieldInstruction> SingleInstructionCallback(IYieldInstruction yieldInstruction, Action action)
+	private static IEnumerator<IYieldInstruction> SingleInstructionCallback(IYieldInstruction yieldInstruction, Action callback)
 	{
 		yield return yieldInstruction;
-		action();
+        callback();
 	}
 	
 	void Awake()
@@ -96,46 +93,33 @@ public class Scheduler : MonoBehaviour
 	// Represents a single task that is being run in this Scheduler
 	private class SchedulerTask : ITask
 	{
-        private static readonly bool DEBUG_TASKS = false;
-
 		private readonly Scheduler _owner;
-		private IEnumerator<IYieldInstruction> _coroutine;
+        public IEnumerator<IYieldInstruction> Coroutine { get; private set; }
 		private readonly string _startCoroutineStack;
-		public string StartCoroutineStack
-		{
-			get { return _startCoroutineStack; }
-		}
 		
 		public SchedulerTask(Scheduler owner, IEnumerator<IYieldInstruction> coroutine)
 		{
 			_owner = owner;
-			_coroutine = coroutine;
-
-            if (DEBUG_TASKS)
-                _startCoroutineStack = Environment.StackTrace;
-            else
-                _startCoroutineStack = String.Empty;
+			Coroutine = coroutine;
 		}
 		
 		// Returns false when the coroutine has completed
 		public bool Step()
 		{
-            if (DEBUG_TASKS)
-    			Profiler.BeginSample(_coroutine.ToString());
+    		Profiler.BeginSample(Coroutine.ToString());
 
 			bool result;
 			try
 			{
-				result = _coroutine.MoveNext();
+				result = Coroutine.MoveNext();
 				if (!result)
 				{
-					_coroutine = null;
+					Coroutine = null;
 				}
 			}
 			finally
 			{
-                if (DEBUG_TASKS)
-    				Profiler.EndSample();
+    			Profiler.EndSample();
 			}
 			
 			return result;
@@ -146,9 +130,9 @@ public class Scheduler : MonoBehaviour
 			get
 			{
 				bool result = false;
-                if (_coroutine != null && !_exited)
+                if (Coroutine != null && !_exited)
 				{
-					result = _coroutine.Current.Ready;
+					result = Coroutine.Current.Ready;
 				}
 				return result;
 			}
@@ -162,7 +146,7 @@ public class Scheduler : MonoBehaviour
 
 		public bool IsRunning
 		{
-			get { return _coroutine != null; }
+			get { return Coroutine != null; }
 		}
 
 		private bool _exited = false;
@@ -173,7 +157,7 @@ public class Scheduler : MonoBehaviour
 				if (_onExit != null)
 					_onExit();
 
-				_owner.TaskExited(this);
+                _owner.RemoveTask(this);
 				_exited = true;
 			}
 		}
@@ -182,19 +166,71 @@ public class Scheduler : MonoBehaviour
 		{
 			string result = "SchedulerTask: NULL";
 			
-            if( _coroutine != null )
-				result = String.Format("SchedulerTask: {0}", _coroutine.ToString());
+            if( Coroutine != null )
+				result = String.Format("SchedulerTask: {0}", Coroutine.ToString());
 
 			return result;
 		}
 	}
+
+    private class PendingTask
+    {
+        public SchedulerTask Task { get; set; }
+        public PendingTask Next { get; set; }
+        public PendingTask Prev { get; set; }
+
+        public PendingTask GetTail()
+        {
+            PendingTask itr = this;
+
+            while (itr.Next != null)
+                itr = itr.Next;
+
+            return itr;
+        }
+
+    }
+
+    private PendingTask _pendingTaskHead = null;
 	
-	private List<SchedulerTask> _pendingTasks = new List<SchedulerTask>(); 
-	
-	private void TaskExited(SchedulerTask task)
+	private void RemoveTask(SchedulerTask task)
 	{
-		_pendingTasks.Remove(task);
+        for (PendingTask itr = _pendingTaskHead; itr.Next != null; itr = itr.Next )
+        {
+            if( itr.Task == task )
+            {
+                if (itr == _pendingTaskHead)
+                    _pendingTaskHead = _pendingTaskHead.Next;
+
+                itr.Prev = itr.Next;
+    
+                if( itr.Next != null )
+                    itr.Next.Prev = itr.Prev;
+
+                itr.Task = null;
+                itr.Prev = null;
+                itr.Next = null;
+                return;
+            }
+        }
 	}
+
+    private void AddTask(SchedulerTask task)
+    {
+        PendingTask newTask = new PendingTask(){Task = task};
+
+        if (_pendingTaskHead == null)
+        {
+            _pendingTaskHead = newTask;
+            return;
+        }
+
+        // get tail
+        PendingTask tail = _pendingTaskHead.GetTail();
+
+        tail.Next = newTask;
+        newTask.Prev = tail;
+    }
 	
 	public ITask StartCoroutine( IEnumerator<IYieldInstruction> task )
 	{
@@ -208,8 +244,7 @@ public class Scheduler : MonoBehaviour
 		{
 			SchedulerTask schedulerTask = new SchedulerTask(this, task);
 			result = schedulerTask;
-            _pendingTasks.Add(schedulerTask);
-
+            AddTask(schedulerTask);
 		}
 		else
 		{
@@ -236,56 +271,18 @@ public class Scheduler : MonoBehaviour
 		public void Exit()
 		{
 			if( _onExit != null )
-			{
 				_onExit();
-			}
 		}
 	}
 
-	public void Update()
-	{
-		List<SchedulerTask> completedTasks = new List<SchedulerTask>(); 
-
-		for (int i = 0; i < _pendingTasks.Count; ++i)
-		{		
-			SchedulerTask coroutine = _pendingTasks[i];
-			try
-			{				
-				// Run the coroutine.
-                // Step() is what runs the next iteration of the coroutine and returns false when task completed.
-				if( coroutine.Ready && !coroutine.Step() ) 
-					completedTasks.Add(coroutine);
-			}
-			catch(Exception e)
-			{
-                // This step had an unhandled excception, exit the task and report it
-                completedTasks.Add(coroutine);
-
-                if (!String.IsNullOrEmpty(coroutine.StartCoroutineStack))
-                {
-                    UnityEngine.Debug.LogError
-                    (
-                        String.Format
-                        (
-                            "Unhandled exception during {0}:{1}\n\nStarted At:\n{2}",
-                            coroutine,
-                            e,
-                            coroutine.StartCoroutineStack
-                        )
-                    );
-                }
-                else
-                {
-                    UnityEngine.Debug.LogError( String.Format("Unhandled exception during {0}:{1}", coroutine, e) );
-                }
-			}
-		}
-
-		foreach (SchedulerTask task in completedTasks)
-		{
+    private void ProcessPendingTasks<T>()
+    {
+        Action<SchedulerTask> taskEnded = task =>
+        {
             try
             {
-                task.Exit();
+                if( task != null )
+                    task.Exit();
             }
             catch (System.Exception e)
             {
@@ -294,9 +291,56 @@ public class Scheduler : MonoBehaviour
             }
             finally
             {
-                _pendingTasks.Remove(task);
+                RemoveTask(task);
             }
-		}
-	}
+        };
+
+        for (PendingTask itr = _pendingTaskHead; itr != null; )
+        {
+            PendingTask current = itr;
+            SchedulerTask task = itr.Task;
+            itr = itr.Next;
+
+            try
+            {
+                if ( task == null || task.Coroutine == null)
+                {
+                    taskEnded(task);
+                }
+                // Only run the coroutines of the requested type
+                else if (task.Coroutine.Current is T)
+                {
+                    // Step() is what runs the next iteration of the coroutine 
+                    // and returns false when task completed.
+                    if (task.Ready && !task.Step())
+                       taskEnded(current.Task);
+                }
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogError(String.Format("Unhandled exception during {0}:{1}", task, e));
+                taskEnded(current.Task);
+            }
+        }
+    }
+
+    #region MonoBehavior Hooks
+
+    void Update()
+    {
+        ProcessPendingTasks<IUpdateYield>();
+    }
+
+    void LateUpdate()
+    {
+        ProcessPendingTasks<ILateUpdateYield>();
+    }
+
+    void FixedUpdate()
+    {
+        ProcessPendingTasks<IFixedUpdateYield>();
+    }
+
+    #endregion
 }
 

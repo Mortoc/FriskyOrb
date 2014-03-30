@@ -10,13 +10,20 @@
 using System;
 using System.Collections;
 
-public class YieldUntilNextFrame : IYieldInstruction
+
+public class YieldUntilNextFrame : IUpdateYield
 {				
 	public bool Ready
 	{
-		get
-		{
-			return true;
-		}
+		get{ return true; }
 	}
+}
+
+public class YieldUntilNextFixedUpdate : IFixedUpdateYield
+{
+    public bool Ready
+    {
+        get { return true; }
+    }
 }	
+

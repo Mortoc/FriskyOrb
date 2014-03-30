@@ -7,10 +7,12 @@ public class Player : MonoBehaviour
     public event Action OnFixedUpdate;
     public event Action OnGrounded;
     public event Action OnUngrounded;
+    public event Action OnDeath;
 
     public event Action<Collision> CollisionEntered;
     public event Action<Collision> CollisionExited;
     public event Action<Collision> CollisionStay;
+
 
     [SerializeField]
     private ParticleSystem _groundEffectParticles;
@@ -32,27 +34,36 @@ public class Player : MonoBehaviour
     public LevelSegment CurrentSegment { get; set; }
 
     private IPlayerController _controller;
-    public IPlayerController Controller 
-    { 
+    public IPlayerController Controller
+    {
         get { return _controller; }
-        set 
+        set
         {
-            if( _controller != null ) 
+            if (_controller != null)
                 _controller.Disable();
-            
+
             _controller = value;
             _controller.Enable();
-        } 
+        }
     }
 
-    private Vector3 _headingSloped = Vector3.zero;
     private int _groundMask;
 
     public bool IsGrounded { get; private set; }
 
     private void UpdateIsGrounded()
     {
-        bool grounded = Physics.Raycast(rigidbody.position, Vector3.down, ((SphereCollider)collider).radius, _groundMask);
+        SphereCollider sphereCol = this.collider as SphereCollider;
+        Vector3 gravDir = Physics.gravity / _startingGravityMag;
+        float distCheck = transform.localScale.magnitude * sphereCol.radius * 2.0f;
+        Vector3 offset = gravDir * -0.5f * distCheck;
+
+        RaycastHit rh;
+
+        rigidbody.position = rigidbody.position + offset;
+        //bool grounded = Physics.Raycast(rigidbody.position, Vector3.down, ((SphereCollider)collider).radius, _groundMask);
+        bool grounded = rigidbody.SweepTest(gravDir, out rh, 2.0f);
+        rigidbody.position = rigidbody.position - offset;
 
         if (grounded && !IsGrounded)
             OnGrounded();
@@ -62,14 +73,9 @@ public class Player : MonoBehaviour
         IsGrounded = grounded;
     }
 
-    public Vector3 HeadingOverGroundSlope()
-    {
-        return _headingSloped;
-    }
-
     public Vector3 Heading { get; set; }
 
-    private float _startingGravity = 0.0f;
+    private float _startingGravityMag = 0.0f;
 
     void Start()
     {
@@ -81,9 +87,9 @@ public class Player : MonoBehaviour
         OnUngrounded += BecameUngrounded;
 
         Level = GameObject.FindObjectOfType<Level>();
-        _startingGravity = Physics.gravity.magnitude;
+        _startingGravityMag = Physics.gravity.magnitude;
         _groundMask = 1 << LayerMask.NameToLayer("Level");
-        
+
         _initialGroundParticleOffset = transform.position - _groundEffectParticles.transform.position;
 
         _blackHoleSphereOffset = (_blackHoleSphere.position - transform.position).magnitude;
@@ -115,11 +121,11 @@ public class Player : MonoBehaviour
         {
             float approxT = CurrentSegment.Path.GetApproxT(rigidbody.position);
             Vector3 pointOnSegment;
-            if( approxT > 0.999f)
+            if (approxT > 0.999f)
             {
                 float tOnNext = CurrentSegment.Next.Path.GetApproxT(rigidbody.position);
                 pointOnSegment = CurrentSegment.Next.Path.GetPoint(tOnNext);
-                
+
                 LevelSegment oldSegment = CurrentSegment;
                 CurrentSegment = CurrentSegment.Next;
                 oldSegment.IsNoLongerCurrent();
@@ -129,17 +135,49 @@ public class Player : MonoBehaviour
                 pointOnSegment = CurrentSegment.Path.GetPoint(approxT);
             }
 
-            if( pointOnSegment.y > rigidbody.position.y + _fallToDeathThreshold)
+            if (pointOnSegment.y > rigidbody.position.y + _fallToDeathThreshold)
             {
                 PlayerDied();
             }
         }
 
+        AdjustGravity();
+
         _groundEffectParticles.transform.position = rigidbody.position - _initialGroundParticleOffset;
+    }
+
+    // Look ahead a bit to see where gravity should be
+    private const float GRAV_SAMPLE_DIST = 1.25f;
+    private void AdjustGravity()
+    {
+        Vector3 gravDir = Physics.gravity.normalized;
+        Vector3 samplePos = rigidbody.position +
+            (Heading * GRAV_SAMPLE_DIST) +
+            (-GRAV_SAMPLE_DIST * gravDir);
+
+        RaycastHit rh;
+        if (Physics.Raycast(samplePos, gravDir, out rh, 3.0f * GRAV_SAMPLE_DIST, _groundMask))
+        {
+            Physics.gravity = rh.normal * _startingGravityMag * -1.0f;
+
+            // Adjust the heading so it's always perpendicular to gravity
+            Vector3 right = Vector3.Cross(Heading, gravDir).normalized;
+            Heading = Vector3.Cross(gravDir, right).normalized * Heading.magnitude;
+//            Debug.Log("Heading " + Heading + ", Right " + right + ", Up " + (-1.0f * gravDir));
+            Debug.DrawLine(rigidbody.position, rigidbody.position + Heading, Color.red);
+            Debug.DrawLine(rigidbody.position, rigidbody.position + right, Color.green);
+            Debug.DrawLine(rigidbody.position, rigidbody.position + (gravDir * -1.0f), Color.blue);
+
+            // Stick down a bit
+            rigidbody.AddForce(Physics.gravity * Time.fixedDeltaTime * 0.5f, ForceMode.Impulse);
+        }
     }
 
     private void PlayerDied()
     {
+        if (OnDeath != null)
+            OnDeath();
+
         DeathFX.transform.parent = null;
         DeathFX.PerformFX();
         Destroy(gameObject);
@@ -167,28 +205,7 @@ public class Player : MonoBehaviour
 
     void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Level"))
-        {
-            Vector3 headingFlat = Heading;
-            headingFlat.y = 0.0f;
-            headingFlat.Normalize();
-
-            Vector3 avgNormal = Vector3.zero;
-            foreach (ContactPoint cp in collision.contacts)
-                avgNormal += cp.normal;
-
-            avgNormal /= (float)collision.contacts.Length;
-
-            float cosTheta = Vector3.Dot(headingFlat, avgNormal);
-
-            Quaternion slopeRotation = Quaternion.AngleAxis(cosTheta * 90.0f, Vector3.Cross(Vector3.up, headingFlat));
-            _headingSloped = slopeRotation * Heading;
-
-            Physics.gravity = avgNormal * _startingGravity * -1.0f;
-        }
-
         if (CollisionStay != null)
             CollisionStay(collision);
     }
 }
- 

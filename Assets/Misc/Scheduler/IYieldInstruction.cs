@@ -14,3 +14,9 @@ public interface IYieldInstruction
 {
 	bool Ready { get; }
 }
+
+public interface IUpdateYield : IYieldInstruction {}
+
+public interface ILateUpdateYield : IYieldInstruction {}
+
+public interface IFixedUpdateYield : IYieldInstruction {}

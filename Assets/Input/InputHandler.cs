@@ -9,7 +9,7 @@ public abstract class InputHandler : MonoBehaviour
         GameObject inputObj = new GameObject("Input Handler");
 
         InputHandler result = null;
-
+        
         switch (Application.platform)
         {
             case RuntimePlatform.Android:
@@ -47,9 +47,10 @@ public abstract class InputHandler : MonoBehaviour
         //Debug.DrawRay(touchRay.origin, touchRay.direction * 1000.0f, Color.red);
         //Debug.Break();
 
-        foreach (RaycastHit rh in Physics.RaycastAll(touchRay, Mathf.Infinity, 1 << LayerMask.NameToLayer("Touchable")))
+        foreach (RaycastHit rh in Physics.RaycastAll(touchRay, 1000.0f, 1 << LayerMask.NameToLayer("Touchable")))
         {
             TappableObject tappable = rh.collider.GetComponent<TappableObject>();
+            Debug.Log("Tapped", tappable);
             if (tappable)
                 tappable.Tapped();
         }

@@ -4,9 +4,10 @@ using System.Collections.Generic;
 
 public class PlayerMovementController : IPlayerController
 {
-    private const float _acceleration = 1250.0f;
-    private const float _steerSpeed = 100.0f;
-    private const float _counterSteerAccel = -0.1f;
+    private const float ACCELERATION = 850.0f;
+    private const float STEER_SPEED = 120.0f;
+    private const float COUNTER_STEER = -0.05f;
+    private const float MAX_SPEED = 12.0f;
 
     private readonly Player _player;
     private readonly JumpAction _jumpAction;
@@ -14,7 +15,7 @@ public class PlayerMovementController : IPlayerController
 
     public PlayerMovementController(Player player)
     {
-    	_player = player;
+        _player = player;
         _jumpAction = new JumpAction(_player);
         _inputHandler = GameObject.FindObjectOfType<InputHandler>();
     }
@@ -27,39 +28,47 @@ public class PlayerMovementController : IPlayerController
 
     public void Disable()
     {
-    	_inputHandler.OnAction -= _jumpAction.PerformAction;
-    	_player.OnFixedUpdate -= FixedUpdate;
+        _inputHandler.OnAction -= _jumpAction.PerformAction;
+        _player.OnFixedUpdate -= FixedUpdate;
     }
 
+    private Vector3 _currentUpVector;
     private void FixedUpdate()
     {
-    	if( _player.IsGrounded )
-    	{
+        if (_player.IsGrounded)
+        {
+            _currentUpVector = Physics.gravity.normalized * -1.0f;
             _jumpAction.PlayerLanded();
-	    	RollForward();
-	    	Steer();
-    	}
+
+            if( _player.rigidbody.velocity.sqrMagnitude < MAX_SPEED * MAX_SPEED )
+                RollForward();
+
+            Steer();
+        }
     }
 
     private void RollForward()
     {
-        Vector3 rollAxis = Vector3.Cross(Vector3.up, _player.Heading);
+        Vector3 rollAxis = Vector3.Cross(_currentUpVector, _player.Heading);
         _player.rigidbody.AddTorque(rollAxis * Time.fixedDeltaTime, ForceMode.Impulse);
 
         float steerAmount = Mathf.Abs(_inputHandler.SteeringAmount());
-        float counterAccel = Mathf.Lerp(0.0f, _counterSteerAccel, steerAmount); // reduce accleration while turning hard
+        float counterAccel = Mathf.Lerp(0.0f, COUNTER_STEER, steerAmount); // reduce accleration while turning hard
 
-        Vector3 accel = _player.HeadingOverGroundSlope() * _acceleration * Time.fixedDeltaTime;
+        Vector3 accel = _player.Heading * ACCELERATION * Time.fixedDeltaTime;
         _player.rigidbody.AddForce(accel, ForceMode.Acceleration);
-        _player.rigidbody.AddForce(accel * counterAccel, ForceMode.Impulse);    
+        _player.rigidbody.AddForce(accel * counterAccel, ForceMode.Impulse);
     }
 
     private void Steer()
     {
         float steerAmount = _inputHandler.SteeringAmount();
-        Quaternion steerRot = Quaternion.AngleAxis(steerAmount * _steerSpeed * Time.fixedDeltaTime, Vector3.up);
+        Quaternion steerRot = Quaternion.AngleAxis(
+            steerAmount * STEER_SPEED * Time.fixedDeltaTime,
+            _currentUpVector
+        );
         _player.Heading = steerRot * _player.Heading;
-        Vector3 right = Vector3.Cross(Vector3.up, _player.Heading) * steerAmount;
+        Vector3 right = Vector3.Cross(_currentUpVector, _player.Heading) * steerAmount;
         _player.rigidbody.AddForce(right * Time.fixedDeltaTime * 100.0f, ForceMode.Impulse);
     }
 }

@@ -296,7 +296,7 @@ public class LevelSegment : MonoBehaviour
     public LevelSegment Previous { get; set; }
     public LevelSegment Next { get; set; }
 
-    public class CreateInfo
+    public class CreationInfo
     {
         public int id = 0;
         public Level level = null;
@@ -309,7 +309,7 @@ public class LevelSegment : MonoBehaviour
         public AnimationCurve rightProfile = null;
     }
 
-    public static LevelSegment Create(CreateInfo options)
+    public static LevelSegment Create(CreationInfo options)
     {
         var levelSegment = new GameObject("LevelSegment");
         levelSegment.layer = options.level.gameObject.layer;
@@ -354,6 +354,7 @@ public class LevelSegment : MonoBehaviour
             var collisionMesh = BuildCollisionMesh(SEGMENT_DETAIL / COLLISION_DETAIL_DENOMINATOR);
 
             var col = gameObject.AddComponent<MeshCollider>();
+            col.smoothSphereCollisions = true;
             col.sharedMesh = collisionMesh;
             col.enabled = false;
         }
@@ -373,6 +374,11 @@ public class LevelSegment : MonoBehaviour
         {
             collider.enabled = false;
             Next.collider.enabled = true;
+            foreach(Doodad childDoodad in GetComponentsInChildren<Doodad>())
+            {
+                if (childDoodad.rigidbody)
+                    childDoodad.rigidbody.useGravity = true;
+            }
         }
         Next.Previous = null; // Clear reference to this
 
@@ -381,9 +387,9 @@ public class LevelSegment : MonoBehaviour
 
         Level.NewSegmentReached();
 
-        Scheduler.Run(new YieldForSeconds(10.0f), () =>
+        Level.SegmentDestroyed();
+        Scheduler.Run(new YieldForSeconds(5.0f), () =>
         {
-            Level.SegmentDestroyed();
             GameObject.Destroy(gameObject);
         });
     }

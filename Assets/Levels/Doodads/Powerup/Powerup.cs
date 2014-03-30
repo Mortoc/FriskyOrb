@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Powerup : MonoBehaviour
+public class Powerup : Doodad
 {
     [SerializeField]
     private float _collectAnimateTime = 1.0f;

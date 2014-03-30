@@ -3,24 +3,24 @@
 using System;
 using System.Collections.Generic;
 
-public class YieldForSeconds : IYieldInstruction
+public class YieldForSeconds : IUpdateYield
 {
-	private readonly float mTimeComplete;
+	private readonly float _timeComplete;
 	public float TimeComplete
 	{
-		get { return mTimeComplete; }
+		get { return _timeComplete; }
 	}
 
 	public YieldForSeconds (float seconds)
 	{
-		mTimeComplete = Time.time + seconds;
+		_timeComplete = Time.time + seconds;
 	}
 	
 	public bool Ready
 	{
 		get 
 		{
-			return Time.time >= mTimeComplete;
+			return Time.time >= _timeComplete;
 		}
 	}
 

@@ -32,14 +32,14 @@ public class EndOfLevelGui : MonoBehaviour
         
         if (GUILayout.Button("New Level", GUILayout.Height(Screen.height * 0.1f)))
         {
-            Application.LoadLevel("MainMenu");
+            Level.StartRandom();
         }
 
         GUILayout.Space(10.0f);
 
         if (GUILayout.Button("Play Again", GUILayout.Height(Screen.height * 0.1f)))
         {
-            Application.LoadLevel("FriskyOrb");
+            Level.Replay();
         }
 
         GUILayout.EndHorizontal();
