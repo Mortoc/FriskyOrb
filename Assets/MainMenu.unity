@@ -84,6 +84,7 @@ GameObject:
   - 4: {fileID: 332241826}
   - 33: {fileID: 332241825}
   - 23: {fileID: 332241823}
+  - 114: {fileID: 332241824}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -113,6 +114,19 @@ Renderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
+--- !u!114 &332241824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 332241822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4921bdbc4e59e2b4d932a1013e63e721, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  axis: {x: 0, y: 1, z: 0}
+  speed: 180
 --- !u!33 &332241825
 MeshFilter:
   m_ObjectHideFlags: 0

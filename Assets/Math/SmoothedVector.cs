@@ -40,7 +40,8 @@ public class SmoothedVector
 	{
 		float recpCount = 1.0f / (float)_samples.Count;
 		Vector3 avg = Vector3.zero;
-		foreach(Sample sample in _samples)
+		
+        foreach(Sample sample in _samples)
 			avg += sample.Position;
 
 		return avg * recpCount;

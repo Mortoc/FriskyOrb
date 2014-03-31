@@ -6,7 +6,7 @@ public class CameraController : MonoBehaviour
 {
     public Player Player { get; set; }
 
-    private Vector3 _followDistance = new Vector3( 0.0f, 2.5f, -1.5f );
+    private Vector3 _followDistance = new Vector3(0.0f, 2.5f, -1.5f);
     private float _lookAheadDistance = 5.0f;
 
     private SmoothedVector _lookAtTarget = new SmoothedVector(0.25f);
@@ -27,7 +27,7 @@ public class CameraController : MonoBehaviour
                 _lookAtTarget.AddSample(lookAtPos);
 
             Quaternion viewRotation = Quaternion.FromToRotation(
-                Vector3.forward, 
+                Vector3.forward,
                 (lookAtPos - Player.rigidbody.position).normalized
             );
             _currentPosition.AddSample(Player.transform.position + (viewRotation * _followDistance));
@@ -36,7 +36,7 @@ public class CameraController : MonoBehaviour
             transform.position = _currentPosition.GetSmoothedVector();
             transform.LookAt(_lookAtTarget.GetSmoothedVector());
         }
-        else if( _velocity.HasSamples && !rigidbody)
+        else if (_velocity.HasSamples && !rigidbody)
         {
             gameObject.AddComponent<Rigidbody>();
             rigidbody.velocity = _velocity.GetSmoothedVector();

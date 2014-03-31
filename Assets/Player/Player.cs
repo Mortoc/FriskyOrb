@@ -95,6 +95,24 @@ public class Player : MonoBehaviour
         _blackHoleSphereOffset = (_blackHoleSphere.position - transform.position).magnitude;
 
         GameObject.FindObjectOfType<LevelGui>().Player = this;
+
+
+        CreateSpecks();
+    }
+
+    private void CreateSpecks()
+    {
+        for (int i = 0; i < 6; ++i)
+        {
+            GameObject speck = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            
+            speck.transform.localScale = Vector3.one * 0.015f;
+            Collider.DestroyImmediate(speck.collider);
+            speck.transform.position = _blackHoleSphere.position +
+                UnityEngine.Random.onUnitSphere * 0.28f;
+            speck.renderer.sharedMaterial = renderer.sharedMaterial;
+            speck.transform.parent = _blackHoleSphere;
+        }
     }
 
     private void BecameGrounded()

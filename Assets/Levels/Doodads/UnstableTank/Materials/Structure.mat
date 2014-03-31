@@ -32,6 +32,10 @@ Material:
     m_Floats:
       data:
         first:
+          name: _GlowStrength
+        second: .25
+      data:
+        first:
           name: _Shininess
         second: .1199205
       data:
@@ -44,10 +48,6 @@ Material:
         second: .270000011
       data:
         first:
-          name: _GlowStrength
-        second: 2.44000006
-      data:
-        first:
           name: _Rimpower
         second: .560000002
     m_Colors:
@@ -55,6 +55,10 @@ Material:
         first:
           name: _Color
         second: {r: .235294104, g: .13494809, b: .13494809, a: 0}
+      data:
+        first:
+          name: _GlowColor
+        second: {r: 1, g: 0, b: 0, a: 1}
       data:
         first:
           name: _SpecColor
@@ -67,10 +71,6 @@ Material:
         first:
           name: _rim_color
         second: {r: .20588237, g: .149870262, b: .164367497, a: 1}
-      data:
-        first:
-          name: _GlowColor
-        second: {r: 1, g: 0, b: 0, a: 1}
       data:
         first:
           name: _RimColor

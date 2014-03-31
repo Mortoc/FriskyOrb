@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class JumpAction : IPlayerAction
 {
     private const float JUMP_STEER_STRENGTH = 50.0f;
-    private const float JUMP_STRENGTH = 45.0f;
+    private const float JUMP_STRENGTH = 75.0f;
     private FX _jumpEffect;
 
     private Player _player;
