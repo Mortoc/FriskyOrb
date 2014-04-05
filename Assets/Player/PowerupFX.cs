@@ -20,8 +20,18 @@ public class PowerupFX : FX
         StartCoroutine(SpawnOrbiters());
     }
 
+    private bool _powerupCompleted = false;
+
     private System.Collections.IEnumerator SpawnOrbiters()
     {
+        var player = FindObjectOfType<Player>();
+        var controller = player.Controller as StarPowerupController;
+
+        if (controller == null)
+            throw new System.InvalidOperationException("Cannot perform PowerupFX while the player isn't being controlled by StarPowerupController");
+
+        controller.OnDisable += () => _powerupCompleted = true;
+
         var orbiters = new List<GameObject>();
 
         for( int i = 0; i < _orbiterCount; ++i )
@@ -37,8 +47,9 @@ public class PowerupFX : FX
             yield return 0;
         }
 
-        yield return new WaitForSeconds(StarPowerupController.POWERUP_DURATION);
-
+        while( !_powerupCompleted )
+            yield return 0;
+        
         foreach (var orbiter in orbiters)
         {
             orbiter.AddComponent<Rigidbody>();
@@ -47,6 +58,8 @@ public class PowerupFX : FX
             Destroy(orbiter.GetComponent<PowerupOrbiterFX>());
             orbiter.transform.parent = null;
         }
+        
+        _powerupCompleted = false;
 
         yield return new WaitForSeconds(Mathf.Lerp(3.0f, 5.0f, UnityEngine.Random.value));
         orbiters.ForEach(Destroy);

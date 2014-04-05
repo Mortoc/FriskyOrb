@@ -72,6 +72,8 @@ public class JumpAction : IPlayerAction
             {
                 SteerDuringJump();
             }
+
+            Score.Instance.RegisterEvent(Score.Event.Jump);
         }
     }
 
@@ -96,6 +98,9 @@ public class JumpAction : IPlayerAction
 
     private void SteerDuringJump()
     {
+        if (!_player)
+            return;
+
         float steerAmount = _inputHandler.SteeringAmount();
         Quaternion steerRot = Quaternion.AngleAxis(steerAmount * 2.0f * Mathf.PI * Time.fixedDeltaTime, Vector3.up);
 

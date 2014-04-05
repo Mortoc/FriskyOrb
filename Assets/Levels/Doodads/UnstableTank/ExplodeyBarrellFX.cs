@@ -17,8 +17,9 @@ public class ExplodeyBarrellFX : FX
         foreach (var fragment in fragments)
         {
             Vector3 randomDir = UnityEngine.Random.onUnitSphere;
+            float force = UnityEngine.Random.value * _explosionForce * 2.0f;
             randomDir.y = Mathf.Max(0.0f, randomDir.y);
-            fragment.AddForce(_explosionForce * randomDir, ForceMode.Impulse);
+            fragment.AddForce(force * randomDir, ForceMode.Impulse);
         }
 
         StartCoroutine(CleanupFragments(fragments));

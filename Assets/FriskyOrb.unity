@@ -173,7 +173,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
       propertyPath: _powerupsUntilFull
-      value: 10
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 13700000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
       propertyPath: m_BlendShapeWeights.Array.data[2]
@@ -436,7 +436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f211e5378e6ae4c4ea6e90814a398f2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _powerupsUntilFull: 10
+  _powerupsUntilFull: 100
   _animateToButtonTime: .25
   _buttonPosition: {x: 1.88999999, y: -.75, z: 2.58999991}
   _animateToPlayerTime: .660000026
@@ -517,6 +517,7 @@ GameObject:
   - 114: {fileID: 1014443283}
   - 114: {fileID: 1014443284}
   - 114: {fileID: 1014443285}
+  - 114: {fileID: 1014443286}
   m_Layer: 8
   m_Name: Level
   m_TagString: Untagged
@@ -552,12 +553,14 @@ MonoBehaviour:
     Prefab: {fileID: 100004, guid: d6ccf97073699374893ef96af0822074, type: 2}
     Difficulty: 1.10000002
   _tweakables:
-  - Name: Start
+  - Name: Hello World
     StartSegment: 0
     ApproxSegmentLength: 20
     SegmentLengthJitter: 0
     Curviness: 0
+    MinHeightDifference: 0
     MaxHeightDifference: 0
+    AscendOnly: 0
     ChanceOfDoodad: 0
     MaxDoodadDifficulty: 0
     MaxDifficulty: 1
@@ -567,71 +570,111 @@ MonoBehaviour:
   - Name: Learn To Steer
     StartSegment: 1
     ApproxSegmentLength: 20
-    SegmentLengthJitter: 5
+    SegmentLengthJitter: 0
     Curviness: 5
+    MinHeightDifference: 0
     MaxHeightDifference: 0
+    AscendOnly: 0
     ChanceOfDoodad: 0
     MaxDoodadDifficulty: 0
     MaxDifficulty: 0
-    ChanceOfPowerupString: .25
-    PowerupStringAvgLength: 20
-    PowerupStringLengthJitter: 5
-  - Name: Basic Elevation Changes
+    ChanceOfPowerupString: 1
+    PowerupStringAvgLength: 5
+    PowerupStringLengthJitter: 3
+  - Name: Who Left These Here?
     StartSegment: 10
     ApproxSegmentLength: 22
     SegmentLengthJitter: 2
     Curviness: 10
-    MaxHeightDifference: 3
-    ChanceOfDoodad: .25
-    MaxDoodadDifficulty: 3
-    MaxDifficulty: 1
+    MinHeightDifference: 0
+    MaxHeightDifference: 0
+    AscendOnly: 0
+    ChanceOfDoodad: 1
+    MaxDoodadDifficulty: 10
+    MaxDifficulty: 0
     ChanceOfPowerupString: .5
-    PowerupStringAvgLength: 6
-    PowerupStringLengthJitter: 0
-  - Name: Fairly Curvy
-    StartSegment: 20
-    ApproxSegmentLength: 15
-    SegmentLengthJitter: 5
-    Curviness: 10
-    MaxHeightDifference: 1
-    ChanceOfDoodad: 0
-    MaxDoodadDifficulty: 0
-    MaxDifficulty: 1
-    ChanceOfPowerupString: .5
-    PowerupStringAvgLength: 8
+    PowerupStringAvgLength: 4
     PowerupStringLengthJitter: 2
-  - Name: Difficult Segments + Height
-    StartSegment: 30
+  - Name: Tricksy Tracks
+    StartSegment: 15
     ApproxSegmentLength: 25
-    SegmentLengthJitter: 5
-    Curviness: 5
-    MaxHeightDifference: 10
+    SegmentLengthJitter: 0
+    Curviness: 1
+    MinHeightDifference: 0
+    MaxHeightDifference: 0
+    AscendOnly: 0
     ChanceOfDoodad: 0
     MaxDoodadDifficulty: 0
-    MaxDifficulty: 10000
+    MaxDifficulty: 10
+    ChanceOfPowerupString: .5
+    PowerupStringAvgLength: 4
+    PowerupStringLengthJitter: 2
+  - Name: Before The Mountain
+    StartSegment: 19
+    ApproxSegmentLength: 20
+    SegmentLengthJitter: 0
+    Curviness: 0
+    MinHeightDifference: 0
+    MaxHeightDifference: 0
+    AscendOnly: 0
+    ChanceOfDoodad: 0
+    MaxDoodadDifficulty: 0
+    MaxDifficulty: 0
+    ChanceOfPowerupString: 1
+    PowerupStringAvgLength: 6
+    PowerupStringLengthJitter: 2
+  - Name: Behold, A Mountain
+    StartSegment: 20
+    ApproxSegmentLength: 20
+    SegmentLengthJitter: 0
+    Curviness: 1
+    MinHeightDifference: 20
+    MaxHeightDifference: 20
+    AscendOnly: 1
+    ChanceOfDoodad: 0
+    MaxDoodadDifficulty: 0
+    MaxDifficulty: 0
+    ChanceOfPowerupString: 1
+    PowerupStringAvgLength: 20
+    PowerupStringLengthJitter: 0
+  - Name: You Probably Won't Pass
+    StartSegment: 21
+    ApproxSegmentLength: 20
+    SegmentLengthJitter: 0
+    Curviness: 5
+    MinHeightDifference: 2
+    MaxHeightDifference: 10
+    AscendOnly: 0
+    ChanceOfDoodad: 0
+    MaxDoodadDifficulty: 0
+    MaxDifficulty: 5
     ChanceOfPowerupString: .5
     PowerupStringAvgLength: 8
     PowerupStringLengthJitter: 2
-  - Name: Doodads
+  - Name: Really?
     StartSegment: 40
     ApproxSegmentLength: 20
-    SegmentLengthJitter: 10
-    Curviness: 10
-    MaxHeightDifference: 3
+    SegmentLengthJitter: 0
+    Curviness: 5
+    MinHeightDifference: 1
+    MaxHeightDifference: 5
+    AscendOnly: 0
     ChanceOfDoodad: 1
     MaxDoodadDifficulty: 3
-    MaxDifficulty: 1
+    MaxDifficulty: 20
     ChanceOfPowerupString: .5
     PowerupStringAvgLength: 8
     PowerupStringLengthJitter: 2
   - Name: Gettin Harder
     StartSegment: 50
     ApproxSegmentLength: 25
-    SegmentLengthJitter: 12
+    SegmentLengthJitter: 5
     Curviness: 10
+    MinHeightDifference: 0
     MaxHeightDifference: 15
-    ChanceOfDoodad: 0
-    MaxDoodadDifficulty: 0
+    AscendOnly: 0
+    ChanceOfDoodad: .5
+    MaxDoodadDifficulty: 100
     MaxDifficulty: 10000
     ChanceOfPowerupString: .25
     PowerupStringAvgLength: 4
@@ -639,11 +682,13 @@ MonoBehaviour:
   - Name: End Game
     StartSegment: 60
     ApproxSegmentLength: 20
-    SegmentLengthJitter: 10
+    SegmentLengthJitter: 5
     Curviness: 15
+    MinHeightDifference: 0
     MaxHeightDifference: 20
+    AscendOnly: 0
     ChanceOfDoodad: 1.5
-    MaxDoodadDifficulty: 3
+    MaxDoodadDifficulty: 100
     MaxDifficulty: 10000
     ChanceOfPowerupString: .25
     PowerupStringAvgLength: 4
@@ -735,69 +780,6 @@ MonoBehaviour:
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
-  - Name: Bubbly
-    AllowsDoodads: 1
-    Difficulty: 1
-    Left:
-      serializedVersion: 2
-      m_Curve:
-      - time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      - time: .142369986
-        value: 1.02527356
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      - time: .496208876
-        value: 1.00083864
-        inSlope: .0011920929
-        outSlope: .0011920929
-        tangentMode: 0
-      - time: .845572591
-        value: 1.02603149
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      - time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-    Right:
-      serializedVersion: 2
-      m_Curve:
-      - time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      - time: .152600154
-        value: .566113651
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      - time: .483367056
-        value: .254383028
-        inSlope: -.00849366188
-        outSlope: -.00849366188
-        tangentMode: 0
-      - time: .792716622
-        value: .553951979
-        inSlope: .0404630713
-        outSlope: .0404630713
-        tangentMode: 0
-      - time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
   - Name: Weeeird
     AllowsDoodads: 1
     Difficulty: 5
@@ -833,6 +815,49 @@ MonoBehaviour:
         value: .112413645
         inSlope: 0
         outSlope: 6.41476297
+        tangentMode: 1
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+  - Name: Weeeird Mirrored
+    AllowsDoodads: 1
+    Difficulty: 5
+    Left:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: .256638229
+        value: .112413645
+        inSlope: 0
+        outSlope: 6.41476297
+        tangentMode: 1
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    Right:
+      serializedVersion: 2
+      m_Curve:
+      - time: -.00341005973
+        value: 1.00185788
+        inSlope: .1475932
+        outSlope: .1475932
+        tangentMode: 0
+      - time: .700357258
+        value: .0583129525
+        inSlope: -1.12408221
+        outSlope: 7.30071497
         tangentMode: 1
       - time: 1
         value: 1
@@ -894,6 +919,59 @@ MonoBehaviour:
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
+  - Name: Schwooop
+    AllowsDoodads: 1
+    Difficulty: 150
+    Left:
+      serializedVersion: 2
+      m_Curve:
+      - time: -.00341005973
+        value: 1.00281906
+        inSlope: .1475932
+        outSlope: .1475932
+        tangentMode: 0
+      - time: .299879164
+        value: .702225804
+        inSlope: -.0299866647
+        outSlope: -.0299866647
+        tangentMode: 0
+      - time: .699859023
+        value: 1.19955635
+        inSlope: .0634345189
+        outSlope: .0634345189
+        tangentMode: 0
+      - time: 1
+        value: 1.00096118
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    Right:
+      serializedVersion: 2
+      m_Curve:
+      - time: -.00341005973
+        value: 1.00281906
+        inSlope: .1475932
+        outSlope: .1475932
+        tangentMode: 0
+      - time: .299723208
+        value: 1.19824672
+        inSlope: -.0299866647
+        outSlope: -.0299866647
+        tangentMode: 0
+      - time: .698747158
+        value: .703270435
+        inSlope: -.0198833905
+        outSlope: -.0198833905
+        tangentMode: 0
+      - time: 1
+        value: 1.00096118
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
   _viewDistance: 8
   _levelTrackMaterial: {fileID: 2100000, guid: d96e93e390971a44f970aadc824ba8da, type: 2}
   _playerPrefab: {fileID: 11400000, guid: 6a07642956a95ff49bf45ba2da1205a3, type: 2}
@@ -929,6 +1007,23 @@ MonoBehaviour:
   Green: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
   Blue: {r: 0, g: .188235298, b: .749019623, a: 1}
   Red: {r: 1, g: 0, b: .258823544, a: 1}
+--- !u!114 &1014443286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1014443281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37f8c18a8f078054f8d3cf0d4aa389b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pointsAnimateSpeed: 20000
+  SegmentCompleteValue: 10000
+  StarCollectValue: 100
+  ExplodeBarrellValue: 2000
+  ActivatePowerupValue: 50000
+  JumpValue: 100
 --- !u!1 &2056844206
 GameObject:
   m_ObjectHideFlags: 0
@@ -956,7 +1051,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7176c662300123d47901b8ca4aee1542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _music: {fileID: 0}
+  _music: {fileID: 8300000, guid: 60d8d6cffe0aadd418e6178b73a7db7e, type: 3}
+  _startDelay: 8
+  _fadeInTime: 5
+  _volume: .5
 --- !u!4 &2056844208
 Transform:
   m_ObjectHideFlags: 0

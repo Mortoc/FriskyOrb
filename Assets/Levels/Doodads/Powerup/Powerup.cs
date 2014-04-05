@@ -66,6 +66,7 @@ public class Powerup : Doodad
         if( bar )
             bar.CollectedPowerup();
 
+        Score.Instance.RegisterEvent(Score.Event.StarCollect);
         GameObject.Destroy(this.gameObject);
     }
 }

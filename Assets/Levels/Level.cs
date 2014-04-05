@@ -39,7 +39,9 @@ public class Level : MonoBehaviour
         public float ApproxSegmentLength = 20.0f;
         public float SegmentLengthJitter = 5.0f;
         public float Curviness = 15.0f;
+        public float MinHeightDifference = 0.0f;
         public float MaxHeightDifference = 0.0f;
+        public bool AscendOnly = false;
         public float ChanceOfDoodad = 1.0f; // values over 1 will have a chance for multiple doodads
         public float MaxDoodadDifficulty = 1.0f;
         public float MaxDifficulty = 1.0f;
@@ -155,6 +157,7 @@ public class Level : MonoBehaviour
     public void NewSegmentReached()
     {
         SegmentCompletedCount++;
+        Score.Instance.RegisterEvent(Score.Event.SegmentComplete);
     }
 
     private LevelSegment GenerateNextSegment(LevelSegment previous, bool initialSegments)
@@ -223,8 +226,16 @@ public class Level : MonoBehaviour
         }
 
         // Set Path height
-        float elevationChange = 1.0f - (_rand.NextSingle() * 2.0f);
-        elevationChange *= tweakables.MaxHeightDifference;
+        float elevationChange = Mathf.Lerp
+        (
+            tweakables.MinHeightDifference, 
+            tweakables.MaxHeightDifference, 
+            _rand.NextSingle()
+        );
+
+        if( !tweakables.AscendOnly && _rand.NextSingle() > 0.5f )
+            elevationChange *= -1.0f;
+        
         a.y = previousHeight;
         aCP.y = previousHeight;
         b.y = previousHeight + elevationChange;

@@ -19,12 +19,18 @@ public class LevelGui : MonoBehaviour
     {
         GUI.skin = _skin;
         GUILayout.BeginArea(new Rect(0.0f, 0.0f, Screen.width, Screen.height));
-        GUILayout.Space(5.0f);
+        GUILayout.Space(Screen.height * 0.015f);
         GUILayout.BeginHorizontal();
        
         GUILayout.FlexibleSpace();
 
-        GUILayout.Label("Score: " + _level.SegmentCompletedCount, GUILayout.Width(Screen.width * .15f), GUILayout.Height(Screen.height * 0.075f));
+        GUILayout.Label
+        (
+            "Score: " + Score.Instance.ScoreDisplayValue, 
+            GUILayout.Width(Screen.width * .15f), 
+            GUILayout.Height(Screen.height * 0.075f)
+        );
+
         GUILayout.Space(5.0f);
         GUILayout.EndHorizontal();
         GUILayout.EndArea();

@@ -23,6 +23,26 @@ public class ExplodeyBarrell : Doodad
             collision.rigidbody.AddForce(forceDir * _playerForce, ForceMode.Impulse);
         }
     }
+    
+    public void ForcePush(Player player, float strength)
+    {
+        StartCoroutine(ForcePushCoroutine(player, strength));
+    }
+
+    private System.Collections.IEnumerator ForcePushCoroutine(Player player, float strength)
+    {
+        gameObject.layer = LayerMask.NameToLayer("FX");
+
+        float fuseTime = 1.0f;
+
+        Vector3 playerDir = (rigidbody.position - player.rigidbody.position).normalized;
+        rigidbody.AddForce(playerDir * strength, ForceMode.Impulse);
+        rigidbody.AddTorque(strength * UnityEngine.Random.onUnitSphere, ForceMode.Impulse);
+
+        yield return new WaitForSeconds(fuseTime);
+
+        Explode(player.gameObject);
+    }
 
     private void Explode(GameObject playerObj)
     {
@@ -31,5 +51,7 @@ public class ExplodeyBarrell : Doodad
         ExplodeyBarrellFX explosionFX = _explodeFX.GetComponent<ExplodeyBarrellFX>();
         explosionFX.PerformFX();
         Destroy(gameObject);
+
+        Score.Instance.RegisterEvent(Score.Event.ExplodeBarrell);
     }
 }

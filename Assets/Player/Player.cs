@@ -132,6 +132,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        //Debug.Log("Time: " + Time.time.ToString("f2"));
         OnFixedUpdate();
 
         if (CurrentSegment)
@@ -236,9 +237,9 @@ public class Player : MonoBehaviour
         if( powerupBar )
             Destroy(powerupBar.gameObject);
 
-        if (!PlayerPrefs.HasKey("best_score") || PlayerPrefs.GetInt("best_score") < Level.SegmentCompletedCount)
+        if (!PlayerPrefs.HasKey("best_score") || PlayerPrefs.GetInt("best_score") < Score.Instance.ActualScore)
         {
-            PlayerPrefs.SetInt("best_score", Level.SegmentCompletedCount);
+            PlayerPrefs.SetInt("best_score", Score.Instance.ActualScore);
             PlayerPrefs.SetInt("best_score_level_seed", Level.Seed);
         }
     }

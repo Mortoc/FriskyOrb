@@ -3,27 +3,39 @@ using System.Collections.Generic;
 
 public class GameMusic : MonoBehaviour
 {
-    private static GameMusic _instance = null;
-
     public AudioClip _music;
 
-    void Awake()
+    [SerializeField]
+    private float _startDelay = 5.0f;
+
+    [SerializeField]
+    private float _fadeInTime = 5.0f;
+
+    [SerializeField]
+    private float _volume = 1.0f;
+
+    private System.Collections.IEnumerator Start()
     {
-        if (_instance)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            GameObject.DontDestroyOnLoad(gameObject);
-            _instance = this;
+        transform.parent = Camera.main.transform;
+        transform.localPosition = Vector3.zero;
 
-            gameObject.AddComponent<AudioSource>();
-            audio.clip = _music;
-            audio.Play();
+        gameObject.AddComponent<AudioSource>();
+        audio.loop = true;
 
-            transform.parent = Camera.main.transform;
-            transform.position = Vector3.zero;
+        yield return new WaitForSeconds(_startDelay);
+
+        audio.clip = _music;
+        
+        audio.Play();
+
+        // Fade In
+        audio.volume = 0.0f;
+        float recipFadeTime = 1.0f / _fadeInTime;
+        for (float time = 0.0f; time < _fadeInTime; time += Time.deltaTime)
+        {
+            yield return 0;
+            audio.volume = Mathf.Lerp(0.0f, _volume, time * recipFadeTime);
         }
+        audio.volume = _volume;
     }
 }

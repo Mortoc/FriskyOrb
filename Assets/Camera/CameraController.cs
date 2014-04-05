@@ -4,7 +4,17 @@ using System.Collections.Generic;
 
 public class CameraController : MonoBehaviour
 {
-    public Player Player { get; set; }
+    private Player _player = null;
+
+    public Player Player 
+    {
+        get { return _player; }
+        set 
+        { 
+            _player = value;
+            _lastPlayerPosition = value.rigidbody.position;
+        }
+    }
 
     private Vector3 _followDistance = new Vector3(0.0f, 2.5f, -1.5f);
     private float _lookAheadDistance = 5.0f;
@@ -13,14 +23,18 @@ public class CameraController : MonoBehaviour
     private SmoothedVector _currentPosition = new SmoothedVector(0.25f);
     private SmoothedVector _velocity = new SmoothedVector(1.0f);
 
+    private Vector3 _lastPlayerPosition;
+
     void FixedUpdate()
     {
         if (Player)
         {
-            Vector3 lookAtPos = Player.rigidbody.position + (Player.Heading * _lookAheadDistance);
+            Rigidbody playerRB = Player.rigidbody;
+
+            Vector3 lookAtPos = playerRB.position + (Player.Heading * _lookAheadDistance);
 
             // If the player is falling off the bottom of the screen, look down a bit more
-            Vector3 playerPosInView = camera.WorldToViewportPoint(Player.transform.position);
+            Vector3 playerPosInView = camera.WorldToViewportPoint(playerRB.position);
             if (playerPosInView.y < 0.2f)
                 _lookAtTarget.AddSample(lookAtPos + (Vector3.down * 0.5f));
             else
@@ -28,11 +42,13 @@ public class CameraController : MonoBehaviour
 
             Quaternion viewRotation = Quaternion.FromToRotation(
                 Vector3.forward,
-                (lookAtPos - Player.rigidbody.position).normalized
+                (lookAtPos - playerRB.position).normalized
             );
-            _currentPosition.AddSample(Player.transform.position + (viewRotation * _followDistance));
+            _currentPosition.AddSample(playerRB.position + (viewRotation * _followDistance));
 
-            _velocity.AddSample(Player.rigidbody.velocity);
+            _velocity.AddSample(_lastPlayerPosition - playerRB.position);
+            _lastPlayerPosition = playerRB.position;
+            
             transform.position = _currentPosition.GetSmoothedVector();
             transform.LookAt(_lookAtTarget.GetSmoothedVector());
         }
