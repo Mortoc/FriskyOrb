@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-public class PowerupBar : TappableObject
+public class PowerupBar : MonoBehaviour
 {
     [SerializeField]
     private float _powerupsUntilFull = 100.0f;
@@ -24,8 +24,32 @@ public class PowerupBar : TappableObject
     private AnimationCurve _animateToPlayerScale;
     private int _originalLayer;
 
+    private InputHandler.CircleTouchRegion _touchRegion;
+
+
     void Start()
     {
+        // Start the powerup bar on the edge of the screen
+        float currentDepth = transform.localPosition.magnitude;
+        Vector2 powerupCenter = new Vector2(Screen.width * 0.9f, Screen.height * 0.5f);
+        transform.position = Camera.main.ScreenPointToRay(powerupCenter).GetPoint(currentDepth);
+
+        InputHandler input = FindObjectOfType<InputHandler>();
+        _touchRegion = new InputHandler.CircleTouchRegion(){
+            Center = new Vector2(Screen.width * 0.8f, Screen.height * 0.2f),
+            Radius = Mathf.Max(Screen.width, Screen.height) * 0.3f
+        };
+
+        input.RegisterTouchRegion(_touchRegion, e =>
+        {
+            if (this && PowerupReady)
+            {
+                PowerupReady = false;
+                StartCoroutine(UsePowerup());
+                e.Consumed = true;
+            }
+        });
+
         _originalLayer = gameObject.layer;
         _startPosition = transform.localPosition;
         _startScale = transform.localScale;
@@ -39,10 +63,10 @@ public class PowerupBar : TappableObject
     {
         _currentPowerups += 1.0f;
 
-        if (PowerupReady && !_animatedToButton)
+        if (_currentPowerups >= _powerupsUntilFull && !_animatedToButton)
         {
-            Scheduler.Run(AnimateToActiveState());
-            Scheduler.Run(SpinButton());
+            StartCoroutine(AnimateToActiveState());
+            StartCoroutine(SpinButton());
         }
         else if (!_animatedToButton)
         {
@@ -59,30 +83,18 @@ public class PowerupBar : TappableObject
         get { return Mathf.Clamp01(_currentPowerups / _powerupsUntilFull); }
     }
 
-    public override void Tapped()
-    {
-        if( PowerupReady )
-            Scheduler.Run(UsePowerup());
-    }
+    public bool PowerupReady { get; private set; }
 
-    private bool PowerupReady
-    {
-        get
-        {
-            return _currentPowerups >= _powerupsUntilFull;
-        }
-    }
-
-    private IEnumerator<IYieldInstruction> SpinButton()
+    private System.Collections.IEnumerator SpinButton()
     {
         while (_animatedToButton)
         {
             transform.Rotate(Vector3.forward * 180.0f * Time.deltaTime);
-            yield return Yield.UntilNextFrame;
+            yield return 0;
         }
     }
 
-    private IEnumerator<IYieldInstruction> AnimateToActiveState()
+    private System.Collections.IEnumerator AnimateToActiveState()
     {
         _animatedToButton = true;
         SkinnedMeshRenderer smr = GetComponent<SkinnedMeshRenderer>();
@@ -95,42 +107,57 @@ public class PowerupBar : TappableObject
             float smoothT = Mathf.SmoothStep(0.0f, 1.0f, t);
             transform.localPosition = Vector3.Lerp(_startPosition, _buttonPosition, smoothT);
 
-            
             smr.SetBlendShapeWeight(1, 100.0f - percentT); // full state
             smr.SetBlendShapeWeight(0, percentT); // button state
 
-            yield return Yield.UntilNextFrame;
+            yield return 0;
         }
 
-        gameObject.layer = LayerMask.NameToLayer("Touchable");
+        PowerupReady = true;
     }
 
-    private IEnumerator<IYieldInstruction> UsePowerup()
+    private System.Collections.IEnumerator UsePowerup()
     {
         _currentPowerups = 0.0f;
         Player player = (Player)GameObject.FindObjectOfType<Player>();
+        player.IsImmortal = true;
         float animateTimeRecip = 1.0f / _animateToPlayerTime;
-        for (float time = 0.0f; time < _animateToPlayerTime; time += Time.deltaTime )
+        for (float time = 0.0f; time < _animateToPlayerTime && player; time += Time.deltaTime)
         {
             float t = time * animateTimeRecip;
             float smoothT = Mathf.SmoothStep(0.0f, 1.0f, t);
 
             transform.position = Vector3.Lerp(transform.position, player.transform.position, smoothT);
             transform.localScale = _animateToPlayerScale.Evaluate(t) * _startScale;
-            yield return Yield.UntilNextFrame;
+            yield return 0;
         }
 
         gameObject.layer = _originalLayer;
         gameObject.renderer.enabled = false;
 
-        Scheduler.Run(ExecutePowerup());
+        ExecutePowerup(player);
     }
 
-    private IEnumerator<IYieldInstruction> ExecutePowerup()
+    private void ExecutePowerup(Player player)
     {
-        yield return Yield.UntilNextFrame;
+        var powerupController = new StarPowerupController(player);
+        var originalController = player.Controller;
+        
+        if (originalController is StarPowerupController)
+            throw new InvalidOperationException("Starting Powerup twice in a row");
 
-        ResetPowerup();
+        
+        //player.AnimateColor(Palette.Instance.Green, 0.75f);
+        player.AnimateColor(Color.white, 0.5f);
+        player.Controller = powerupController;
+        powerupController.PowerupEnded += () => {
+            player.Controller = originalController;
+            player.IsImmortal = false;
+            player.rigidbody.isKinematic = false;
+            ResetPowerup();
+
+            player.AnimateColor(Palette.Instance.Orange, 2.5f);
+        };
     }
 
     private void ResetPowerup()
@@ -138,6 +165,7 @@ public class PowerupBar : TappableObject
         gameObject.layer = _originalLayer;
         gameObject.renderer.enabled = true;
         _animatedToButton = false;
+        PowerupReady = false;
 
         SkinnedMeshRenderer smr = GetComponent<SkinnedMeshRenderer>();
         smr.SetBlendShapeWeight(2, 100.0f); // empty state

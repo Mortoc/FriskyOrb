@@ -21,18 +21,18 @@ public class ExplodeyBarrellFX : FX
             fragment.AddForce(_explosionForce * randomDir, ForceMode.Impulse);
         }
 
-        Scheduler.Run(CleanupFragments(fragments));
+        StartCoroutine(CleanupFragments(fragments));
     }
 
-    private IEnumerator<IYieldInstruction> CleanupFragments(IEnumerable<Rigidbody> fragments)
+    private System.Collections.IEnumerator CleanupFragments(IEnumerable<Rigidbody> fragments)
     {
-        yield return new YieldForSeconds(_fragmentLife);
+        yield return new WaitForSeconds(_fragmentLife);
 
         // Spread out the cleanup over a bunch of frames
         foreach (var fragment in fragments)
         {
             GameObject.Destroy(fragment.gameObject);
-            yield return Yield.UntilNextFrame;
+            yield return 0;
         }
 
         GameObject.Destroy(gameObject);

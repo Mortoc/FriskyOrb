@@ -7,14 +7,16 @@ public class StarPowerupController : IPlayerController
     public event Action OnEnable;
     public event Action OnDisable;
 
-    private const float POWERUP_DURATION = 2.0f; // seconds
-    private const float PLAYER_SPEED = 30.0f; // units/second
+    public event Action PowerupEnded;
+
+    public const float POWERUP_DURATION = 2.0f; // seconds
+    public const float PLAYER_SPEED = 1.0f; // segments/second
 
     private readonly Player _player;
 
     public StarPowerupController(Player player)
     {
-        _player = player;
+        _player = player;    
     }
 
     public void Enable()
@@ -22,7 +24,8 @@ public class StarPowerupController : IPlayerController
         if (OnEnable != null)
             OnEnable();
 
-        Scheduler.Run(ExecutePowerup());
+        _player.PowerupFX.PerformFX();
+        _player.StartCoroutine(ExecutePowerup());
     }
 
     public void Disable()
@@ -31,12 +34,37 @@ public class StarPowerupController : IPlayerController
             OnDisable();
     }
 
-    private IEnumerator<IYieldInstruction> ExecutePowerup()
+    private System.Collections.IEnumerator ExecutePowerup()
     {
+        Vector3 floatOffset = Vector3.up;
+        SmoothedVector targetPositionSmoothed = new SmoothedVector(0.33f);
+        YieldInstruction nextFixedUpdate = new WaitForFixedUpdate();
+        Rigidbody playerRB = _player.rigidbody;
+        playerRB.isKinematic = true;
+
+        LevelSegment segment = _player.CurrentSegment;
+        float startT = segment.Path.GetApproxT(playerRB.position);
+        float segmentsIn = 0.0f;
         for( float time = 0.0f; time < POWERUP_DURATION; time += Time.fixedDeltaTime )
         {
-            yield return Yield.UntilNextFixedUpdate;
-            Debug.Log("stack");
+            float t = time / POWERUP_DURATION;
+            float tInSegment = startT + (t * POWERUP_DURATION * PLAYER_SPEED) - segmentsIn;
+
+            if( tInSegment >= 0.99f )
+            {
+                segmentsIn += 1.0f;
+                tInSegment -= 1.0f;
+                segment = segment.Next;
+            }
+
+            Vector3 targetPosition = segment.Path.GetPoint(tInSegment) + floatOffset;
+            targetPositionSmoothed.AddSample(targetPosition);
+            playerRB.position = targetPositionSmoothed.GetSmoothedVector();
+            yield return nextFixedUpdate;
         }
+
+        playerRB.isKinematic = false;
+        if (PowerupEnded != null)
+            PowerupEnded();
     }
 }

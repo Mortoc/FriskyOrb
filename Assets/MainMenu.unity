@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axis: {x: 0, y: 1, z: 0}
-  speed: 180
+  speed: 1
 --- !u!33 &332241825
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -243,13 +243,13 @@ MonoBehaviour:
   _rerenderResolution: 1
   _highPrecsion: 1
   settings:
-    downsampleSteps: 6
+    downsampleSteps: 2
     baseResolution: 1
-    downsampleResolution: 4
+    downsampleResolution: 2
     iterations: 3
     blurSpread: .600000024
     innerStrength: 1.25
-    outerStrength: 2.02999997
+    outerStrength: 1.20000005
     boostStrength: 2.29999995
     blendMode: 1
     downsampleBlendMode: 1

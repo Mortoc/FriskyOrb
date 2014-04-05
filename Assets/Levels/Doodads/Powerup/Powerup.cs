@@ -46,6 +46,9 @@ public class Powerup : Doodad
 
         for (float t = 0.0f; t < _collectAnimateTime; t += Time.deltaTime)
         {
+            if (!player)
+                yield break;
+
             float animPercent = t * recprAnimateTime;
             float influence1T = Mathf.SmoothStep(0.0f, 1.0f, animPercent * 2.0f);
             Vector3 influence1 = Vector3.Lerp(startPosition, randOffset + player.transform.position, influence1T);
@@ -58,7 +61,11 @@ public class Powerup : Doodad
             yield return 0;
         }
 
-        GameObject.FindObjectOfType<PowerupBar>().CollectedPowerup();
+        PowerupBar bar = GameObject.FindObjectOfType<PowerupBar>();
+        
+        if( bar )
+            bar.CollectedPowerup();
+
         GameObject.Destroy(this.gameObject);
     }
 }

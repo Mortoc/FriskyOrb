@@ -16,6 +16,5 @@ public class PlayerExplodeFX : FX
             fragment.rigidbody.AddForce(UnityEngine.Random.onUnitSphere * _explodeForce, ForceMode.Impulse);
             fragment.rigidbody.AddTorque(UnityEngine.Random.onUnitSphere * _rotateForce, ForceMode.Impulse);
         }
-
     }
 }

@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: PlayerStructure
+  m_Name: PowerupOrbiter
   m_Shader: {fileID: 4800000, guid: 733ca5c4d156844769e6d7e932242ddc, type: 3}
   m_ShaderKeywords:
   - GLOW11_MULTIPLY_GLOWCOLOR
@@ -52,12 +52,12 @@ Material:
       data:
         first:
           name: _GlowStrength
-        second: 1.33000004
+        second: .200000003
     m_Colors:
       data:
         first:
           name: _Color
-        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+        second: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
       data:
         first:
           name: _SpecColor
@@ -73,7 +73,7 @@ Material:
       data:
         first:
           name: _GlowColor
-        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+        second: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
       data:
         first:
           name: _RimColor

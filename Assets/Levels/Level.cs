@@ -99,6 +99,9 @@ public class Level : MonoBehaviour
 
     private LevelSegment _lastSegment;
 
+    [SerializeField]
+    private GameObject _endGuiPrefab;
+
     void Awake()
     {
         if (PlayerPrefs.HasKey("next_level_seed"))
@@ -133,6 +136,7 @@ public class Level : MonoBehaviour
         _player.transform.position = first.Path.GetPoint(0.1f) + Vector3.up;
         _player.gameObject.name = "Player";
         _player.CurrentSegment = first.Next;
+        _player.OnDeath += () => Instantiate(_endGuiPrefab);
 
         // Setup Camera
         _camera = Camera.main.gameObject.AddComponent<CameraController>();
@@ -192,8 +196,6 @@ public class Level : MonoBehaviour
             previousHeight = previous.Path.B.position.y;
             Vector3 prevBcpDiff = a - previous.Path.B_CP.position;
             aCP = a + prevBcpDiff;
-
-            forwardDirection = prevBcpDiff.normalized;
         }
 
         float rotationRandom = Mathf.Lerp(-1.0f, 1.0f, _rand.NextSingle());
@@ -230,7 +232,15 @@ public class Level : MonoBehaviour
 
         // Figure out which Profile to use
         uint highestProfile;
-        for (highestProfile = 0; highestProfile < _segmentProfiles.Length && _segmentProfiles[highestProfile].Difficulty < tweakables.MaxDifficulty; ++highestProfile) ;
+        for 
+        (
+            highestProfile = 0;
+            
+            highestProfile < _segmentProfiles.Length && 
+            _segmentProfiles[highestProfile].Difficulty < tweakables.MaxDifficulty; 
+
+            ++highestProfile
+        );
 
         SegmentProfile profile;
 
@@ -341,7 +351,6 @@ public class Level : MonoBehaviour
                     doodadObj.transform.parent = segment.transform;
                     doodadObj.transform.localPosition = doodadPosition;
                     doodadObj.transform.up = rh.normal;
-
                     foreach (var doodadRigidbody in doodadObj.GetComponentsInChildren<Rigidbody>())
                     {
                         doodadRigidbody.useGravity = false;

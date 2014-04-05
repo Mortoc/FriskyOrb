@@ -77,6 +77,9 @@ public class JumpAction : IPlayerAction
 
     private void ApplyJump()
     {
+        if (!_player)
+            return;
+
         _player.rigidbody.drag = 0.0f;
         
         if( _player.rigidbody.velocity.y < 0.0f )

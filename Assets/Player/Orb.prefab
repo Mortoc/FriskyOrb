@@ -13,7 +13,6 @@ GameObject:
   - 54: {fileID: 5400000}
   - 135: {fileID: 13500000}
   - 114: {fileID: 11400000}
-  - 108: {fileID: 10800000}
   m_Layer: 9
   m_Name: Orb
   m_TagString: Untagged
@@ -1173,6 +1172,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &100124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400124}
+  - 114: {fileID: 11400008}
+  m_Layer: 0
+  m_Name: PowerupFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 1
@@ -1183,6 +1198,7 @@ Transform:
   m_LocalPosition: {x: -.569999993, y: 1.25999999, z: -7.76000023}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 400124}
   - {fileID: 400002}
   - {fileID: 400004}
   - {fileID: 400120}
@@ -1914,6 +1930,17 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: .0136373043, y: .015961362, z: -.0515560284}
   m_LocalScale: {x: .533779383, y: .533779383, z: .533779383}
+  m_Children: []
+  m_Father: {fileID: 400000}
+--- !u!4 &400124
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100124}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400000}
 --- !u!23 &2300000
@@ -5237,41 +5264,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: .354146957, y: .201172754, z: .24926278}
   m_Center: {x: .0753765479, y: .05962364, z: -.162306637}
---- !u!108 &10800000
-Light:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Type: 2
-  m_Color: {r: 1, g: .79396832, b: .558823526, a: 1}
-  m_Intensity: .25
-  m_Range: 5
-  m_SpotAngle: 30
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 0
-    m_Resolution: -1
-    m_Strength: 1
-    m_Bias: .0500000007
-    m_Softness: 4
-    m_SoftnessFade: 1
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 0
-  m_ActuallyLightmapped: 0
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_Lightmapping: 1
-  m_ShadowSamples: 1
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
-  m_IndirectIntensity: 1
-  m_AreaSize: {x: 1, y: 1}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5288,7 +5280,7 @@ MonoBehaviour:
   _blackHoleSphere: {fileID: 400122}
   JumpFX: {fileID: 11400002}
   DeathFX: {fileID: 11400004}
-  PowerupFX: {fileID: 0}
+  PowerupFX: {fileID: 11400008}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5311,7 +5303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a1d80656fea00845978872339ac43f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _explodeForce: 10
+  _explodeForce: 40
   _rotateForce: 30
 --- !u!114 &11400006
 MonoBehaviour:
@@ -5326,6 +5318,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   axis: {x: 0, y: 0, z: 1}
   speed: 180
+--- !u!114 &11400008
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6afe330156d35bd4ba466a0decde12ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _orbiterCount: 5
+  _orbiterSpeed: 360
+  _orbiterRadius: .5
+  _orbiterPrefab: {fileID: 100000, guid: 5472369d30105be40b4dcb6329972188, type: 2}
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

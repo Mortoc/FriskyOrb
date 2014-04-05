@@ -9,7 +9,7 @@ public abstract class InputHandler : MonoBehaviour
         GameObject inputObj = new GameObject("Input Handler");
 
         InputHandler result = null;
-        
+
         switch (Application.platform)
         {
             case RuntimePlatform.Android:
@@ -39,21 +39,66 @@ public abstract class InputHandler : MonoBehaviour
             OnAction();
     }
 
-    // Returns true when the touch event should be consumed
+    public interface ITouchRegion
+    {
+        bool Contains(Vector3 cursorPos);
+    }
+
+    public class TouchEvent
+    {
+        public Vector3 CursorPosition { get; set; }
+        public bool Consumed { get; set; }
+    }
+
+    public class CircleTouchRegion : ITouchRegion
+    {
+        public Vector3 Center { get; set; }
+        public float Radius { get; set; }
+
+        public bool Contains(Vector3 cursorPos)
+        {
+            return (Center - cursorPos).sqrMagnitude < (Radius * Radius);
+        }
+    }
+
+    public class RectTouchRegion : ITouchRegion
+    {
+        public Rect Rect;
+
+        public bool Contains(Vector3 cursorPos)
+        {
+            return Rect.Contains(cursorPos);
+        }
+    }
+
+    private Dictionary<ITouchRegion, Action<TouchEvent>> _touchRegions = new Dictionary<ITouchRegion, Action<TouchEvent>>();
+
+    public void RegisterTouchRegion(ITouchRegion touchRegion, Action<TouchEvent> callback)
+    {
+        _touchRegions.Add(touchRegion, callback);
+    }
+
+    public void RemoveTouchRegion(ITouchRegion touchRegion)
+    {
+        _touchRegions.Remove(touchRegion);
+    }
+
+    // Returns true when the touch event was consumed
     protected bool ExecuteTouchAt(Vector3 screenPos)
     {
-        Ray touchRay = Camera.main.ScreenPointToRay(screenPos);
+        TouchEvent tEvent = new TouchEvent() { CursorPosition = screenPos, Consumed = false };
 
-        //Debug.DrawRay(touchRay.origin, touchRay.direction * 1000.0f, Color.red);
-        //Debug.Break();
-
-        foreach (RaycastHit rh in Physics.RaycastAll(touchRay, 1000.0f, 1 << LayerMask.NameToLayer("Touchable")))
+        foreach(var kvp in _touchRegions)
         {
-            TappableObject tappable = rh.collider.GetComponent<TappableObject>();
-            Debug.Log("Tapped", tappable);
-            if (tappable)
-                tappable.Tapped();
+            if( kvp.Key.Contains(screenPos) )
+            {
+                kvp.Value(tEvent);
+
+                if (tEvent.Consumed)
+                    return true;
+            }
         }
+
         return false;
     }
 }

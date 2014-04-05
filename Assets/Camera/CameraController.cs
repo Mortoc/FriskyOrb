@@ -9,8 +9,8 @@ public class CameraController : MonoBehaviour
     private Vector3 _followDistance = new Vector3(0.0f, 2.5f, -1.5f);
     private float _lookAheadDistance = 5.0f;
 
-    private SmoothedVector _lookAtTarget = new SmoothedVector(0.25f);
-    private SmoothedVector _currentPosition = new SmoothedVector(0.5f);
+    private SmoothedVector _lookAtTarget = new SmoothedVector(0.33f);
+    private SmoothedVector _currentPosition = new SmoothedVector(0.25f);
     private SmoothedVector _velocity = new SmoothedVector(1.0f);
 
     void FixedUpdate()

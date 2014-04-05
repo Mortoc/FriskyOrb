@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     private Vector3 _initialGroundParticleOffset;
 
     [SerializeField]
-    private float _fallToDeathThreshold = 10.0f;
+    private float _fallToDeathThreshold = 30.0f;
 
     [SerializeField]
     private Transform _blackHoleSphere;
@@ -41,7 +41,7 @@ public class Player : MonoBehaviour
         {
             if (_controller != null)
                 _controller.Disable();
-
+            
             _controller = value;
             _controller.Enable();
         }
@@ -89,19 +89,18 @@ public class Player : MonoBehaviour
         Level = GameObject.FindObjectOfType<Level>();
         _startingGravityMag = Physics.gravity.magnitude;
         _groundMask = 1 << LayerMask.NameToLayer("Level");
-
+         
         _initialGroundParticleOffset = transform.position - _groundEffectParticles.transform.position;
-
         _blackHoleSphereOffset = (_blackHoleSphere.position - transform.position).magnitude;
 
         GameObject.FindObjectOfType<LevelGui>().Player = this;
-
 
         CreateSpecks();
     }
 
     private void CreateSpecks()
     {
+        // TODO: CombineChildren to reduce draw calls
         for (int i = 0; i < 6; ++i)
         {
             GameObject speck = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -164,6 +163,34 @@ public class Player : MonoBehaviour
         _groundEffectParticles.transform.position = rigidbody.position - _initialGroundParticleOffset;
     }
 
+    public void AnimateColor(Color toColor, float time)
+    {
+        foreach(Material mat in renderer.materials)
+            StartCoroutine(AnimateColorCoroutine(toColor, time, mat));
+    }
+
+    private System.Collections.IEnumerator AnimateColorCoroutine(Color toColor, float time, Material mat)
+    {
+        float recipTime = 1.0f / time;
+        Color startColor = mat.color;
+
+        Color startGlowColor = Color.black;
+        
+        if( mat.HasProperty("_GlowColor") )
+            startGlowColor = mat.GetColor("_GlowColor");
+
+        for( float t = 0; t < 1.0f; t += Time.deltaTime * recipTime )
+        {
+            yield return 0;
+
+            mat.color = Color.Lerp(startColor, toColor, t);
+
+            if (mat.HasProperty("_GlowColor"))
+                mat.SetColor("_GlowColor", Color.Lerp(startGlowColor, toColor, t));
+        }
+
+    }
+
     // Look ahead a bit to see where gravity should be
     private const float GRAV_SAMPLE_DIST = 1.25f;
     private void AdjustGravity()
@@ -191,8 +218,13 @@ public class Player : MonoBehaviour
         }
     }
 
+    public bool IsImmortal { get; set; }
+
     private void PlayerDied()
     {
+        if (IsImmortal)
+            return;
+
         if (OnDeath != null)
             OnDeath();
 
@@ -200,13 +232,15 @@ public class Player : MonoBehaviour
         DeathFX.PerformFX();
         Destroy(gameObject);
 
+        var powerupBar = FindObjectOfType<PowerupBar>();
+        if( powerupBar )
+            Destroy(powerupBar.gameObject);
+
         if (!PlayerPrefs.HasKey("best_score") || PlayerPrefs.GetInt("best_score") < Level.SegmentCompletedCount)
         {
             PlayerPrefs.SetInt("best_score", Level.SegmentCompletedCount);
             PlayerPrefs.SetInt("best_score_level_seed", Level.Seed);
         }
-
-        Level.GetComponent<EndOfLevelGui>().enabled = true;
     }
 
     void OnCollisionEnter(Collision collision)

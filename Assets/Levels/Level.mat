@@ -79,7 +79,7 @@ Material:
       data:
         first:
           name: _Shininess
-        second: .0370903164
+        second: 1
       data:
         first:
           name: _rim_power

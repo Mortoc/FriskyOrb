@@ -14,6 +14,7 @@ public class LevelGui : MonoBehaviour
         if (!_level)
             throw new System.Exception("LevelGui needs to be on the same object as Level");
     }
+
     void OnGUI()
     {
         GUI.skin = _skin;
@@ -28,5 +29,4 @@ public class LevelGui : MonoBehaviour
         GUILayout.EndHorizontal();
         GUILayout.EndArea();
     }
-
 }

@@ -388,10 +388,13 @@ public class LevelSegment : MonoBehaviour
         Level.NewSegmentReached();
 
         Level.SegmentDestroyed();
-        Scheduler.Run(new YieldForSeconds(5.0f), () =>
-        {
-            GameObject.Destroy(gameObject);
-        });
+        StartCoroutine(DelayThenCleanup());
+    }
+    
+    private System.Collections.IEnumerator DelayThenCleanup()
+    {
+        yield return new WaitForSeconds(5.0f);
+        GameObject.Destroy(gameObject);
     }
 
     void OnDrawGizmos()
