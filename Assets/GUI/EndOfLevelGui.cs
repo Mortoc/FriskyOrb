@@ -29,18 +29,29 @@ public class EndOfLevelGui : MonoBehaviour
         GUILayout.FlexibleSpace();
 
         GUILayout.BeginHorizontal();
-        
-        if (GUILayout.Button("New Level", GUILayout.Height(Screen.height * 0.1f)))
+
+        GUILayout.FlexibleSpace();
+
+        if (GUILayout.Button("Main Menu", GUILayout.Width(Screen.width * .2f), GUILayout.Height(Screen.height * 0.1f)))
+        {
+            Application.LoadLevel("MainMenu");
+        }
+
+        GUILayout.FlexibleSpace();
+
+        if (GUILayout.Button("New Level", GUILayout.Width(Screen.width * .2f), GUILayout.Height(Screen.height * 0.1f)))
         {
             Level.StartRandom();
         }
 
-        GUILayout.Space(10.0f);
+        GUILayout.FlexibleSpace();
 
-        if (GUILayout.Button("Play Again", GUILayout.Height(Screen.height * 0.1f)))
+        if (GUILayout.Button("Play Again", GUILayout.Width(Screen.width * .2f), GUILayout.Height(Screen.height * 0.1f)))
         {
             Level.Replay();
         }
+
+        GUILayout.FlexibleSpace();
 
         GUILayout.EndHorizontal();
 

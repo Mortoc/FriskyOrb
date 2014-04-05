@@ -146,8 +146,6 @@ public class PowerupBar : MonoBehaviour
         if (originalController is StarPowerupController)
             throw new InvalidOperationException("Starting Powerup twice in a row");
 
-        
-        //player.AnimateColor(Palette.Instance.Green, 0.75f);
         player.AnimateColor(Color.white, 0.5f);
         player.Controller = powerupController;
         powerupController.PowerupEnded += () => {
@@ -162,6 +160,7 @@ public class PowerupBar : MonoBehaviour
 
     private void ResetPowerup()
     {
+        StopAllCoroutines();
         gameObject.layer = _originalLayer;
         gameObject.renderer.enabled = true;
         _animatedToButton = false;

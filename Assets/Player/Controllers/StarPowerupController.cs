@@ -38,12 +38,26 @@ public class StarPowerupController : IPlayerController
     {
         Vector3 floatOffset = Vector3.up;
         SmoothedVector targetPositionSmoothed = new SmoothedVector(0.33f);
-        YieldInstruction nextFixedUpdate = new WaitForFixedUpdate();
+        YieldInstruction untilNextFixedUpdate = new WaitForFixedUpdate();
         Rigidbody playerRB = _player.rigidbody;
         playerRB.isKinematic = true;
 
         LevelSegment segment = _player.CurrentSegment;
         float startT = segment.Path.GetApproxT(playerRB.position);
+
+        Vector3 targetPosition = segment.Path.GetPoint(startT) + floatOffset;
+        float playerSpeed = 20.0f;
+        float dist = 0.4f;
+        do {
+            Vector3 diff = targetPosition - playerRB.position;
+            dist = diff.magnitude;
+            Vector3 dir = diff / dist;
+
+            playerRB.position = playerRB.position + (dir * playerSpeed * Time.fixedDeltaTime);
+
+            yield return untilNextFixedUpdate;
+        } while( dist > 0.2f );
+
         float segmentsIn = 0.0f;
         for( float time = 0.0f; time < POWERUP_DURATION; time += Time.fixedDeltaTime )
         {
@@ -57,10 +71,10 @@ public class StarPowerupController : IPlayerController
                 segment = segment.Next;
             }
 
-            Vector3 targetPosition = segment.Path.GetPoint(tInSegment) + floatOffset;
+            targetPosition = segment.Path.GetPoint(tInSegment) + floatOffset;
             targetPositionSmoothed.AddSample(targetPosition);
             playerRB.position = targetPositionSmoothed.GetSmoothedVector();
-            yield return nextFixedUpdate;
+            yield return untilNextFixedUpdate;
         }
 
         playerRB.isKinematic = false;

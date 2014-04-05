@@ -11,7 +11,7 @@ PlayerSettings:
   targetResolution: 0
   accelerometerFrequency: 60
   companyName: Mortco
-  productName: FriskyOrb
+  productName: Starbomb
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   defaultScreenWidth: 1024
@@ -112,7 +112,7 @@ PlayerSettings:
   m_BuildTargetIcons:
   - m_BuildTarget: 
     m_Icons:
-    - m_Icon: {fileID: 0}
+    - m_Icon: {fileID: 2800000, guid: 57b1a9cef67ca1c4d84505f392a3e058, type: 3}
       m_Size: 128
   m_BuildTargetBatching:
   - m_BuildTarget: Android
