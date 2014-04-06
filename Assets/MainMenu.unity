@@ -404,6 +404,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1100219670}
   - 114: {fileID: 1100219671}
+  - 114: {fileID: 1100219672}
   m_Layer: 0
   m_Name: GUI
   m_TagString: Untagged
@@ -434,3 +435,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _skin: {fileID: 11400000, guid: 2d831c5a0b6294b439ddbd36bade89ae, type: 2}
+--- !u!114 &1100219672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1100219669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2ac23ef217896747843c7dc2f10baa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _levelNamesCSV: {fileID: 4900000, guid: f45d58c7ce8f02b4995af92b443a4ac4, type: 3}

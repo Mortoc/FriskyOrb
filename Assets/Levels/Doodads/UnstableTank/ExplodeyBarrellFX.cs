@@ -9,6 +9,8 @@ public class ExplodeyBarrellFX : FX
     private float _fragmentLife = 5.0f;
     [SerializeField]
     private ParticleSystem _particleSystem;
+    [SerializeField]
+    private AudioClip[] _explosionSounds;
 
     public override void PerformFX()
     {
@@ -20,6 +22,17 @@ public class ExplodeyBarrellFX : FX
             float force = UnityEngine.Random.value * _explosionForce * 2.0f;
             randomDir.y = Mathf.Max(0.0f, randomDir.y);
             fragment.AddForce(force * randomDir, ForceMode.Impulse);
+        }
+
+        if (_explosionSounds.Length > 0)
+        {
+            if( !audio )
+                gameObject.AddComponent<AudioSource>();
+
+            audio.clip = _explosionSounds[UnityEngine.Random.Range(0, _explosionSounds.Length)];
+            audio.loop = false;
+            audio.volume = 0.8f;
+            audio.Play();
         }
 
         StartCoroutine(CleanupFragments(fragments));

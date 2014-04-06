@@ -6,6 +6,7 @@ public class JumpFX : FX
     public override void PerformFX()
     {
         transform.forward = Vector3.down;
+        audio.Play();
 
         particleSystem.Emit(
             Mathf.FloorToInt(particleSystem.emissionRate * particleSystem.duration)

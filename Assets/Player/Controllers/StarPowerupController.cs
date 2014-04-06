@@ -13,6 +13,7 @@ public class StarPowerupController : IPlayerController
     public const float PLAYER_SPEED = 1.0f; // segments/second
 
     private readonly Player _player;
+    public AudioClip BeforeEndSound { get; set; }
 
     public StarPowerupController(Player player)
     {
@@ -68,8 +69,17 @@ public class StarPowerupController : IPlayerController
         // Run along the track
         float segmentsIn = 0.0f;
         float tInSegment = startT;
+        AudioSource audio = null;
         for( float time = 0.0f; time < POWERUP_DURATION; time += Time.fixedDeltaTime )
         {
+            if( BeforeEndSound && BeforeEndSound.length > (POWERUP_DURATION - time) )
+            {
+                audio = Camera.main.gameObject.AddComponent<AudioSource>();
+                audio.volume = 0.5f;
+                audio.PlayOneShot(BeforeEndSound);
+                BeforeEndSound = null;
+            }
+
             float t = time / POWERUP_DURATION;
             tInSegment = startT + (t * POWERUP_DURATION * PLAYER_SPEED) - segmentsIn;
 
@@ -122,6 +132,9 @@ public class StarPowerupController : IPlayerController
                 }
             }
         }
+
+        if (audio)
+            AudioSource.Destroy(audio);
 
         if (PowerupEnded != null)
             PowerupEnded();

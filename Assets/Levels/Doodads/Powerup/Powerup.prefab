@@ -74,6 +74,7 @@ MonoBehaviour:
   _collectAnimateTime: 1
   _collectAnimationRandomOffsetAmount: .5
   _spinRate: 200
+  _collectionNoises: []
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,6 +89,10 @@ MonoBehaviour:
   _collectAnimateTime: 1
   _collectAnimationRandomOffsetAmount: 1
   _spinRate: 360
+  _collectionNoises:
+  - {fileID: 8300000, guid: 30acf76716d6a5548be3a4bd143e3041, type: 3}
+  - {fileID: 8300000, guid: 5fd077996783a014d83fde773a17c9e5, type: 3}
+  - {fileID: 8300000, guid: 9d8690054d77c9d4fb11c318c41f6e28, type: 3}
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

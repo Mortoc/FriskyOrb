@@ -2564,6 +2564,10 @@ MonoBehaviour:
   _explosionForce: 20
   _fragmentLife: 5
   _particleSystem: {fileID: 19800000}
+  _explosionSounds:
+  - {fileID: 8300000, guid: 1c61e29e48bf13e43b9a9a3c88f12fd2, type: 3}
+  - {fileID: 8300000, guid: be72732b2bed04c41a55c9c164e837d4, type: 3}
+  - {fileID: 8300000, guid: 86e4db9b6296b8c44a99df3de6056f4a, type: 3}
 --- !u!198 &19800000
 ParticleSystem:
   m_ObjectHideFlags: 1

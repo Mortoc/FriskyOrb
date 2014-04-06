@@ -4,20 +4,18 @@ using System.Text;
 
 public class MainGui : MonoBehaviour
 {
-    private string EncodeLevelSeedToName(int seed)
-    {
-        string str = seed.ToString();
-        byte[] bytes = new byte[str.Length * sizeof(char)];
-        System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
-        return Convert.ToBase64String(bytes).Substring(0, 8);
-    }
-
     private string _personalBest = null;
     void Start()
     {
         if (PlayerPrefs.HasKey("best_score"))
-            _personalBest = "Your Best " + PlayerPrefs.GetInt("best_score") + " : " + 
-                EncodeLevelSeedToName( PlayerPrefs.GetInt("best_score_level_seed") );
+        {
+            var levelNameManager = GetComponent<LevelNameManager>();
+            levelNameManager.ParseNames();
+
+            var seed = Math.Abs(PlayerPrefs.GetInt("best_score_level_seed") % levelNameManager.NameCount);
+            _personalBest = "Your Best " + PlayerPrefs.GetInt("best_score") + ":\n\"" +
+                  levelNameManager.GetName(seed) + "\"";
+        }
     }
     
     public GUISkin _skin;
@@ -46,7 +44,8 @@ public class MainGui : MonoBehaviour
 
         if( !String.IsNullOrEmpty(_personalBest) )
         {
-            if (GUILayout.Button(_personalBest, GUILayout.Width(buttonWidth), GUILayout.Height(buttonHeight)))
+            GUILayout.Label(_personalBest);
+            if (GUILayout.Button("Replay", GUILayout.Width(buttonWidth), GUILayout.Height(buttonHeight)))
             {
                 Level.Start(PlayerPrefs.GetInt("best_score_level_seed"));
             }

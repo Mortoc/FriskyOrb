@@ -7,7 +7,7 @@ PlayerSettings:
   AndroidProfiler: 0
   defaultScreenOrientation: 4
   targetDevice: 2
-  targetGlesGraphics: 2
+  targetGlesGraphics: 1
   targetResolution: 0
   accelerometerFrequency: 100
   companyName: Mortco
@@ -79,7 +79,7 @@ PlayerSettings:
   productGUID: ecce1250aac8ba14bbfc136bc9e85a6c
   iPhoneBundleVersion: 1.0
   AndroidBundleVersionCode: 1
-  AndroidMinSdkVersion: 15
+  AndroidMinSdkVersion: 14
   AndroidPreferredInstallLocation: 0
   aotOptions: 
   apiCompatibilityLevel: 2

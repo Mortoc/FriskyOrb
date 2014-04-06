@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f211e5378e6ae4c4ea6e90814a398f2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _powerupsUntilFull: 10
+  _powerupsUntilFull: 50
   _animateToButtonTime: .25
   _buttonPosition: {x: 1.88999999, y: -.75, z: 2.58999991}
   _animateToPlayerTime: .660000026
@@ -74,6 +74,8 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+  _activateSound: {fileID: 8300000, guid: 80afba955476023409d05063249f9c41, type: 3}
+  _deactivateSound: {fileID: 8300000, guid: aaa2f334eb781984eaa93a9de950c280, type: 3}
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

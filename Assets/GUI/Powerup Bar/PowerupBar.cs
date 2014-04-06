@@ -24,6 +24,11 @@ public class PowerupBar : MonoBehaviour
     private AnimationCurve _animateToPlayerScale;
     private int _originalLayer;
 
+    [SerializeField]
+    private AudioClip _activateSound;
+    [SerializeField]
+    private AudioClip _deactivateSound;
+
     private InputHandler.CircleTouchRegion _touchRegion;
 
 
@@ -140,7 +145,13 @@ public class PowerupBar : MonoBehaviour
 
     private void ExecutePowerup(Player player)
     {
+        if (!audio)
+            gameObject.AddComponent<AudioSource>();
+        audio.clip = _activateSound;
+        audio.Play();
+
         var powerupController = new StarPowerupController(player);
+        powerupController.BeforeEndSound = _deactivateSound;
         var originalController = player.Controller;
         
         if (originalController is StarPowerupController)
