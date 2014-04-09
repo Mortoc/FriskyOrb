@@ -13,8 +13,12 @@ public class MainGui : MonoBehaviour
             levelNameManager.ParseNames();
 
             var seed = Math.Abs(PlayerPrefs.GetInt("best_score_level_seed") % levelNameManager.NameCount);
-            _personalBest = "Your Best " + PlayerPrefs.GetInt("best_score") + ":\n\"" +
-                  levelNameManager.GetName(seed) + "\"";
+            _personalBest = String.Format
+            (
+                "Your Best {0:n0}:\n\"{1}\"", 
+                PlayerPrefs.GetInt("best_score"), 
+                levelNameManager.GetName(seed)
+            );
         }
     }
     

@@ -5335,7 +5335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _groundEffectParticles: {fileID: 19800002}
-  _fallToDeathThreshold: 3
+  _fallToDeathThreshold: 8
   _blackHoleSphere: {fileID: 400122}
   JumpFX: {fileID: 11400002}
   DeathFX: {fileID: 11400004}

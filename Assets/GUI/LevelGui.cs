@@ -26,7 +26,7 @@ public class LevelGui : MonoBehaviour
 
         GUILayout.Label
         (
-            "Score: " + Score.Instance.ScoreDisplayValue, 
+            string.Format("Score: {0:n0}", Score.Instance.ScoreDisplayValue), 
             GUILayout.Width(Screen.width * .15f), 
             GUILayout.Height(Screen.height * 0.075f)
         );
