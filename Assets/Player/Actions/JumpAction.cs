@@ -32,7 +32,6 @@ public class JumpAction : IPlayerAction
         _playerDrag = player.rigidbody.drag;
 
         _inputHandler = GameObject.FindObjectOfType<InputHandler>();
-        
     }
 
     public void PlayerLanded()
@@ -52,6 +51,9 @@ public class JumpAction : IPlayerAction
         //Debug.Log("Checking if we can jump: availableJumps: " + _availablejumpCount + ", minTime since last jump: " + _minTimeBetweenJumps + ", time since last jump: " + (Time.time - _initialJumpTime));
         if (_availablejumpCount > 0 && Time.time - _minTimeBetweenJumps > _initialJumpTime)
         {
+			
+			_jumpEffect.SendMessage("FirstJump", _availablejumpCount == _jumpCount);
+
             // Cost another jump if the user wasn't grounded
             // when doing this jump
             if (!_hasJumped && !_player.IsGrounded)
@@ -59,6 +61,7 @@ public class JumpAction : IPlayerAction
                 //Debug.Log("Cost an extra jump cause we weren't grounded");
                 _availablejumpCount--;
             }
+
 
             _hasJumped = true;
             _initialJumpTime = Time.time;

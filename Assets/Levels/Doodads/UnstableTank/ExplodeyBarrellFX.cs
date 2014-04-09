@@ -31,7 +31,7 @@ public class ExplodeyBarrellFX : FX
 
             audio.clip = _explosionSounds[UnityEngine.Random.Range(0, _explosionSounds.Length)];
             audio.loop = false;
-            audio.volume = 0.8f;
+            audio.volume = 1.0f;
             audio.Play();
         }
 

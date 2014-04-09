@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
 
         rigidbody.position = rigidbody.position + offset;
         //bool grounded = Physics.Raycast(rigidbody.position, Vector3.down, ((SphereCollider)collider).radius, _groundMask);
-        bool grounded = rigidbody.SweepTest(gravDir, out rh, 2.0f);
+        bool grounded = rigidbody.SweepTest(gravDir, out rh, 1.0f);
         rigidbody.position = rigidbody.position - offset;
 
         if (grounded && !IsGrounded)
@@ -117,11 +117,13 @@ public class Player : MonoBehaviour
     private void BecameGrounded()
     {
         _groundEffectParticles.enableEmission = true;
+		audio.Play();
     }
 
     private void BecameUngrounded()
     {
         _groundEffectParticles.enableEmission = false;
+		audio.Stop();
     }
 
     void Update()

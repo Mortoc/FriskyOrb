@@ -7,9 +7,14 @@ public class PlayerExplodeFX : FX
     private float _explodeForce = 10.0f;
     [SerializeField]
     private float _rotateForce = 30.0f;
+	[SerializeField]
+	private AudioClip _clip;
 
     public override void PerformFX()
     {
+		if (_clip)
+			AudioSource.PlayClipAtPoint(_clip, transform.position);
+
         foreach (Transform fragment in transform)
         {
             fragment.gameObject.SetActive(true);

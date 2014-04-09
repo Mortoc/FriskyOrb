@@ -11,9 +11,6 @@ public class Powerup : Doodad
     [SerializeField]
     private float _spinRate = 200.0f;
 
-    [SerializeField]
-    private AudioClip[] _collectionNoises;
-    
     void Start()
     {
         transform.Rotate(Vector3.up * UnityEngine.Random.value * 180.0f);
@@ -39,13 +36,8 @@ public class Powerup : Doodad
             if( !audio )
                 gameObject.AddComponent<AudioSource>();
 
-            if( _collectionNoises.Length > 0 )
-            {
-                audio.clip = _collectionNoises[UnityEngine.Random.Range(0, _collectionNoises.Length)];
-                audio.loop = false;
-                audio.Play();
-            }
-            
+			audio.pitch = Mathf.Lerp (0.75f, 1.25f, UnityEngine.Random.value);
+			audio.Play();
         }
     }
 
