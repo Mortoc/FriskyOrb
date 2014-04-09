@@ -6,7 +6,7 @@ public class PlayerMovementController : IPlayerController
 {
     private const float ACCELERATION = 850.0f;
     private const float STEER_SPEED = 120.0f;
-    private const float COUNTER_STEER = -0.05f;
+    private const float COUNTER_STEER = -0.1f;
     private const float MAX_SPEED = 12.0f;
 
     private readonly Player _player;
@@ -53,10 +53,11 @@ public class PlayerMovementController : IPlayerController
         _player.rigidbody.AddTorque(rollAxis * Time.fixedDeltaTime, ForceMode.Impulse);
 
         float steerAmount = Mathf.Abs(_inputHandler.SteeringAmount());
-        float counterAccel = Mathf.Lerp(0.0f, COUNTER_STEER, steerAmount); // reduce accleration while turning hard
 
         Vector3 accel = _player.Heading * ACCELERATION * Time.fixedDeltaTime;
         _player.rigidbody.AddForce(accel, ForceMode.Acceleration);
+
+        float counterAccel = Mathf.Lerp(0.0f, COUNTER_STEER, steerAmount); // reduce accleration while turning hard
         _player.rigidbody.AddForce(accel * counterAccel, ForceMode.Impulse);
     }
 

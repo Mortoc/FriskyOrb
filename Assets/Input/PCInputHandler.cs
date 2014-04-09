@@ -20,7 +20,8 @@ public class PCInputHandler : InputHandler
 	#region implemented abstract members of InputHandler
 	public override float SteeringAmount ()
 	{
-		return Input.GetAxis("Steering");
+		float result = Input.GetAxis("Steering");
+        return result;
 	}
 	#endregion
 
