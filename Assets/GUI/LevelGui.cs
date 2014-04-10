@@ -17,10 +17,33 @@ public class LevelGui : MonoBehaviour
 
     void OnGUI()
     {
+        float edgeMargin = Screen.height * 0.02f;
+        float pauseButtonSize = Screen.height * 0.15f;
+
         GUI.skin = _skin;
         GUILayout.BeginArea(new Rect(0.0f, 0.0f, Screen.width, Screen.height));
-        GUILayout.Space(Screen.height * 0.015f);
+        
+        GUILayout.Space(edgeMargin);
         GUILayout.BeginHorizontal();
+        GUILayout.Space(edgeMargin);
+
+        if( GUILayout.Button(
+            "", 
+            _skin.FindStyle("PauseButton"), 
+            GUILayout.Width(pauseButtonSize), 
+            GUILayout.Height(pauseButtonSize)
+            )) 
+        {
+            if( Time.timeScale < 0.0001f )
+            {
+                Time.timeScale = 1.0f;
+            }
+            else
+            {
+                Time.timeScale = 0.0f;
+            }
+        }
+
        
         GUILayout.FlexibleSpace();
 
