@@ -1,0 +1,61 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="PlayerRoll_data" version="1.3.0" audacityversion="2.0.5" sel0="0.0000000000" sel1="0.0000000000" vpos="0" h="2.2511963351" zoom="425.5515101219" rate="96000.0">
+	<tags>
+		<tag name="TITLE" value="Wet towel on body 9"/>
+		<tag name="YEAR" value="2010"/>
+		<tag name="ARTIST" value="Iwan Gabovitch"/>
+	</tags>
+	<wavetrack name="qubodup-bowling_roll" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="96000" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="524288" sampleformat="131073" numsamples="274632">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000af0.au" len="274632" min="-0.50061" max="0.861267" rms="0.085848"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="2">
+				<controlpoint t="2.495585081336" val="1.000000000000"/>
+				<controlpoint t="2.850418741676" val="0.055555582047"/>
+			</envelope>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="qubodup-bowling_roll" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="96000" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="524288" sampleformat="131073" numsamples="274632">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000f31.au" len="274632" min="-0.437592" max="0.935516" rms="0.086647"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="2">
+				<controlpoint t="2.495585081336" val="1.000000000000"/>
+				<controlpoint t="2.850418741676" val="0.055555582047"/>
+			</envelope>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="Audio Track" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="96000" gain="1.0" pan="0.0">
+		<waveclip offset="2.31934375">
+			<sequence maxsamples="524288" sampleformat="131073" numsamples="274632">
+				<waveblock start="0">
+					<simpleblockfile filename="e000083a.au" len="274632" min="-0.50058" max="0.861115" rms="0.085858"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="2">
+				<controlpoint t="0.009397040287" val="0.055555582047"/>
+				<controlpoint t="0.359530917047" val="0.958333313465"/>
+			</envelope>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="Audio Track" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="96000" gain="1.0" pan="0.0">
+		<waveclip offset="2.31934375">
+			<sequence maxsamples="524288" sampleformat="131073" numsamples="274632">
+				<waveblock start="0">
+					<simpleblockfile filename="e000002e.au" len="274632" min="-0.437683" max="0.935638" rms="0.086651"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="2">
+				<controlpoint t="0.009397040287" val="0.055555582047"/>
+				<controlpoint t="0.359530917047" val="0.958333313465"/>
+			</envelope>
+		</waveclip>
+	</wavetrack>
+</project>

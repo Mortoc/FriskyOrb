@@ -622,8 +622,8 @@ MonoBehaviour:
     PowerupStringLengthJitter: 0
   - Name: You Probably Won't Pass
     StartSegment: 21
-    ApproxSegmentLength: 20
-    SegmentLengthJitter: 0
+    ApproxSegmentLength: 30
+    SegmentLengthJitter: 3
     Curviness: 5
     MinHeightDifference: 2
     MaxHeightDifference: 10
@@ -636,8 +636,8 @@ MonoBehaviour:
     PowerupStringLengthJitter: 2
   - Name: Really?
     StartSegment: 40
-    ApproxSegmentLength: 20
-    SegmentLengthJitter: 0
+    ApproxSegmentLength: 30
+    SegmentLengthJitter: 5
     Curviness: 5
     MinHeightDifference: 1
     MaxHeightDifference: 5
@@ -664,7 +664,7 @@ MonoBehaviour:
     PowerupStringLengthJitter: 1
   - Name: End Game
     StartSegment: 60
-    ApproxSegmentLength: 20
+    ApproxSegmentLength: 25
     SegmentLengthJitter: 5
     Curviness: 15
     MinHeightDifference: 0

@@ -13,6 +13,7 @@ GameObject:
   - 54: {fileID: 5400000}
   - 135: {fileID: 13500000}
   - 114: {fileID: 11400000}
+  - 82: {fileID: 8200002}
   m_Layer: 9
   m_Name: Orb
   m_TagString: Untagged
@@ -31,7 +32,6 @@ GameObject:
   - 198: {fileID: 19800000}
   - 199: {fileID: 19900000}
   - 114: {fileID: 11400002}
-  - 82: {fileID: 8200000}
   m_Layer: 9
   m_Name: JumpEffect
   m_TagString: Untagged
@@ -5265,19 +5265,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: .354146957, y: .201172754, z: .24926278}
   m_Center: {x: .0753765479, y: .05962364, z: -.162306637}
---- !u!82 &8200000
+--- !u!82 &8200002
 AudioSource:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
+  m_GameObject: {fileID: 100000}
   m_Enabled: 1
   serializedVersion: 3
-  m_audioClip: {fileID: 8300000, guid: f21a33dcbc768c44e8d7fe1544d893a2, type: 3}
-  m_PlayOnAwake: 0
-  m_Volume: .330000013
-  m_Pitch: 1
-  Loop: 0
+  m_audioClip: {fileID: 8300000, guid: 5df1bbf6e62c94fffb1455f88e957337, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: .25
+  m_Pitch: 2.36999989
+  Loop: 1
   Mute: 0
   Priority: 128
   DopplerLevel: 1
@@ -5351,6 +5351,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 521d02e3f65b90649ba12ab15db53045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _firstJump: {fileID: 8300000, guid: 1e2131631efcb4325a4abeba6ef4a89d, type: 3}
+  _otherJumps: {fileID: 8300000, guid: 8bfb269ef7dd848d4ad7a4e8afba7a18, type: 3}
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5364,6 +5366,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _explodeForce: 40
   _rotateForce: 30
+  _clip: {fileID: 8300000, guid: 8c26a648aad10407c95b4024c99f9a3b, type: 3}
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1

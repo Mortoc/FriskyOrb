@@ -602,7 +602,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: -.164808452, y: .188068986, z: -.691816032, w: .677391171}
+  m_LocalRotation: {x: -.164808467, y: .188069001, z: -.691816092, w: .677391231}
   m_LocalPosition: {x: 0, y: .248947829, z: .0309238434}
   m_LocalScale: {x: 1, y: .99999994, z: .99999994}
   m_Children: []
@@ -2565,9 +2565,7 @@ MonoBehaviour:
   _fragmentLife: 5
   _particleSystem: {fileID: 19800000}
   _explosionSounds:
-  - {fileID: 8300000, guid: 1c61e29e48bf13e43b9a9a3c88f12fd2, type: 3}
-  - {fileID: 8300000, guid: be72732b2bed04c41a55c9c164e837d4, type: 3}
-  - {fileID: 8300000, guid: 86e4db9b6296b8c44a99df3de6056f4a, type: 3}
+  - {fileID: 8300000, guid: 710784499cd92476296fcdea185dad84, type: 3}
 --- !u!198 &19800000
 ParticleSystem:
   m_ObjectHideFlags: 1
