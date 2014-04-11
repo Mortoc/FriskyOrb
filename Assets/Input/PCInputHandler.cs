@@ -18,14 +18,10 @@ public class PCInputHandler : InputHandler
 	}
 
 	#region implemented abstract members of InputHandler
-	public override float SteeringAmount ()
+	public override float SteeringAmount()
 	{
-		float result = Input.GetAxis("Steering");
-        return result;
+		return Input.GetAxis("Steering");
 	}
 	#endregion
 
 }
-
-
-// Download the paid version of the game for free until April 30th at: www.mortoc.com/bombed.html
