@@ -9,13 +9,28 @@ GameObject:
   m_Component:
   - 4: {fileID: 400000}
   - 33: {fileID: 3300000}
-  - 23: {fileID: 2300000}
   - 114: {fileID: 11400000}
   - 135: {fileID: 13500000}
-  - 114: {fileID: 11400002}
   - 82: {fileID: 8200000}
   m_Layer: 0
   m_Name: Powerup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &100002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400002}
+  - 33: {fileID: 3300002}
+  - 23: {fileID: 2300000}
+  m_Layer: 0
+  m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,14 +45,26 @@ Transform:
   m_LocalRotation: {x: 0, y: -.191579908, z: 0, w: .981477022}
   m_LocalPosition: {x: -0, y: 1.38, z: 2.41000009}
   m_LocalScale: {x: .330000013, y: .330000013, z: .150000006}
-  m_Children: []
+  m_Children:
+  - {fileID: 400002}
   m_Father: {fileID: 0}
+--- !u!4 &400002
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 400000}
 --- !u!23 &2300000
 Renderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 100002}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -60,6 +87,13 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
+  m_Mesh: {fileID: 4300000, guid: 89f9716b2638abd43b482ec8a0d8f13f, type: 3}
+--- !u!33 &3300002
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
   m_Mesh: {fileID: 4300000, guid: 89f9716b2638abd43b482ec8a0d8f13f, type: 3}
 --- !u!82 &8200000
 AudioSource:
@@ -132,21 +166,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _collectAnimateTime: 1
   _collectAnimationRandomOffsetAmount: .5
-  _spinRate: 200
---- !u!114 &11400002
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dde9cc75d222b954cb3be6c8ac198e89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _collectAnimateTime: 1
-  _collectAnimationRandomOffsetAmount: 1
-  _spinRate: 360
+  _spinRate: 500
+  _spinObj: {fileID: 400002}
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

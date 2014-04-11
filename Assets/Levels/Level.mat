@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Level
-  m_Shader: {fileID: 4800000, guid: 7d7376f741cc340cbb78d370d39a80d3, type: 3}
+  m_Shader: {fileID: 4800000, guid: 8912568cc364544c684c9fc88c4e5286, type: 3}
   m_ShaderKeywords:
   - GLOW11_MULTIPLY_GLOWCOLOR
   - GLOW11_GLOW_MAINTEX
@@ -31,16 +31,16 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
-          name: _Cube
+          name: _Detail
         second:
-          m_Texture: {fileID: 8900000, guid: f72031966eaf8cc4aaf1c3483aff0adc, type: 2}
+          m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
-          name: _Detail
+          name: _Cube
         second:
-          m_Texture: {fileID: 0}
+          m_Texture: {fileID: 8900000, guid: f72031966eaf8cc4aaf1c3483aff0adc, type: 2}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -155,7 +155,7 @@ Material:
       data:
         first:
           name: _GlowStrength
-        second: .25
+        second: .75
       data:
         first:
           name: _EnvTimer

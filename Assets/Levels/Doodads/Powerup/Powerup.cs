@@ -10,6 +10,9 @@ public class Powerup : Doodad
 
     [SerializeField]
     private float _spinRate = 200.0f;
+	[SerializeField]
+	private Transform _spinObj;
+
 
     void Start()
     {
@@ -18,7 +21,7 @@ public class Powerup : Doodad
 
     void Update()
     {
-        transform.Rotate(Vector3.up * _spinRate * Time.deltaTime);
+		_spinObj.Rotate(Vector3.up * _spinRate * Time.deltaTime);
     }
 
     private bool _collected = false;
