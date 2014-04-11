@@ -16,8 +16,12 @@ public class MobileInputHandler : InputHandler
     {
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
-            if (!ExecuteTouchAt(Input.touches[0].position))
+            Vector3 touchPos = Input.touches[0].position;
+            if (!ExecuteTouchAt(touchPos) && (touchPos.x > Screen.height * .15f || touchPos.y > Screen.height * .85f))
+            {
                 ExecuteAction();
+            }
+                
         }
     }
 

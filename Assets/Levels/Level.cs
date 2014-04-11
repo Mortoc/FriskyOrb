@@ -12,7 +12,8 @@ public class Level : MonoBehaviour
 
     public static void StartRandom()
     {
-        var seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+
+        var seed = UnityEngine.Random.Range(0, FindObjectOfType<LevelNameManager>().NameCount);
         Start(seed);
     }
 
@@ -103,6 +104,13 @@ public class Level : MonoBehaviour
 
     [SerializeField]
     private GameObject _endGuiPrefab;
+
+    public string Name { get; private set; }
+
+    void Start()
+    {
+        Name = FindObjectOfType<LevelNameManager>().GetName(Seed);
+    }
 
     void Awake()
     {

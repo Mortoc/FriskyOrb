@@ -94,7 +94,7 @@ public class JumpAction : IPlayerAction
             _player.rigidbody.velocity = vel;
         }
 
-        _player.rigidbody.AddForce(Vector3.up * JUMP_STRENGTH, ForceMode.Impulse);
+        _player.rigidbody.AddForce(Physics.gravity.normalized * -1.0f * JUMP_STRENGTH, ForceMode.Impulse);
 
         _jumpEffect.PerformFX();
     }

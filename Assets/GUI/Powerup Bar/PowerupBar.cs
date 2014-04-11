@@ -36,7 +36,7 @@ public class PowerupBar : MonoBehaviour
     {
         // Start the powerup bar on the edge of the screen
         float currentDepth = transform.localPosition.magnitude;
-        Vector2 powerupCenter = new Vector2(Screen.width * 0.9f, Screen.height * 0.5f);
+        Vector2 powerupCenter = new Vector2(Screen.width * 0.9f, Screen.height * 0.25f);
         transform.position = Camera.main.ScreenPointToRay(powerupCenter).GetPoint(currentDepth);
 
         InputHandler input = FindObjectOfType<InputHandler>();
@@ -54,7 +54,7 @@ public class PowerupBar : MonoBehaviour
                 e.Consumed = true;
             }
         });
-
+        
         _originalLayer = gameObject.layer;
         _startPosition = transform.localPosition;
         _startScale = transform.localScale;

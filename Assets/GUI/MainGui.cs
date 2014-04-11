@@ -4,7 +4,9 @@ using System.Text;
 
 public class MainGui : MonoBehaviour
 {
+    public ParticleSystem _particles;
     private string _personalBest = null;
+    private string _personalBestLevel = null;
     void Start()
     {
         if (PlayerPrefs.HasKey("best_score"))
@@ -15,49 +17,97 @@ public class MainGui : MonoBehaviour
             var seed = Math.Abs(PlayerPrefs.GetInt("best_score_level_seed") % levelNameManager.NameCount);
             _personalBest = String.Format
             (
-                "Your Best {0:n0}:\n\"{1}\"", 
-                PlayerPrefs.GetInt("best_score"), 
-                levelNameManager.GetName(seed)
+                "{0:n0}", 
+                PlayerPrefs.GetInt("best_score")
             );
+            _personalBestLevel = String.Format("\"{0}\"", levelNameManager.GetName(seed));
         }
     }
-    
+
+    private SmoothedVector _particleUp = new SmoothedVector(2.0f);
+    void Update()
+    {
+        if( Input.acceleration.sqrMagnitude > 0.00001f )
+        {
+            _particleUp.AddSample(Input.acceleration.normalized);
+            _particles.transform.up = _particleUp.GetSmoothedVector();
+        }
+    }
+
     public GUISkin _skin;
     void OnGUI()
     {
         GUI.skin = _skin;
+        
         GUILayout.BeginArea(new Rect(0.0f, 0.0f, Screen.width, Screen.height));
-        GUILayout.Space(10.0f);
-        GUILayout.BeginHorizontal();
-        GUILayout.Space(10.0f);
-        GUILayout.Label("STARBOMB", _skin.FindStyle("Header"));
-        GUILayout.FlexibleSpace();
-
-        GUILayout.FlexibleSpace();
 
         GUILayout.BeginVertical();
         GUILayout.FlexibleSpace();
-        float buttonWidth = Screen.width / 3.0f;
-        float buttonHeight = Screen.height * 0.1f;
-        if (GUILayout.Button("New Track", GUILayout.Width(buttonWidth), GUILayout.Height(buttonHeight)))
+
+
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+
+        float newLevelButtonHeight = Screen.height * 0.3f;
+        float newLevelButtonWidth = newLevelButtonHeight * 512.0f / 304.0f;
+
+        if (GUILayout.Button("", GUI.skin.FindStyle("NewLevelButton"), GUILayout.Width(newLevelButtonWidth), GUILayout.Height(newLevelButtonHeight)))
         {
             Level.StartRandom();
         }
 
-        GUILayout.FlexibleSpace();
+        GUILayout.Space(Screen.width * 0.05f);
 
-        if( !String.IsNullOrEmpty(_personalBest) )
+        GUILayout.EndHorizontal();
+
+        GUILayout.FlexibleSpace();
+        GUILayout.FlexibleSpace();
+        GUILayout.EndVertical();
+
+        GUILayout.FlexibleSpace();
+        GUILayout.EndArea();
+
+        if (!String.IsNullOrEmpty(_personalBest))
         {
-            GUILayout.Label(_personalBest);
-            if (GUILayout.Button("Replay", GUILayout.Width(buttonWidth), GUILayout.Height(buttonHeight)))
+
+            GUILayout.BeginArea(new Rect(Screen.width * 0.1f, Screen.height * 0.66f, Screen.width * 0.8f, Screen.height * 0.45f), GUI.skin.box);
+
+            float replayButtonHeight = Screen.height * 0.225f;
+            float replayButtonWidth = replayButtonHeight * 512.0f / 266.0f;
+
+            GUILayout.BeginHorizontal();
+
+            GUILayout.BeginVertical();
+            GUILayout.FlexibleSpace();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Your Best Score:", GUI.skin.FindStyle("YourBestLabel"));
+            GUILayout.Space(Screen.width * 0.01f);
+            GUILayout.Label(_personalBest, GUI.skin.FindStyle("YourBestData"));
+            GUILayout.EndHorizontal();
+
+            GUILayout.FlexibleSpace();
+
+            GUILayout.Label(_personalBestLevel, GUI.skin.FindStyle("YourBestData"), GUILayout.Width(Screen.width * 0.1f));
+
+            GUILayout.FlexibleSpace();
+            GUILayout.EndVertical();
+
+            GUILayout.FlexibleSpace();
+
+
+            GUILayout.BeginVertical();
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("", GUI.skin.FindStyle("ReplayButton"), GUILayout.Width(replayButtonWidth), GUILayout.Height(replayButtonHeight)))
             {
                 Level.Start(PlayerPrefs.GetInt("best_score_level_seed"));
             }
+            GUILayout.FlexibleSpace();
+            GUILayout.EndVertical();
+
+            GUILayout.EndHorizontal();
+            GUILayout.Space(Screen.height * 0.05f);
+            GUILayout.EndArea();
         }
-        GUILayout.FlexibleSpace();
-        GUILayout.EndVertical();
-        GUILayout.FlexibleSpace();
-        GUILayout.EndHorizontal();
-        GUILayout.EndArea();
+
     }
 }
