@@ -12,9 +12,7 @@ public class PlayerExplodeFX : FX
 
     public override void PerformFX()
     {
-		if (_clip)
-			AudioSource.PlayClipAtPoint(_clip, transform.position);
-
+		audio.Play ();
         foreach (Transform fragment in transform)
         {
             fragment.gameObject.SetActive(true);

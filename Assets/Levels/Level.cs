@@ -118,7 +118,9 @@ public class Level : MonoBehaviour
         levelNames.ParseNames();
         int count = levelNames.NameCount;
 
-        if (PlayerPrefs.HasKey("next_level_seed"))
+		if ( PlayerPrefs.HasKey("next_level_seed") && 
+		     PlayerPrefs.GetInt("next_level_seed") > 0 && 
+		     PlayerPrefs.GetInt("next_level_seed") < levelNames.NameCount )
             _seed = PlayerPrefs.GetInt("next_level_seed");
         else
             _seed = UnityEngine.Random.Range(0, count);

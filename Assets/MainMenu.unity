@@ -239,20 +239,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _blurMode: 0
-  _reuseDepth: 0
-  _rerenderResolution: 1
-  _highPrecsion: 1
+  _reuseDepth: 1
+  _rerenderResolution: 2
+  _highPrecsion: 0
   settings:
-    downsampleSteps: 6
+    downsampleSteps: 3
     baseResolution: 1
-    downsampleResolution: 2
-    iterations: 3
+    downsampleResolution: 4
+    iterations: 8
     blurSpread: .600000024
-    innerStrength: 2
-    outerStrength: 1
+    innerStrength: 1.5
+    outerStrength: 1.5
     boostStrength: 2
-    blendMode: 1
-    downsampleBlendMode: 1
+    blendMode: 0
+    downsampleBlendMode: 100
     falloff:
       serializedVersion: 2
       m_Curve:

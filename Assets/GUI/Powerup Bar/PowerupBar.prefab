@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f211e5378e6ae4c4ea6e90814a398f2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _powerupsUntilFull: 50
+  _powerupsUntilFull: 30
   _animateToButtonTime: .25
   _buttonPosition: {x: 1.88999999, y: -.75, z: 2.58999991}
   _animateToPlayerTime: .660000026

@@ -70,8 +70,11 @@ public class LevelNameManager : MonoBehaviour
 
     public string GetName(int levelNum)
     {
+		if (NameCount == 0)
+			ParseNames();
+
         if (levelNum > NameCount || levelNum < 0)
-            throw new ArgumentOutOfRangeException("levelNum");
+			throw new ArgumentOutOfRangeException(String.Format("levelNum is {0} but must be in the range [0, {1})", levelNum, NameCount));
 
         int suffixIdx = levelNum % _suffixes.Length;
         levelNum /= _suffixes.Length;

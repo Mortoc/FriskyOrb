@@ -86,7 +86,7 @@ public class ControllerPacket
 public class PadController : MonoBehaviour {
 	
 	static int mMAXCONTROLLERS = 4;
-	static string mVersion = "0.03";
+	//static string mVersion = "0.03";
 	
 	int mActivePadCount;  //the number of currently active game pads detected
 	ControllerPacket[] mPadData;
