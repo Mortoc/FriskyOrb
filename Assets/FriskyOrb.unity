@@ -568,11 +568,11 @@ MonoBehaviour:
     StartSegment: 10
     ApproxSegmentLength: 22
     SegmentLengthJitter: 2
-    Curviness: 10
+    Curviness: 3
     MinHeightDifference: 0
     MaxHeightDifference: 0
     AscendOnly: 0
-    ChanceOfDoodad: 1
+    ChanceOfDoodad: .5
     MaxDoodadDifficulty: 10
     MaxDifficulty: 0
     ChanceOfPowerupString: .5
