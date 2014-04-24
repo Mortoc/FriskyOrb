@@ -33,7 +33,7 @@ Material:
         first:
           name: _GlowTex
         second:
-          m_Texture: {fileID: 2800000, guid: fe8e19273eb6b1445ab9efcf7ae63d03, type: 3}
+          m_Texture: {fileID: 2800000, guid: b84caaf848b0b9b4383def0aebfc6128, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -43,16 +43,16 @@ Material:
         second: 1
       data:
         first:
+          name: _GlowStrength
+        second: .699999988
+      data:
+        first:
           name: _rim_power
         second: 2.61642838
       data:
         first:
           name: _RimPower
         second: .991071343
-      data:
-        first:
-          name: _GlowStrength
-        second: .200000003
     m_Colors:
       data:
         first:
@@ -64,16 +64,16 @@ Material:
         second: {r: 1, g: 1, b: 1, a: 1}
       data:
         first:
+          name: _GlowColor
+        second: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
+      data:
+        first:
           name: _Vertex_color
         second: {r: .485294104, g: .258659303, b: 0, a: 1}
       data:
         first:
           name: _rim_color
         second: {r: 1, g: .532994926, b: 0, a: 1}
-      data:
-        first:
-          name: _GlowColor
-        second: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
       data:
         first:
           name: _RimColor
