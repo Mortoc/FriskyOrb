@@ -2,7 +2,8 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/GUI/Powerup Bar/PowerupBar.cs">
     <Files>
-      <File FileName="Assets/GUI/Powerup Bar/PowerupBar.cs" Line="32" Column="24" />
+      <File FileName="Assets/GUI/Powerup Bar/PowerupBar.cs" Line="20" Column="42" />
+      <File FileName="Assets/GUI/Powerup Bar/PowerupBar.cs" Line="70" Column="1" />
       <File FileName="Assets/Credits/credits.txt" Line="1" Column="1" />
       <File FileName="Assets/Levels/Doodads/UnstableTank/ExplodeyBarrellFX.cs" Line="1" Column="1" />
       <File FileName="Assets/Player/Player.cs" Line="1" Column="1" />

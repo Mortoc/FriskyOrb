@@ -17,30 +17,22 @@ public class PowerupBar : MonoBehaviour
 
     void Start()
     {
-        input.RegisterTouchRegion(_touchRegion, e =>
-        {
-            if (this && PowerupReady)
-            {
-                PowerupReady = false;
-                StartCoroutine(UsePowerup());
-                e.Consumed = true;
-            }
-        });
-        
 		_fullRecip = 1.0f / _powerupsUntilFull;
-		
 		PowerupReady = false;
     }
+
+	public void UsePowerup()
+	{
+		if (this && PowerupReady)
+		{
+			PowerupReady = false;
+			ExecutePowerup(GameObject.FindObjectOfType<Player>());
+		}
+	}
 
     public void CollectedPowerup()
     {
         _currentPowerups += 1.0f;
-
-        if (_currentPowerups >= _powerupsUntilFull)
-        {
-            StartCoroutine(AnimateToActiveState());
-            StartCoroutine(SpinButton());
-        }
     }
 
     public float PowerupPercent
@@ -70,8 +62,7 @@ public class PowerupBar : MonoBehaviour
             player.Controller = originalController;
             player.IsImmortal = false;
             player.rigidbody.isKinematic = false;
-            ResetPowerup();
-
+            
             player.AnimateColor(Palette.Instance.Orange, 2.5f);
         };
     }
