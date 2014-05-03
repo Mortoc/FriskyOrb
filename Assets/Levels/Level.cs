@@ -12,7 +12,6 @@ public class Level : MonoBehaviour
 
     public static void StartRandom()
     {
-
         var seed = UnityEngine.Random.Range(0, FindObjectOfType<LevelNameManager>().NameCount);
         Start(seed);
     }

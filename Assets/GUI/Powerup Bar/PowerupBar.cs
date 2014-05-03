@@ -17,30 +17,52 @@ public class PowerupBar : MonoBehaviour
 
     void Start()
     {
-        input.RegisterTouchRegion(_touchRegion, e =>
-        {
-            if (this && PowerupReady)
-            {
-                PowerupReady = false;
-                StartCoroutine(UsePowerup());
-                e.Consumed = true;
-            }
-        });
-        
-		_fullRecip = 1.0f / _powerupsUntilFull;
-		
+		_fullRecip = 1.0f / _powerupsUntilFull;	
 		PowerupReady = false;
     }
+
 
     public void CollectedPowerup()
     {
         _currentPowerups += 1.0f;
-
         if (_currentPowerups >= _powerupsUntilFull)
         {
-            StartCoroutine(AnimateToActiveState());
-            StartCoroutine(SpinButton());
+
         }
+    }
+
+
+    private Rect _powerupBarGuiArea = new Rect();
+    private Rect _powerupGooGuiArea = new Rect();
+    
+
+    [SerializeField]
+    private float _powerupBarHeight = 0.5f;
+
+    [SerializeField]
+    private Texture _powerupBarBackground;
+    [SerializeField]
+    private Texture _powerupBarForeground;
+    
+    void OnGUI()
+    {
+        float aspectRatio = 51.0f / 512.0f;
+        float height = Screen.height * _powerupBarHeight;
+        float width = aspectRatio * height;
+        _powerupBarGuiArea.x = Screen.width - width;
+        _powerupBarGuiArea.y = Screen.height - height;
+        _powerupBarGuiArea.width = Screen.width - _powerupBarGuiArea.x;
+        _powerupBarGuiArea.height = Screen.height - _powerupBarGuiArea.y;
+        
+        _powerupGooGuiArea.width = _powerupBarGuiArea.width;
+        _powerupGooGuiArea.height = _powerupBarGuiArea.height * PowerupPercent;
+        _powerupGooGuiArea.x = _powerupBarGuiArea.x;
+        _powerupGooGuiArea.y = Screen.height - _powerupGooGuiArea.height;
+
+
+        GUI.DrawTexture(_powerupGooGuiArea, _powerupBarBackground);
+
+        GUI.DrawTexture(_powerupBarGuiArea, _powerupBarForeground);
     }
 
     public float PowerupPercent
@@ -74,5 +96,11 @@ public class PowerupBar : MonoBehaviour
 
             player.AnimateColor(Palette.Instance.Orange, 2.5f);
         };
+    }
+
+    private void ResetPowerup()
+    {
+        _currentPowerups = 0.0f;
+
     }
 }
