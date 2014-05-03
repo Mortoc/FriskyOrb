@@ -91,9 +91,7 @@ public class LevelGui : MonoBehaviour
 
         GUILayout.BeginArea(screenRect);
         
-        GUILayout.Space(edgeMargin);
         GUILayout.BeginHorizontal();
-        GUILayout.Space(edgeMargin);
 
         // Can only pause when player is alive
         if (Player && GUILayout.Button(

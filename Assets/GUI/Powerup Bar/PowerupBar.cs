@@ -18,25 +18,23 @@ public class PowerupBar : MonoBehaviour
     void Start()
     {
 		_fullRecip = 1.0f / _powerupsUntilFull;
+        _powerupButtonFadeTimeRecip = 1.0f / _powerupButtonFadeTime;
 		PowerupReady = false;
     }
 
-	public void UsePowerup()
-	{
-		if (this && PowerupReady)
-		{
-			PowerupReady = false;
-			ExecutePowerup(GameObject.FindObjectOfType<Player>());
-		}
-	}
-
     public void CollectedPowerup()
     {
-        _currentPowerups += 1.0f;
+        if (PowerupReady)
+            return;
 
         if (_currentPowerups >= _powerupsUntilFull)
         {
-
+            PowerupReady = true;
+            _powerupButtonFadeStart = Time.time;
+        }
+        else
+        {
+            _currentPowerups += 1.0f;
         }
     }
 
@@ -49,8 +47,32 @@ public class PowerupBar : MonoBehaviour
 
     [SerializeField]
     private Texture _powerupBarBackground;
+
+    [SerializeField]
+    private Texture _powerupBarFullBackground;
+    [SerializeField]
+    private float _powerupBarFullPulseRate = 3.0f;
+
     [SerializeField]
     private Texture _powerupBarForeground;
+
+    [SerializeField]
+    private GUIStyle _powerupButton;
+    [SerializeField]
+    private Texture _powerupButtonGlow;
+    [SerializeField]
+    private float _powerupButtonHeight = 0.33f;
+    private Rect _powerupButtonArea;
+
+    private float _powerupButtonFadeStart = 0.0f;
+
+    [SerializeField]
+    private float _powerupButtonFadeTime = 0.33f;
+    private float _powerupButtonFadeTimeRecip = 0.0f;
+
+    private Color _tempGuiColor = Color.black;
+
+
     
     void OnGUI()
     {
@@ -60,17 +82,47 @@ public class PowerupBar : MonoBehaviour
         _powerupBarGuiArea.x = Screen.width - width;
         _powerupBarGuiArea.y = Screen.height - height;
         _powerupBarGuiArea.width = Screen.width - _powerupBarGuiArea.x;
-        _powerupBarGuiArea.height = Screen.height - _powerupBarGuiArea.y;
+        _powerupBarGuiArea.height = Screen.height - _powerupBarGuiArea.y;   
         
-        _powerupGooGuiArea.width = _powerupBarGuiArea.width;
-        _powerupGooGuiArea.height = _powerupBarGuiArea.height * PowerupPercent;
-        _powerupGooGuiArea.x = _powerupBarGuiArea.x;
-        _powerupGooGuiArea.y = Screen.height - _powerupGooGuiArea.height;
+        if( PowerupReady )
+        {
+            _powerupButtonArea.width = Screen.height * _powerupButtonHeight;
+            _powerupButtonArea.height = _powerupButtonArea.width;
+            _powerupButtonArea.x = Screen.width - _powerupButtonArea.width;
+            _powerupButtonArea.y = Screen.height - (_powerupButtonArea.height - (_powerupBarGuiArea.width * 0.5f));
 
+            GUI.DrawTexture(_powerupGooGuiArea, _powerupBarBackground);
+            GUI.DrawTexture(_powerupBarGuiArea, _powerupBarForeground);
+            GUI.DrawTexture(_powerupBarGuiArea, _powerupBarFullBackground);
 
-        GUI.DrawTexture(_powerupGooGuiArea, _powerupBarBackground);
+            Color guiColor = GUI.color;
+            _tempGuiColor.r = guiColor.r;
+            _tempGuiColor.g = guiColor.g;
+            _tempGuiColor.b = guiColor.b;
+            _tempGuiColor.a = Mathf.Abs(Mathf.Sin(Time.time * _powerupBarFullPulseRate));
+            GUI.color = _tempGuiColor;
+            GUI.DrawTexture(_powerupButtonArea, _powerupButtonGlow);
 
-        GUI.DrawTexture(_powerupBarGuiArea, _powerupBarForeground);
+            _tempGuiColor.a = Mathf.Clamp01((Time.time - _powerupButtonFadeStart) * _powerupButtonFadeTimeRecip);
+            GUI.color = _tempGuiColor;
+
+            if( GUI.Button(_powerupButtonArea, "", _powerupButton) )
+            {
+                ExecutePowerup(GameObject.FindObjectOfType<Player>());
+            }
+            GUI.color = guiColor;
+        }
+        else
+        {
+            _powerupGooGuiArea.width = _powerupBarGuiArea.width;
+            _powerupGooGuiArea.height = _powerupBarGuiArea.height * PowerupPercent;
+            _powerupGooGuiArea.x = _powerupBarGuiArea.x;
+            _powerupGooGuiArea.y = Screen.height - _powerupGooGuiArea.height;
+
+            GUI.DrawTexture(_powerupGooGuiArea, _powerupBarBackground);
+            GUI.DrawTexture(_powerupBarGuiArea, _powerupBarForeground);
+        }
+        
     }
 
     public float PowerupPercent
@@ -94,6 +146,8 @@ public class PowerupBar : MonoBehaviour
         if (originalController is StarPowerupController)
             throw new InvalidOperationException("Starting Powerup twice in a row");
 
+        PowerupReady = false;
+        _currentPowerups = 0.0f;
         player.AnimateColor(Color.white, 0.5f);
         player.Controller = powerupController;
         powerupController.PowerupEnded += () => {
