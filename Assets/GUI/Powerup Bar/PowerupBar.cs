@@ -17,20 +17,28 @@ public class PowerupBar : MonoBehaviour
 
     void Start()
     {
-		_fullRecip = 1.0f / _powerupsUntilFull;	
+		_fullRecip = 1.0f / _powerupsUntilFull;
 		PowerupReady = false;
     }
 
+	public void UsePowerup()
+	{
+		if (this && PowerupReady)
+		{
+			PowerupReady = false;
+			ExecutePowerup(GameObject.FindObjectOfType<Player>());
+		}
+	}
 
     public void CollectedPowerup()
     {
         _currentPowerups += 1.0f;
+
         if (_currentPowerups >= _powerupsUntilFull)
         {
 
         }
     }
-
 
     private Rect _powerupBarGuiArea = new Rect();
     private Rect _powerupGooGuiArea = new Rect();
@@ -92,8 +100,7 @@ public class PowerupBar : MonoBehaviour
             player.Controller = originalController;
             player.IsImmortal = false;
             player.rigidbody.isKinematic = false;
-            ResetPowerup();
-
+            
             player.AnimateColor(Palette.Instance.Orange, 2.5f);
         };
     }
