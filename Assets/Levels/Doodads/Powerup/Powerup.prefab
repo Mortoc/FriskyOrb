@@ -168,6 +168,7 @@ MonoBehaviour:
   _collectAnimationRandomOffsetAmount: .5
   _spinRate: 500
   _spinObj: {fileID: 400002}
+  _bounceEffect: .100000001
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

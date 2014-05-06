@@ -12,6 +12,8 @@ public class Powerup : Doodad
     private float _spinRate = 200.0f;
 	[SerializeField]
 	private Transform _spinObj;
+    [SerializeField]
+    private float _bounceEffect = 0.02f;
 
 
     void Start()
@@ -31,22 +33,52 @@ public class Powerup : Doodad
         if (player && !_collected)
         {
             _collected = true;
-            Destroy(collider);
 
-            transform.parent = null;
-            StartCoroutine(AnimateCollection(player));
+            PowerupBar bar = GameObject.FindObjectOfType<PowerupBar>();
 
-            if( !audio )
+            if (!audio)
                 gameObject.AddComponent<AudioSource>();
 
-			audio.pitch = Mathf.Lerp (0.75f, 1.25f, UnityEngine.Random.value);
+
+            transform.parent = null;
+            if (!bar.PowerupReady)
+            {
+                StartCoroutine(AnimateCollection(player, bar));
+                audio.pitch = Mathf.Lerp(0.75f, 1.25f, UnityEngine.Random.value);
+            }
+            else
+            {
+                StartCoroutine(BounceOffPlayer(player));
+                audio.pitch = Mathf.Lerp(0.25f, 0.66f, UnityEngine.Random.value);
+            }
+
 			audio.Play();
         }
     }
 
-    private System.Collections.IEnumerator AnimateCollection(Player player)
+    private System.Collections.IEnumerator BounceOffPlayer(Player player)
     {
+        yield return new WaitForFixedUpdate();
+        gameObject.AddComponent<Rigidbody>();
+        Vector3 dir = (transform.position - player.rigidbody.position).normalized;
+        rigidbody.mass = 0.05f;
+        rigidbody.AddForce(dir * player.rigidbody.velocity.magnitude * _bounceEffect, ForceMode.Impulse);
 
+        yield return new WaitForSeconds(0.1f);
+
+        collider.isTrigger = false;
+
+        Renderer childRenderer = GetComponentInChildren<Renderer>();
+
+        while (childRenderer.isVisible)
+            yield return new WaitForFixedUpdate();
+
+        GameObject.Destroy(this.gameObject);
+    }
+
+    private System.Collections.IEnumerator AnimateCollection(Player player, PowerupBar bar)
+    {
+        Destroy(collider);
         Vector3 startPosition = transform.position;
         Vector3 startScale = transform.localScale;
         Vector3 randOffset = UnityEngine.Random.onUnitSphere * _collectAnimationRandomOffsetAmount;
@@ -70,10 +102,7 @@ public class Powerup : Doodad
             yield return 0;
         }
 
-        PowerupBar bar = GameObject.FindObjectOfType<PowerupBar>();
-        
-        if( bar )
-            bar.CollectedPowerup();
+        bar.CollectedPowerup();
 
         Score.Instance.RegisterEvent(Score.Event.StarCollect);
         GameObject.Destroy(this.gameObject);

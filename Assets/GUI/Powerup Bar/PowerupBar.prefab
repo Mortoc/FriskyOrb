@@ -46,7 +46,7 @@ MonoBehaviour:
     type: 3}
   _powerupBarFullBackground: {fileID: 2800000, guid: a6a56193cbdfe0d42ad23b46c8dda0b6,
     type: 3}
-  _powerupBarFullPulseRate: 3
+  _powerupBarFullPulseRate: 1.25
   _powerupBarForeground: {fileID: 2800000, guid: 6235ad310381ef0499a80dd10af8da95,
     type: 3}
   _powerupButton:
@@ -109,7 +109,8 @@ MonoBehaviour:
     m_StretchWidth: 1
     m_StretchHeight: 0
   _powerupButtonGlow: {fileID: 2800000, guid: 325ebd7dad994854ba3fa53fa14e8a7a, type: 3}
-  _powerupButtonHeight: .330000013
+  _powerupButtonHeight: .449999988
+  _powerupButtonFadeTime: .330000013
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

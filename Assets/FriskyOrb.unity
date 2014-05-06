@@ -74,6 +74,50 @@ NavMeshSettings:
     widthInaccuracy: 16.666666
     heightInaccuracy: 10
   m_NavMesh: {fileID: 0}
+--- !u!1001 &506302769
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 2.4000001
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: .988006353
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 2.38410759
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -.0576070212
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: .938125789
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: .190863848
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: -.283147544
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
+      propertyPath: _powerupsUntilFull
+      value: 40
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
+  m_RootGameObject: {fileID: 928660928}
+  m_IsPrefabParent: 0
+  m_IsExploded: 1
 --- !u!1 &697646018
 GameObject:
   m_ObjectHideFlags: 0
@@ -324,7 +368,7 @@ Transform:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
-  m_PrefabInternal: {fileID: 1741149744}
+  m_PrefabInternal: {fileID: 506302769}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 928660929}
@@ -340,7 +384,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
-  m_PrefabInternal: {fileID: 1741149744}
+  m_PrefabInternal: {fileID: 506302769}
   m_GameObject: {fileID: 928660928}
   m_LocalRotation: {x: -.0576070212, y: .938125789, z: .190863848, w: -.283147544}
   m_LocalPosition: {x: 2.4000001, y: .988006353, z: 2.38410759}
@@ -352,14 +396,14 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400000, guid: 701f6c29d6bd975458f9682a5e454e58,
     type: 2}
-  m_PrefabInternal: {fileID: 1741149744}
+  m_PrefabInternal: {fileID: 506302769}
   m_GameObject: {fileID: 928660928}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f211e5378e6ae4c4ea6e90814a398f2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _powerupsUntilFull: 30
+  _powerupsUntilFull: 40
   _activateSound: {fileID: 8300000, guid: 80afba955476023409d05063249f9c41, type: 3}
   _deactivateSound: {fileID: 8300000, guid: aaa2f334eb781984eaa93a9de950c280, type: 3}
   _powerupBarHeight: .660000026
@@ -431,6 +475,7 @@ MonoBehaviour:
     m_StretchHeight: 0
   _powerupButtonGlow: {fileID: 2800000, guid: 325ebd7dad994854ba3fa53fa14e8a7a, type: 3}
   _powerupButtonHeight: .449999988
+  _powerupButtonFadeTime: .330000013
 --- !u!1 &1014443281
 GameObject:
   m_ObjectHideFlags: 0
@@ -962,54 +1007,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _levelNamesCSV: {fileID: 4900000, guid: f45d58c7ce8f02b4995af92b443a4ac4, type: 3}
---- !u!1001 &1741149744
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 2.4000001
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: .988006353
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 2.38410759
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -.0576070212
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: .938125789
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: .190863848
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: -.283147544
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
-      propertyPath: _powerupButtonHeight
-      value: .449999988
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
-      propertyPath: _powerupBarFullPulseRate
-      value: 1.25
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
-  m_RootGameObject: {fileID: 928660928}
-  m_IsPrefabParent: 0
-  m_IsExploded: 1
 --- !u!1 &2056844206
 GameObject:
   m_ObjectHideFlags: 0
