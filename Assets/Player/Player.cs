@@ -101,7 +101,7 @@ public class Player : MonoBehaviour
     private void CreateSpecks()
     {
         // TODO: CombineChildren to reduce draw calls
-        for (int i = 0; i < 6; ++i)
+        for (int i = 0; i < 7; ++i)
         {
             GameObject speck = GameObject.CreatePrimitive(PrimitiveType.Cube);
             
@@ -239,11 +239,19 @@ public class Player : MonoBehaviour
         if( powerupBar )
             Destroy(powerupBar.gameObject);
 
+
         if (!PlayerPrefs.HasKey("best_score") || PlayerPrefs.GetInt("best_score") < Score.Instance.ActualScore)
         {
             PlayerPrefs.SetInt("best_score", Score.Instance.ActualScore);
             PlayerPrefs.SetInt("best_score_level_seed", Level.Seed);
+
+            Analytics.gua.sendEventHit("Player", "Death", "WasBestScore", Score.Instance.ActualScore);
         }
+        else
+        {
+            Analytics.gua.sendEventHit("Player", "Death", "WasNotBestScore", Score.Instance.ActualScore);
+        }
+
     }
 
     void OnCollisionEnter(Collision collision)

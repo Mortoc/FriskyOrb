@@ -53,6 +53,8 @@ public class MainGui : MonoBehaviour
 
         if (GUILayout.Button("", GUI.skin.FindStyle("NewLevelButton"), GUILayout.Width(newLevelButtonWidth), GUILayout.Height(newLevelButtonHeight)))
         {
+
+            Analytics.gua.sendEventHit("MainManu", "PressedNewLevelButton");
             Level.StartRandom();
         }
 
@@ -99,6 +101,7 @@ public class MainGui : MonoBehaviour
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("", GUI.skin.FindStyle("ReplayButton"), GUILayout.Width(replayButtonWidth), GUILayout.Height(replayButtonHeight)))
             {
+                Analytics.gua.sendEventHit("MainManu", "ReplayedBestLevel", "LevelSeed", PlayerPrefs.GetInt("best_score_level_seed"));
                 Level.Start(PlayerPrefs.GetInt("best_score_level_seed"));
             }
             GUILayout.FlexibleSpace();

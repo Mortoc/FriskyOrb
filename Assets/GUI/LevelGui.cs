@@ -84,7 +84,7 @@ public class LevelGui : MonoBehaviour
         }
 
         Rect screenRect = new Rect(0.0f, 0.0f, Screen.width, Screen.height);
-        float edgeMargin = Screen.height * 0.02f;
+
         float pauseButtonSize = Screen.height * 0.15f;
         float scoreButtonHeight = Screen.height * 0.2f;
         float scoreButtonWidth = scoreButtonHeight * 512.0f / 242.0f;
