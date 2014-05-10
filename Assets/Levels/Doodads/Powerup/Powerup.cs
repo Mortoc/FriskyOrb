@@ -49,7 +49,7 @@ public class Powerup : Doodad
             else
             {
                 StartCoroutine(BounceOffPlayer(player));
-                audio.pitch = Mathf.Lerp(0.25f, 0.66f, UnityEngine.Random.value);
+                audio.pitch = Mathf.Lerp(0.5f, 0.75f, UnityEngine.Random.value);
             }
 
 			audio.Play();
