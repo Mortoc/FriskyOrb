@@ -61,17 +61,20 @@ public class Powerup : Doodad
         yield return new WaitForFixedUpdate();
         gameObject.AddComponent<Rigidbody>();
         Vector3 dir = (transform.position - player.rigidbody.position).normalized;
-        rigidbody.mass = 0.05f;
+        dir = Vector3.Lerp(player.rigidbody.velocity.normalized, dir, .66f);
+        rigidbody.mass = Mathf.Lerp(0.033f, 0.4f, UnityEngine.Random.value);
         rigidbody.AddForce(dir * player.rigidbody.velocity.magnitude * _bounceEffect, ForceMode.Impulse);
+        rigidbody.AddForce(Vector3.up, ForceMode.Impulse);
 
         yield return new WaitForSeconds(0.1f);
 
         collider.isTrigger = false;
+        gameObject.layer = LayerMask.NameToLayer("FX");
 
         Renderer childRenderer = GetComponentInChildren<Renderer>();
 
         while (childRenderer.isVisible)
-            yield return new WaitForFixedUpdate();
+            yield return 0;
 
         GameObject.Destroy(this.gameObject);
     }

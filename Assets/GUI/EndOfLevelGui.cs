@@ -53,17 +53,11 @@ public class EndOfLevelGui : MonoBehaviour
         GUILayout.EndVertical();
 
         GUILayout.FlexibleSpace();
-
         GUILayout.EndHorizontal();
-
         GUILayout.FlexibleSpace();
-
         GUILayout.EndVertical();
-
         GUILayout.FlexibleSpace();
-
         GUILayout.EndHorizontal();
-
         GUILayout.EndArea();
     }
 }

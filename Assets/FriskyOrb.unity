@@ -496,7 +496,7 @@ MonoBehaviour:
     PowerupStringLengthJitter: 0
   - Name: Learn To Steer
     StartSegment: 2
-    ApproxSegmentLength: 20
+    ApproxSegmentLength: 30
     SegmentLengthJitter: 0
     Curviness: 5
     MinHeightDifference: 0
@@ -510,7 +510,7 @@ MonoBehaviour:
     PowerupStringLengthJitter: 3
   - Name: Who Left These Here?
     StartSegment: 10
-    ApproxSegmentLength: 22
+    ApproxSegmentLength: 35
     SegmentLengthJitter: 2
     Curviness: 3
     MinHeightDifference: 0
@@ -524,9 +524,9 @@ MonoBehaviour:
     PowerupStringLengthJitter: 2
   - Name: Tricksy Tracks
     StartSegment: 15
-    ApproxSegmentLength: 25
+    ApproxSegmentLength: 35
     SegmentLengthJitter: 0
-    Curviness: 1
+    Curviness: .5
     MinHeightDifference: 0
     MaxHeightDifference: 0
     AscendOnly: 0
@@ -552,9 +552,9 @@ MonoBehaviour:
     PowerupStringLengthJitter: 2
   - Name: Behold, A Mountain
     StartSegment: 20
-    ApproxSegmentLength: 20
+    ApproxSegmentLength: 25
     SegmentLengthJitter: 0
-    Curviness: 1
+    Curviness: 0
     MinHeightDifference: 20
     MaxHeightDifference: 20
     AscendOnly: 1
@@ -566,7 +566,7 @@ MonoBehaviour:
     PowerupStringLengthJitter: 0
   - Name: You Probably Won't Pass
     StartSegment: 21
-    ApproxSegmentLength: 30
+    ApproxSegmentLength: 45
     SegmentLengthJitter: 3
     Curviness: 5
     MinHeightDifference: 2
@@ -580,7 +580,7 @@ MonoBehaviour:
     PowerupStringLengthJitter: 2
   - Name: Really?
     StartSegment: 40
-    ApproxSegmentLength: 30
+    ApproxSegmentLength: 45
     SegmentLengthJitter: 5
     Curviness: 5
     MinHeightDifference: 1
@@ -594,7 +594,7 @@ MonoBehaviour:
     PowerupStringLengthJitter: 2
   - Name: Gettin Harder
     StartSegment: 50
-    ApproxSegmentLength: 25
+    ApproxSegmentLength: 33
     SegmentLengthJitter: 5
     Curviness: 10
     MinHeightDifference: 0
@@ -608,8 +608,8 @@ MonoBehaviour:
     PowerupStringLengthJitter: 1
   - Name: End Game
     StartSegment: 60
-    ApproxSegmentLength: 25
-    SegmentLengthJitter: 5
+    ApproxSegmentLength: 33
+    SegmentLengthJitter: 6
     Curviness: 15
     MinHeightDifference: 0
     MaxHeightDifference: 20
@@ -1003,45 +1003,3 @@ Prefab:
   m_RootGameObject: {fileID: 928660928}
   m_IsPrefabParent: 0
   m_IsExploded: 1
---- !u!1 &2056844206
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 2056844208}
-  - 114: {fileID: 2056844207}
-  m_Layer: 0
-  m_Name: Music
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2056844207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2056844206}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7176c662300123d47901b8ca4aee1542, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _music: {fileID: 8300000, guid: 60d8d6cffe0aadd418e6178b73a7db7e, type: 3}
-  _startDelay: 7
-  _fadeInTime: 15
-  _volume: .25
---- !u!4 &2056844208
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2056844206}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .646283269, y: -2.28397846, z: 30.9398689}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
