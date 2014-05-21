@@ -25,6 +25,12 @@ public class CameraController : MonoBehaviour
 
     private Vector3 _lastPlayerPosition;
 
+    void Start()
+    {
+        // drop resolution for Glow11 if old android
+        
+    }
+
     void FixedUpdate()
     {
         if (Player)

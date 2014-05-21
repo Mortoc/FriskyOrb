@@ -4,7 +4,7 @@
 // http://strobotnik.com
 // http://jet.ro
 //
-// $Revision: 533 $
+// $Revision: 635 $
 //
 // File version history:
 // 2013-04-26, 1.0.0 - Initial version
@@ -17,17 +17,25 @@
 // 2013-12-17, 1.2.0 - Added disableAnalyticsByUserOptOut in PlayerPrefs
 //                     and use of gua.analyticsDisabled.
 // 2014-02-11, 1.3.0 - Changed trackingID to be invalid dummy by default.
+// 2014-05-12, 1.4.0 - Added support for offline cache (net activity coroutine
+//                     as part of that). Updated for method renames
+//                     (see GoogleUniversalAnalytics.cs). Added
+//                     ScreenResolution and ViewportSize to the 1st launch
+//                     SystemInfo statistics, and removed viewport size from
+//                     being submitted for the first screen hit. 
 
 using UnityEngine;
 using System.Collections;
 
 public class Analytics : MonoBehaviour
 {
-    public string trackingID = "UA-XXXXXXX-Y"; // dummy id - use your actual id!
+    public string trackingID = "UA-51195157-1"; // dummy id - use your actual id!
     public string appName = "GoogleUniversalAnalyticsForUnityExample";
     public string appVersion = "0.0.1";
     public string newLevelAnalyticsEventPrefix = "level-";
     public bool useHTTPS = false;
+    // Note: switching useOfflineCache after initialization doesn't have any effect.
+    public bool useOfflineCache = true;
 
     public static GoogleUniversalAnalytics gua = null;
 
@@ -40,19 +48,12 @@ public class Analytics : MonoBehaviour
 
     private const string disableAnalyticsByUserOptOutPrefKey = "GoogleUniversalAnalytics_optOut";
 
+    string offlineCacheFileName = "GUA-offline-queue.dat";
+
 
     int getPOSIXTime()
     {
         return (int)(System.DateTime.UtcNow - new System.DateTime(1970, 1, 1)).TotalSeconds;
-    }
-
-    // Example of a helper method. See commented-out
-    // exampleAnalyticsTestHits() at end of this file for
-    // more ideas of what to track, and what you could
-    // make helper methods for.
-    public static void changeScreen(string newScreenName)
-    {
-        gua.sendAppScreenHit(newScreenName);
     }
 
 
@@ -120,10 +121,17 @@ public class Analytics : MonoBehaviour
             PlayerPrefs.Save();
         }
 
+        string offlineCacheFilePath = ""; // empty string=disable (in GUA class)
+        if (useOfflineCache && offlineCacheFileName != null && offlineCacheFileName.Length > 0)
+        {
+            offlineCacheFilePath = Application.persistentDataPath + '/' + offlineCacheFileName;
+            //Debug.Log("Full path for offline cache: " + offlineCacheFilePath);
+        }
+
         //bool useStringEscaping = true; // see the docs about this
         if (gua == null)
             gua = GoogleUniversalAnalytics.Instance;
-        gua.initialize(trackingID, clientID, appName, appVersion, useHTTPS);
+        gua.initialize(this, trackingID, clientID, appName, appVersion, useHTTPS, offlineCacheFilePath);
         //gua.setStringEscaping(useStringEscaping); // see the docs about this
 
         if (PlayerPrefs.HasKey(disableAnalyticsByUserOptOutPrefKey))
@@ -136,18 +144,14 @@ public class Analytics : MonoBehaviour
             // Start by sending a hit with some generic info, including an app
             // screen hit with the first level name, since first scene doesn't get
             // automatically call to OnLevelWasLoaded.
-            gua.beginHit(GoogleUniversalAnalytics.HitType.Appview);
-            gua.addApplicationVersion();
+            gua.beginHit(GoogleUniversalAnalytics.HitType.Screenview);
             gua.addScreenResolution(Screen.currentResolution.width, Screen.currentResolution.height);
-            gua.addViewportSize(Screen.width, Screen.height);
 #if !UNITY_METRO && !UNITY_WEBPLAYER && !UNITY_STANDALONE && !UNITY_3_5
             gua.addScreenColors(Handheld.use32BitDisplayBuffer ? 32 : 16);
 #endif
             // Note: this adds language e.g. as "English", although Google API example has "en-us".
             gua.addUserLanguage(Application.systemLanguage.ToString());
-            //gua.addCustomDimension(1, "ScreenDPI");
-            //gua.addCustomMetric(1, (int)Screen.dpi);
-            gua.addContentDescription(newLevelAnalyticsEventPrefix + Application.loadedLevelName);
+            gua.addScreenName(newLevelAnalyticsEventPrefix + Application.loadedLevelName);
             gua.sendHit();
 
 
@@ -166,10 +170,12 @@ public class Analytics : MonoBehaviour
             //          testing). Otherwise all following single time statistics
             //          hits would be sent on each launch.
 
-            if (Application.internetReachability != NetworkReachability.NotReachable &&
+            if ((useOfflineCache || gua.internetReachable) &&
                 !PlayerPrefs.HasKey(prefKey))
             {
                 gua.sendEventHit(category, "ScreenDPI", ((int)Screen.dpi).ToString(), (int)Screen.dpi);
+                gua.sendEventHit(category, "ScreenResolution", "" + Screen.currentResolution.width + "x" + Screen.currentResolution.height);
+                gua.sendEventHit(category, "ViewportSize", "" + Screen.width + "x" + Screen.height);
 
                 gua.sendEventHit(category, "operatingSystem", SystemInfo.operatingSystem);
                 gua.sendEventHit(category, "processorType", SystemInfo.processorType);
@@ -220,9 +226,9 @@ public class Analytics : MonoBehaviour
                 PlayerPrefs.SetInt(prefKey, getPOSIXTime());
                 PlayerPrefs.Save();
             }
-
         } // !gua.analyticsDisabled
 	} // Awake
+
 
     void OnLevelWasLoaded(int level)
     {
@@ -235,9 +241,21 @@ public class Analytics : MonoBehaviour
         }
     }
 
-    void Start()
+    void OnDisable()
     {
-        //exampleAnalyticsTestHits();
+        #if !UNITY_WEBPLAYER
+        // so that files won't be kept open when exiting play mode in editor
+        gua.closeOfflineCacheFile();
+        #endif
+    }
+
+
+    // Example of a helper method.
+    // See commented-out exampleAnalyticsTestHits() below for more ideas of
+    // what to track, and what you could make helper methods for.
+    public static void changeScreen(string newScreenName)
+    {
+        gua.sendAppScreenHit(newScreenName);
     }
 
     /*
@@ -294,7 +312,7 @@ public class Analytics : MonoBehaviour
         gua.sendUserTimingHit("loadtimes", "init", 100, "test-loadtimes-init");
 
 
-        // test custom appview event of going to screen named "test-end",
+        // test custom screenview event of going to screen named "test-end",
         // with the event containing forced end of current session
         //
         // (The default gua.sendSomething()-style helpers check for the
@@ -305,9 +323,9 @@ public class Analytics : MonoBehaviour
         //
         if (!gua.analyticsDisabled)
         {
-            gua.beginHit(GoogleUniversalAnalytics.HitType.Appview);
+            gua.beginHit(GoogleUniversalAnalytics.HitType.Screenview);
             gua.addApplicationVersion();
-            gua.addContentDescription("test-end");
+            gua.addScreenName("test-end");
             gua.addSessionControl(false);
             gua.sendHit();
         }

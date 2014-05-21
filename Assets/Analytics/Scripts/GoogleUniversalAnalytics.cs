@@ -5,7 +5,7 @@
 // http://strobotnik.com
 // http://jet.ro
 //
-// $Revision: 533 $
+// $Revision: 635 $
 //
 // File version history:
 // 2013-04-26, 1.0.0 - Initial version
@@ -19,6 +19,19 @@
 //                     LogError for trying to use the dummy value for it.
 //                     Use custom User-Agent on iOS (improve device detection).
 //                     Fixed reset of sessionHitCountResetPending.
+// 2014-05-12, 1.4.0 - Added offline caching of hits, and netActivity coroutine
+//                     for sending cached hits & monitoring net access.
+//                     Changed hits to be sent using a coroutine and result
+//                     verification to update net access status on failure.
+//                     Updates to reflect changes in measurement protocol:
+//                     * Renamed HitType.Appview to HitType.Screenview,
+//                     * Renamed addContentDescription to addScreenName.
+//                     * Added setUserID, setIPOverride, setUserAgentOverride,
+//                       setApplicationID, addApplicationInstallerID.
+//                     Also added setApplicationName and replaced
+//                     addApplicationVersion with setApplicationVersion. Now
+//                     app name, version and ID are always added to hits if
+//                     they have been set.
 
 #if UNITY_EDITOR
 #define DEBUG
@@ -30,6 +43,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Text;
+using System.IO;
 using System;
 
 
@@ -52,12 +66,12 @@ public sealed class GoogleUniversalAnalytics
     //! Hit types to be used with beginHit().
     public enum HitType
     {
-        Pageview, Appview, Event, Transaction, Item, Social, Exception, Timing, None
+        Pageview, Screenview, Event, Transaction, Item, Social, Exception, Timing, None
     }
 
     private readonly static string[] hitTypeNames = new string[9]
     {
-        "pageview", "appview", "event", "transaction", "item", "social", "exception", "timing", "none"
+        "pageview", "screenview", "event", "transaction", "item", "social", "exception", "timing", "none"
     };
 
     private readonly static string httpCollectUrl = "http://www.google-analytics.com/collect";
@@ -85,17 +99,115 @@ public sealed class GoogleUniversalAnalytics
 
     //! Flag to define if https should be used or not when submitting hits.
     public bool useHTTPS;
+    //! Reference to helper MonoBehaviour used for Coroutines.
+    public MonoBehaviour helperBehaviour;
     //! Current tracking ID for Google Analytics, like "UA-XXXXXXX-Y".
     public string trackingID;
     //! Current anonymous client ID.
     public string clientID;
-    //! (Optional) Current app name. For analytics profiles with app tracking enabled.
+    //! Current user ID.
+    public string userID;
+    //! Current user IP (override implicit).
+    public string userIP;
+    //! Current user agent (override implicit).
+    public string userAgent;
+    //! (Optional) Current app name. For app tracking analytics views.
     public string appName;
-    //! (Optional) Current app version. For analytics profiles with app tracking enabled.
+    //! (Optional) Current app version. For app tracking analytics views.
     public string appVersion;
+    //! (Optional) Current app ID. For app tracking analytics views.
+    public string appID;
 
     //! Flag to specify if analytics are fully disabled (e.g. because of user opt-out).
-    public bool analyticsDisabled;
+    private bool analyticsDisabled_;
+    public bool analyticsDisabled
+    {
+        get
+        {
+            return analyticsDisabled_;
+        }
+        set
+        {
+            analyticsDisabled_ = value;
+#           if !UNITY_WEBPLAYER
+            if (analyticsDisabled_)
+                clearOfflineQueue();
+#           endif
+        }
+    }
+
+#if !UNITY_WEBPLAYER
+    // Is offline cache enabled (not supported with web player)
+    public bool useOfflineCache;
+    // Full path and file name of the offline cache file.
+    private string offlineCacheFilePath;
+    // Reader for reading cached hits to be sent when online
+    private StreamReader offlineCacheReader;
+    // Writer for saving hits when offline
+    private StreamWriter offlineCacheWriter;
+
+    // cached values so that we don't have to read from PlayerPrefs all the time
+    private int offlineQueueLength = -1; // -1 = uninitialized
+    private int offlineQueueSentHits = -1;
+
+    private enum NetAccessStatus
+    {
+        Offline, PendingVerification, Error, Mismatch, Functional
+    }
+    private NetAccessStatus netAccessStatus = NetAccessStatus.Offline;
+
+    WaitForSeconds defaultReachabilityCheckPeriod = new WaitForSeconds(5.0f);
+    WaitForSeconds hitBeingBuiltRetryTime = new WaitForSeconds(0.25f);
+    WaitForSeconds netVerificationErrorRetryTime = new WaitForSeconds(20.0f);
+    WaitForSeconds netVerificationMismatchRetryTime = new WaitForSeconds(10.0f);
+    WaitForSeconds cachedHitSendThrottleTime = new WaitForSeconds(1.0f);
+
+    //! Sets net activity time wait periods.
+    /*! There are reasonable defaults, so there is no need to call this
+     *  at all unless you want to change the times.
+     */
+    void setOfflineQueueNetActivityTimes(float defaultReachabilityCheckPeriodSeconds,
+                                         float hitBeingBuiltRetryTimeSeconds,
+                                         float netVerificationErrorRetryTimeSeconds,
+                                         float netVerificationMismatchRetryTimeSeconds,
+                                         float cachedHitSendThrottleTimeSeconds)
+    {
+#       if DEBUG_WARNINGS
+        if (defaultReachabilityCheckPeriodSeconds < 1 / 61.0f)
+            Debug.LogWarning("GUA - custom defaultReachabilityCheckPeriodSeconds is set to a very low value: " + defaultReachabilityCheckPeriodSeconds);
+        if (hitBeingBuiltRetryTimeSeconds < 1 / 61.0f)
+            Debug.LogWarning("GUA - custom hitBeingBuiltRetryTimeSeconds is set to a very low value: " + defaultReachabilityCheckPeriodSeconds);
+        if (netVerificationErrorRetryTimeSeconds < 1.0f)
+            Debug.LogWarning("GUA - custom netVerificationErrorRetryTimeSeconds is set to a very low value: " + defaultReachabilityCheckPeriodSeconds);
+        if (netVerificationMismatchRetryTimeSeconds < 0.5f)
+            Debug.LogWarning("GUA - custom netVerificationMismatchRetryTimeSeconds is set to a very low value: " + defaultReachabilityCheckPeriodSeconds);
+        if (cachedHitSendThrottleTimeSeconds < 0.5f)
+            Debug.LogWarning("GUA - custom cachedHitSendThrottleTimeSeconds is set to a very low value: " + defaultReachabilityCheckPeriodSeconds);
+#       endif
+        defaultReachabilityCheckPeriod = new WaitForSeconds(defaultReachabilityCheckPeriodSeconds);
+        hitBeingBuiltRetryTime = new WaitForSeconds(hitBeingBuiltRetryTimeSeconds);
+        netVerificationErrorRetryTime = new WaitForSeconds(netVerificationErrorRetryTimeSeconds);
+        netVerificationMismatchRetryTime = new WaitForSeconds(netVerificationMismatchRetryTimeSeconds);
+        cachedHitSendThrottleTime = new WaitForSeconds(cachedHitSendThrottleTimeSeconds);
+    }
+#endif // not UNITY_WEBPLAYER
+
+    public int remainingEntriesInOfflineCache
+    {
+        get
+        {
+#           if UNITY_WEBPLAYER
+            return 0; // no offline cache support with webplayer
+#           else
+            if (offlineQueueLength == -1)
+                offlineQueueLength = PlayerPrefs.GetInt(offlineQueueLengthPrefKey, 0);
+            if (offlineQueueSentHits == -1)
+                offlineQueueSentHits = PlayerPrefs.GetInt(offlineQueueSentHitsPrefKey, 0);
+            return offlineQueueLength - offlineQueueSentHits;
+#           endif // not webplayer
+        }
+    }
+
 
 #if UNITY_IPHONE
     //! Custom headers (e.g. for using custom-built User-Agent).
@@ -112,11 +224,10 @@ public sealed class GoogleUniversalAnalytics
     //! Constructs a new analytics helper. You must use initialize() for actual initialization.
     public GoogleUniversalAnalytics()
     {
-#if DEBUG_LOGS
+#       if DEBUG_LOGS
         Debug.Log("GUA constructor (GoogleUniversalAnalytics)");
-#endif
+#       endif
     }
-
 
     // Alternative for WWW.escapeURL(string), if choosing not to escape urls.
     private static string returnStringAsIs(string s)
@@ -138,48 +249,237 @@ public sealed class GoogleUniversalAnalytics
     }
 #endif
 
+    private bool isHitBeingBuilt
+    {
+        get
+        {
+            return hitType != HitType.None || sb.Length > 0;
+        }
+    }
+
+
+    public bool internetReachable
+    {
+        get
+        {
+#           if !UNITY_WEBPLAYER
+            if (useOfflineCache)
+            {
+                return netAccessStatus == NetAccessStatus.Functional &&
+                    Application.internetReachability != NetworkReachability.NotReachable;
+            }
+            else
+#           endif
+                return Application.internetReachability != NetworkReachability.NotReachable;
+        }
+    }
+
+
+#if !UNITY_WEBPLAYER
+    // Coroutine for net activity polling/updating.
+    // (Needs to be started from a MonoBehaviour frontend class.)
+    // Used only when offline cache is enabled, to check if we get online
+    // and verify net access, or sending queued hits in the backround.
+    IEnumerator netActivity()
+    {
+#       if DEBUG_WARNINGS
+        int hitWasBeingBuiltCounter = 0;
+#       endif
+        NetworkReachability prevReachability = Application.internetReachability;
+
+        if (Application.internetReachability != NetworkReachability.NotReachable)
+            netAccessStatus = NetAccessStatus.PendingVerification;
+        else
+            netAccessStatus = NetAccessStatus.Offline;
+
+#       if DEBUG_LOGS
+        Debug.Log("GUA netActivity started, initial status: " + netAccessStatus);
+#       endif
+
+        while (useOfflineCache)
+        {
+#           if DEBUG_LOGS
+            Debug.Log("GUA netActivity cycle, offlineQueueLength=" + offlineQueueLength + ", offlineQueueSentHits=" + offlineQueueSentHits);
+#           endif
+#           if DEBUG_WARNINGS
+            if (hitWasBeingBuiltCounter >= 5)
+            {
+                // Trying to verify connection or send cached hits, but can't
+                // do it since app code keeps being middle of building an
+                // analytics hit. Show a warning.
+                Debug.LogWarning("GUA can't verify connection or send cached hits because \"hit was being built\" over several tries. Did you beginHit() without using sendHit() almost immediately?");
+                hitWasBeingBuiltCounter = 0;
+            }
+#           endif
+
+            if (netAccessStatus == NetAccessStatus.Error)
+            {
+                yield return netVerificationErrorRetryTime;
+                netAccessStatus = NetAccessStatus.PendingVerification;
+            }
+            else if (netAccessStatus == NetAccessStatus.Mismatch)
+            {
+                yield return netVerificationMismatchRetryTime;
+                netAccessStatus = NetAccessStatus.PendingVerification;
+            }
+
+            NetworkReachability networkReachability = Application.internetReachability;
+            if (prevReachability != networkReachability)
+            {
+#               if DEBUG_LOGS
+                Debug.Log("GUA updated network reachability: " + networkReachability);
+#               endif
+                if (networkReachability != NetworkReachability.NotReachable)
+                    netAccessStatus = NetAccessStatus.PendingVerification;
+                else if (networkReachability == NetworkReachability.NotReachable)
+                {
+                    netAccessStatus = NetAccessStatus.Offline;
+                }
+                prevReachability = Application.internetReachability;
+            }
+
+            if (netAccessStatus == NetAccessStatus.PendingVerification)
+            {
+                if (isHitBeingBuilt)
+                {
+#                   if DEBUG_WARNINGS
+                    ++hitWasBeingBuiltCounter;
+#                   endif
+#                   if DEBUG_LOGS
+                    Debug.Log("GUA hit was being built when trying to verify net access, waiting");
+#                   endif
+                    yield return hitBeingBuiltRetryTime;
+                    continue;
+                }
+
+#               if DEBUG_LOGS
+                Debug.Log("GUA verifying network");
+#               endif
+#               if DEBUG_WARNINGS
+                hitWasBeingBuiltCounter = 0;
+#               endif
+                beginHit(HitType.Screenview);
+                addNonInteractionHit();
+                addCommonOptionalHitParams();
+                WWW www = finalizeAndSendHit(true);
+                yield return www;
+                if (www.error != null && www.error.Length > 0)
+                {
+#                   if DEBUG_LOGS
+                    Debug.Log("GUA net verification error: " + www.error);
+#                   endif
+                    netAccessStatus = NetAccessStatus.Error;
+                    continue;
+                }
+                else
+                {
+                    byte[] result = www.bytes;
+                    if (result != null && result.Length > 3 &&
+                        result[0] == 'G' && result[1] == 'I' && result[2] == 'F')
+                    {
+#                       if DEBUG_LOGS
+                        Debug.Log("GUA net verification success");
+#                       endif
+                        netAccessStatus = NetAccessStatus.Functional; // success
+                    }
+                    else
+                    {
+#                       if DEBUG_LOGS
+                        Debug.Log("GUA net verification mismatch (network login screen?)");
+                        //Debug.Log(www.data); // for debug peeking at data
+#                       endif
+                        netAccessStatus = NetAccessStatus.Mismatch;
+                        continue;
+                    }
+                } // no www error
+            } // netAccessStatus == NetAccessStatus.PendingVerification
+
+            if (pendingQueuedOfflineHits() &&
+                netAccessStatus == NetAccessStatus.Functional)
+            {
+                if (isHitBeingBuilt)
+                {
+#                   if DEBUG_WARNINGS
+                    ++hitWasBeingBuiltCounter;
+#                   endif
+                    yield return hitBeingBuiltRetryTime;
+                    continue;
+                }
+                else
+                {
+#                   if DEBUG_WARNINGS
+                    hitWasBeingBuiltCounter = 0;
+#                   endif
+                    sendOnePendingOfflineHit();
+                    yield return cachedHitSendThrottleTime;
+                    continue;
+                }
+            }
+
+            yield return defaultReachabilityCheckPeriod;
+        } // while useOfflineCache
+    } // netActivity
+#endif // not webplayer
+
 
     //! Initializes an analytics helper object for use. This must be called also for the default Instance.
     /*!
+     * \param analyticsHelperBehaviour reference to the Analytics helper behaviour.
      * \param trackingID tracking ID for Google Analytics, like "UA-XXXXXXX-Y".
      * \param anonymousClientID string which identifies current user anonymously.
      *        For example, Unity's SystemInfo.deviceUniqueIdentifier.
-     * \param appName (Optional) App name, for analytics profiles with app tracking enabled.
-     * \param appVersion (Optional) App version, for analytics profiles with app tracking enabled.
+     * \param appName App name (Optional, but required for using app tracking view).
+     * \param appVersion App version (Optional, but required for using app tracking view).
      * \param useHTTPS Set to true to send analytics using https, or false for http.
      *                 Note that https requests may silently fail when running inside editor.
+     * \param offlineCacheFilePath full path and file name to use for caching
+     *                             hits to be sent later when offline, or empty
+     *                             string ("") to disable offline cache.
      */
-    public void initialize(string trackingID,
+    public void initialize(MonoBehaviour analyticsHelperBehaviour,
+                           string trackingID,
                            string anonymousClientID,
                            string appName = "",
                            string appVersion = "",
-                           bool useHTTPS = false)
+                           bool useHTTPS = false,
+                           string offlineCacheFilePath = "")
     {
+        this.helperBehaviour = analyticsHelperBehaviour;
         this.trackingID = escapeString(trackingID);
 
-#if UNITY_EDITOR
-#if DEBUG_WARNINGS
-        if (this.trackingID.Equals("UA-8989161-8"))
-            Debug.LogWarning("GUA Warning! You are using Analytics Tracking ID of the AnalyticsExample. For own apps you must use your own Tracking ID from the Google Analytics site.");
-#endif
+#       if UNITY_EDITOR
+#       if DEBUG_WARNINGS
+        if (this.trackingID.Equals("UA-8989161-8") &&
+            !Application.loadedLevelName.Equals("AnalyticsExample"))
+            Debug.LogError("GUA Warning! You are using Analytics Tracking ID of the AnalyticsExample. For own apps you must use your own Tracking ID from the Google Analytics site.");
+#       endif // debug warnings
         if (this.trackingID.Equals("UA-XXXXXXX-Y"))
             Debug.LogError("GUA Error! You haven't set Analytics Tracking ID! You must get a Tracking ID from the Google Analytics site.");
-#endif
+#       endif // editor
 
         this.useHTTPS = useHTTPS;
-        // client id and app name are always escaped on initialization, just in case...
+        // the fields below are always escaped on initialization, just in case...
         clientID = WWW.EscapeURL(anonymousClientID);
         this.appName = (appName != null && appName.Length > 0) ? WWW.EscapeURL(appName) : null;
         this.appVersion = (appVersion != null && appVersion.Length > 0) ? WWW.EscapeURL(appVersion) : null;
         this.analyticsDisabled = false;
-#if DEBUG_WARNINGS
+
+#       if DEBUG_WARNINGS
         if (this.appName != null && this.appName.Length > 100)
             Debug.LogWarning("GUA Application Name is too long, max 100 bytes: " + this.appName);
         if (this.appVersion != null && this.appVersion.Length > 100)
             Debug.LogWarning("GUA Application Version is too long, max 100 bytes: " + this.appName);
-#endif
+#       endif // debug warnings
 
-#if DEBUG_LOGS
+#       if !UNITY_WEBPLAYER
+        this.offlineCacheFilePath = offlineCacheFilePath;
+        if (offlineCacheFilePath != null && offlineCacheFilePath.Length > 0)
+        {
+            useOfflineCache = true;
+        }
+#       endif // not webplayer
+
+#       if DEBUG_LOGS
         // Log tracking ID, anonymous client ID and possible app name
         string loggedAppName = "(none)", loggedAppVersion = "(none)";
         if (appName != null && appName.Length > 0)
@@ -190,7 +490,8 @@ public sealed class GoogleUniversalAnalytics
                   ", anonymousClientID:" + this.clientID +
                   ", appName:" + loggedAppName +
                   ", appVersion:" + loggedAppVersion);
-#endif
+        Debug.Log("GUA offline cache file full path: " + offlineCacheFilePath);
+#       endif // debug logs
 
         // Construct cached string containing default part for ALL hits:
         // (on web player platforms we'll also add the start of enclosing
@@ -198,31 +499,29 @@ public sealed class GoogleUniversalAnalytics
 
         sb.Length = 0;
 
-#if UNITY_WEBPLAYER
+#       if UNITY_WEBPLAYER
         sb.Append("{var guax=null;guax=new XMLHttpRequest();guax.open(\"POST\",\"");
         sb.Append(useHTTPS ? httpsCollectUrl : httpCollectUrl);
         sb.Append("\",true);guax.setRequestHeader(\"Content-Type\",\"text/plain;charset=UTF-8\");guax.send(\"");
-#endif
+#       endif // webplayer
 
         sb.Append(guaVersionData);
         sb.Append("&tid="); // tracking ID, required for all hit types
         sb.Append(this.trackingID);
         sb.Append("&cid="); // client ID, required for all hit types
         sb.Append(this.clientID);
-        // always add app name if we have it:
-        if (this.appName != null && this.appName.Length > 0)
-        {
-            sb.Append("&an=");
-            sb.Append(this.appName);
-        }
-        /* // but let's not always submit the app version even if we have it...
-         * // it's better to add that only in some hits, like screen hit.
-        if (this.appVersion != null)
-        {
-            sb.Append("&av=");
-            sb.Append(this.appVersion);
-        }
-        */
+        //// used to add this here by default, but now it's moved to sendHit
+        //if (this.appName != null && this.appName.Length > 0)
+        //{
+        //    sb.Append("&an=");
+        //    sb.Append(this.appName);
+        //}
+        //// also app version is added in sendHit
+        //if (this.appVersion != null)
+        //{
+        //    sb.Append("&av=");
+        //    sb.Append(this.appVersion);
+        //}
         defaultHitData = sb.ToString();
         sb.Length = 0;
 
@@ -232,8 +531,8 @@ public sealed class GoogleUniversalAnalytics
         //     System.Text.Encoding.UTF8.GetBytes(char[], charIndex, charCount, byte[], byteIndex)
         //   However, WWW objects don't take byte[] with offset/count, so we can't do that.
 
-#if UNITY_IPHONE
-        // Make custom User-Agent when running under iOS:
+#       if UNITY_IPHONE
+        // Make custom User-Agent and use custom headers when running under iOS:
         string deviceModel = SystemInfo.deviceModel;
         string operatingSystem = SystemInfo.operatingSystem;
         string iDeviceType = "";
@@ -270,11 +569,16 @@ public sealed class GoogleUniversalAnalytics
             sb.Length = 0;
             customHeaders = new Hashtable();
             customHeaders.Add("User-Agent", userAgent);
-#if DEBUG_LOGS
+#       if DEBUG_LOGS
             Debug.Log("GUA using custom User-Agent: " + userAgent);
-#endif
+#       endif // debug logs
         }
-#endif
+#       endif // unity iphone (iOS)
+
+#       if !UNITY_WEBPLAYER
+        if (useOfflineCache)
+            helperBehaviour.StartCoroutine(netActivity());
+#       endif // not webplayer
     }
 
 
@@ -299,21 +603,31 @@ public sealed class GoogleUniversalAnalytics
             escapeString = WWW.EscapeURL;
         else
             escapeString = returnStringAsIs;
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         // debug builds can warn about non-safe strings
         if (!useStringEscaping)
             escapeString = returnStringAsIs_withEscapingCheck;
-#endif
+#       endif // debug warnings
     }
-
 
     //! Begins describing a new "Hit" for analytics.
     /*!
-     * Tracking and client IDs are always added automatically for all hits,
-     * as well as application name if the analytics is initialized with one.
+     * Tracking ID and client ID are always added automatically for all hits,
+     * as well as application name and version if those are specified when
+     * initializing the analytics.
+     * 
+     * Additionally you can call set...() methods to specify app ID and
+     * user ID, as well as user IP and user Agent overrides, which will also
+     * be always added to all hits if they have been set.
      *
-     * Use add...() methods to add data to the hit being described. After you have
-     * fully described the hit, call sendHit() to send it.
+     * After calling beginHit(), you can use add...() methods to add specific
+     * data to the hit being described. Finally after you have fully described
+     * the hit, you must call sendHit() to actually send the hit.
+     * 
+     * \note It's best to build a hit and send it right away, i.e. call to
+     *       sendHit() should follow beginHit almost immediately. This is so
+     *       that net access verification and offline hit sending is not
+     *       disrupted (when offline cache usage is enabled).
      *
      * \param hitType type of the hit we're describing, see #HitType.
      * \return true if successful, or false if internet is not reachable and
@@ -322,25 +636,34 @@ public sealed class GoogleUniversalAnalytics
      *
      * \sa For more details, see the Measurement Protocol documentation:
      *     https://developers.google.com/analytics/devguides/collection/protocol/v1/
-     * \todo Possibility to put important hit types to queue (e.g. transactions)?
-     * \todo If support for hit queueing is added, then also add support for throttled sending.
      */
     public bool beginHit(HitType hitType)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (analyticsDisabled)
         {
-            Debug.Log("GUA beginHit called when analytics is disabled");
+            Debug.LogWarning("GUA beginHit called when analytics is disabled");
         }
-#endif
+        if (this.hitType != HitType.None)
+        {
+            Debug.LogWarning("GUA trying to use beginHit when a hit is already being built! (ignoring new hit type)");
+            return false;
+        }
+#       endif // debug warnings
 
         string hitTypeName = hitTypeNames[(int)hitType];
 
-        if (Application.internetReachability == NetworkReachability.NotReachable)
+        // constructing hits is now allowed even when being offline
+        // (when queueOfflineHits is enabled)
+        if (!internetReachable
+#           if !UNITY_WEBPLAYER
+            && !useOfflineCache
+#           endif
+            )
         {
-#if DEBUG_LOGS
-            Debug.Log("GUA no internet reachability - cannot beginHit: " + hitTypeName);
-#endif
+#           if DEBUG_LOGS
+            Debug.Log("GUA no internet reachability and no offline hit queueing - cannot beginHit: " + hitTypeName);
+#           endif // debug logs
             return false;
         }
 
@@ -349,9 +672,9 @@ public sealed class GoogleUniversalAnalytics
         sb.Append(defaultHitData);
         sb.Append("&t=");
         sb.Append(hitTypeName);
-#if DEBUG_LOGS
+#       if DEBUG_LOGS
         Debug.Log("GUA beginHit: " + hitTypeName);
-#endif
+#       endif // debug logs
         return true;
     }
 
@@ -359,6 +682,8 @@ public sealed class GoogleUniversalAnalytics
     //
     // General Measurement Protocol parameters
     //
+    // (method for adding cache buster is omitted; it's automatically added)
+    // 
 
     //! Adds flag which forces sender IP to be anonymized in analytics.
     public void addAnonymizeIP()
@@ -371,14 +696,41 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addQueueTime(int ms)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (ms < 0)
             Debug.LogWarning("GUA Queue Time is invalid (negative): " + ms);
-#endif
+#       endif // debug warnings
         if (ms < 0)
             return;
         sb.Append("&qt=");
         sb.Append(ms);
+    }
+
+
+    //
+    // User Measurement Protocol parameters
+    //
+    // (method for adding client ID is omitted; it's automatically added)
+    //
+
+    //! Sets a separate optional user ID for all upcoming hits.
+    /*! The userID value should be a unique, persistent, and non-personally
+     *  identifiable string identifier that represents a user or signed-in
+     *  account across devices.
+     * \note If you want to use the user ID, you must set it again each
+     *       time your app is started. (By measurement protocol specs, the
+     *       user ID is not allowed to be automatically persisted to storage).
+     * \param userID user ID for upcoming hits, for example "as8eknlll".
+     *               This may not itself be PII (personally identifiable
+     *               information). Set to empty string ("") if you want to
+     *               remove previously set userID.
+     */
+    public void setUserID(string userID)
+    {
+        if (userID == null || userID.Length == 0)
+            this.userID = "";
+        else
+            this.userID = escapeString(userID);
     }
 
 
@@ -393,12 +745,50 @@ public sealed class GoogleUniversalAnalytics
     public void addSessionControl(bool type)
     {
         sb.Append(type ? "&sc=start" : "&sc=end");
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (type)
             sessionHitCount = 0; // new session - current hit will be 1st one
         else
             sessionHitCountResetPending = true; // end session - pending reset
-#endif
+#       endif // debug warnings
+    }
+
+    //! Sets IP address of the user for all upcoming hits (overrides implicit one).
+    /*! This should be a valid IP address. It will always be anonymized just
+     *  as though addAnonymizeIP had been used.
+     * \param ip user IP address, for example "10.0.0.123". Set to empty
+     *           string ("") if you want to remove previously set value.
+     */
+    public void setIPOverride(string ip)
+    {
+        if (ip == null || ip.Length == 0)
+            this.userIP = "";
+        else
+        {
+            string data = escapeString(ip);
+            this.userIP = data;
+        }
+    }
+
+    //! Sets user agent of the "browser" for all upcoming hits (overrides implicit one).
+    /*! Google Analytics site determines OS and device type from user agent.
+     * \note Google has libraries to identify real user agents. Hand crafting
+     *       your own agent could break at any time. Debugging any problems
+     *       with this feature is up to you.
+     * \param userAgent user agent of the "browser". Search the internet for
+     *                  various examples of user agent strings. Set to empty
+     *                  string ("") if you want to remove previously set value.
+     * \param allowNonEscaped userAgent is always escaped unless this is set to true.
+     */
+    public void setUserAgentOverride(string userAgent, bool allowNonEscaped = false)
+    {
+        if (userAgent == null || userAgent.Length == 0)
+            this.userAgent = "";
+        else
+        {
+            string data = allowNonEscaped ? escapeString(userAgent) : WWW.EscapeURL(userAgent);
+            this.userAgent = data;
+        }
     }
 
 
@@ -416,10 +806,10 @@ public sealed class GoogleUniversalAnalytics
         string data = allowNonEscaped ? escapeString(url) : WWW.EscapeURL(url);
         sb.Append("&dr=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 2048)
             Debug.LogWarning("GUA Document Referrer is too long, max 2048 bytes");
-#endif
+#       endif // debug warnings
     }
 
     //! Adds campaign name.
@@ -430,10 +820,10 @@ public sealed class GoogleUniversalAnalytics
         string data = escapeString(text);
         sb.Append("&cn=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 100)
             Debug.LogWarning("GUA Campaign Name is too long, max 100 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds campaign source.
@@ -444,10 +834,10 @@ public sealed class GoogleUniversalAnalytics
         string data = escapeString(text);
         sb.Append("&cs=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 100)
             Debug.LogWarning("GUA Campaign Source is too long, max 100 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds campaign medium.
@@ -458,10 +848,10 @@ public sealed class GoogleUniversalAnalytics
         string data = escapeString(text);
         sb.Append("&cm=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 50)
             Debug.LogWarning("GUA Campaign Medium is too long, max 50 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds campaign keyword.
@@ -475,10 +865,10 @@ public sealed class GoogleUniversalAnalytics
         string data = allowNonEscaped ? escapeString(text) : WWW.EscapeURL(text);
         sb.Append("&ck=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 500)
             Debug.LogWarning("GUA Campaign Keyword is too long, max 500 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds campaign content.
@@ -491,10 +881,10 @@ public sealed class GoogleUniversalAnalytics
         string data = allowNonEscaped ? escapeString(text) : WWW.EscapeURL(text);
         sb.Append("&cc=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 100)
             Debug.LogWarning("GUA Campaign Content is too long, max 100 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds campaign ID.
@@ -505,10 +895,10 @@ public sealed class GoogleUniversalAnalytics
         string data = escapeString(text);
         sb.Append("&ci=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 100)
             Debug.LogWarning("GUA Campaign ID is too long, max 100 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds Google AdWords ID.
@@ -550,10 +940,10 @@ public sealed class GoogleUniversalAnalytics
         sb.Append(width);
         sb.Append('x');
         sb.Append(height);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (width < 0 || height < 0)
             Debug.LogWarning("GUA Screen Resolution is invalid: " + width + "x" + height);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds viewable area of device or browser.
@@ -568,10 +958,10 @@ public sealed class GoogleUniversalAnalytics
         sb.Append(width);
         sb.Append('x');
         sb.Append(height);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (width < 0 || height < 0)
             Debug.LogWarning("GUA Viewport Size is invalid: " + width + "x" + height);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds definition of character set used for page/document.
@@ -582,10 +972,10 @@ public sealed class GoogleUniversalAnalytics
         string data = escapeString(text);
         sb.Append("&de=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 20)
             Debug.LogWarning("GUA Document Encoding is too long, max 20 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds screen color depth in bits, for example 24.
@@ -611,10 +1001,10 @@ public sealed class GoogleUniversalAnalytics
         string data = escapeString(text);
         sb.Append("&ul=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 20)
             Debug.LogWarning("GUA User Language is too long, max 20 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds info about Java availability.
@@ -671,10 +1061,10 @@ public sealed class GoogleUniversalAnalytics
         string data = allowNonEscaped ? escapeString(url) : WWW.EscapeURL(url);
         sb.Append("&dl=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 2048)
             Debug.LogWarning("GUA Document Location URL is too long, max 2048 bytes");
-#endif
+#       endif // debug warnings
     }
 
     //! Adds hostname where content was hosted.
@@ -685,10 +1075,10 @@ public sealed class GoogleUniversalAnalytics
         string data = escapeString(text);
         sb.Append("&dh=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 100)
             Debug.LogWarning("GUA Document Host Name is too long, max 100 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds path portion of the page URL, should begin with '/'.
@@ -702,10 +1092,10 @@ public sealed class GoogleUniversalAnalytics
         string data = allowNonEscaped ? escapeString(text) : WWW.EscapeURL(text);
         sb.Append("&dp=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 2048)
             Debug.LogWarning("GUA Document Path is too long, max 2048 bytes");
-#endif
+#       endif // debug warnings
     }
 
     //! Adds title of the page or document.
@@ -716,30 +1106,31 @@ public sealed class GoogleUniversalAnalytics
         string data = escapeString(text);
         sb.Append("&dt=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 1500)
             Debug.LogWarning("GUA Document Title is too long, max 1500 bytes");
-#endif
+#       endif // debug warnings
     }
 
-    //! Adds content description, same as "Screen Name" for profiles with app tracking enabled.
+    //! Adds screen name.
     /*! If this is missing for normal page view tracking, this is taken from
-     *  document location or host name & path.
-     * \param text screen name (with app tracking), or description of content.
+     *  document location or host name & path. The sendAppScreenHit convenience
+     *  method uses this to specify name of the app screen.
+     * \param text screen name.
      */
-    public void addContentDescription(string text)
+    public void addScreenName(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (text == null || text.Length == 0)
-            Debug.LogWarning("GUA trying to add null or empty Content Description (Screen Name)");
-#endif
+            Debug.LogWarning("GUA trying to add null or empty Screen Name (Content Description)");
+#       endif // debug warnings
         string data = escapeString(text);
         sb.Append("&cd=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 2048)
-            Debug.LogWarning("GUA Content Description is too long, max 2048 bytes");
-#endif
+            Debug.LogWarning("GUA Screen Name is too long, max 2048 bytes");
+#       endif // debug warnings
     }
 
     //! Adds ID of a clicked (DOM) element.
@@ -749,19 +1140,19 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addLinkID(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (text == null || text.Length == 0)
             Debug.LogWarning("GUA trying to add null or empty Link ID");
-#endif
+#       endif // debug warnings
         string data = escapeString(text);
         sb.Append("&linkid=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         // Note: Max length is not actually specified in measurement protocol
         //       parameter specs (as of now), so this is self-imposed:
         if (data.Length > 100)
             Debug.LogWarning("GUA Link ID is too long, max 100 bytes");
-#endif
+#       endif // debug warnings
     }
 
 
@@ -770,39 +1161,85 @@ public sealed class GoogleUniversalAnalytics
     // App Tracking Measurement Protocol parameters
     //
 
-    /* // This one is omitted, since app name is automatically added
-     * // to all requests if initialized with app name! (Requirement for App Tracking)
-    // Adds application name (max 100 bytes). Only visible in app views (profiles).
-    public void addApplicationName(string text)
+    //! Sets application name for all upcoming hits (max 100 bytes).
+    /*! Required for app views in your Google Analytics profiles.
+     * \param text app name, for example "Herring". Set to empty string ("")
+     *             to remove previously set value.
+     */
+    public void setApplicationName(string text)
     {
-        string data = escapeString(text);
-        sb.Append("&an=");
-        sb.Append(data);
-#if DEBUG_WARNINGS
-        if (data.Length > 100)
-            Debug.LogWarning("GUA Application Name is too long, max 100 bytes: " + data);
-#endif
+        if (text == null || text.Length == 0)
+            appName = "";
+        else
+        {
+            string data = escapeString(text);
+            appName = data;
+#           if DEBUG_WARNINGS
+            if (data.Length > 100)
+                Debug.LogWarning("GUA Application Name is too long, max 100 bytes: " + data);
+#           endif // debug warnings
+        }
     }
-     */
 
-    //! Adds application version. Only visible in app views (profiles).
-    /*! \param text application version (max 100 bytes), for example "1.2".
-     *         If this is null, the version entered for initialize() will be used.
+    //! Sets application ID for all upcoming hits (max 150 bytes).
+    /*! \param text application ID (max 150 bytes), for example
+     *              "com.company.app". Set to empty string ("") to remove
+     *              previously set value.
      */
-    public void addApplicationVersion(string text = null)
+    public void setApplicationID(string text)
     {
-        string ver = (text == null) ? appVersion : text;
-#if DEBUG_WARNINGS
-        if (ver == null || ver.Length == 0)
-            Debug.LogWarning("GUA trying to add null or empty Application Version");
-#endif
-        string data = escapeString(ver);
-        sb.Append("&av=");
+        if (text == null || text.Length == 0)
+            appID = "";
+        else
+        {
+            string data = escapeString(text);
+            appID = data;
+#           if DEBUG_WARNINGS
+            if (data.Length > 150)
+                Debug.LogWarning("GUA Application ID is too long, max 150 bytes: " + data);
+#           endif // debug warnings
+        }
+    }
+
+    //! Sets application version for all upcoming hits (max 100 bytes).
+    /*! Required for app views in your Google Analytics profiles.
+     * \param text application version (max 100 bytes), for example "1.2".
+     *        Set to empty string ("") to remove previously set value.
+     */
+    public void setApplicationVersion(string text)
+    {
+        if (text == null || text.Length == 0)
+            appVersion = "";
+        else
+        {
+            string data = escapeString(text);
+            appVersion = data;
+#           if DEBUG_WARNINGS
+            if (data.Length > 100)
+                Debug.LogWarning("GUA Application Version is too long, max 100 bytes: " + data);
+#           endif // debug warnings
+        }
+    }
+
+    //! Adds application installer ID (max 150 bytes).
+    /*! \note Unlike other setApplication...-named methods, this only affects
+     *        the hit currently being built.
+     * \param text application installer ID (max 150 bytes), for example
+     *             "com.platform.vending".
+     */
+    public void addApplicationInstallerID(string text)
+    {
+#       if DEBUG_WARNINGS
+        if (text == null || text.Length == 0)
+            Debug.LogWarning("GUA trying to add null or empty Application Installer ID");
+#       endif // debug warnings
+        string data = escapeString(text);
+        sb.Append("&aiid=");
         sb.Append(data);
-#if DEBUG_WARNINGS
-        if (data.Length > 100)
-            Debug.LogWarning("GUA Application Version is too long, max 100 bytes: " + data);
-#endif
+#       if DEBUG_WARNINGS
+        if (data.Length > 150)
+            Debug.LogWarning("GUA Application Installer ID is too long, max 150 bytes: " + data);
+#       endif // debug warnings
     }
 
 
@@ -816,23 +1253,23 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addEventCategory(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Event)
             Debug.LogWarning("GUA trying to add Event Category to wrong hit type: " + hitTypeNames[(int)hitType]);
         if (text == null || text.Length == 0)
             Debug.LogWarning("GUA trying to add null or empty Event Category");
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Event)
             return;
         string data = escapeString(text);
         sb.Append("&ec=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length == 0)
             Debug.LogWarning("GUA Event Category is empty!");
         if (data.Length > 150)
             Debug.LogWarning("GUA Event Category is too long, max 150 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds event action.
@@ -841,21 +1278,21 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addEventAction(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Event)
             Debug.LogWarning("GUA trying to add Event Action to wrong hit type: " + hitTypeNames[(int)hitType]);
         if (text == null || text.Length == 0)
             Debug.LogWarning("GUA trying to add null or empty Event Category");
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Event)
             return;
         string data = escapeString(text);
         sb.Append("&ea=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 500)
             Debug.LogWarning("GUA Event Action is too long, max 500 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds event label.
@@ -864,21 +1301,21 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addEventLabel(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Event)
             Debug.LogWarning("GUA trying to add Event Label to wrong hit type: " + hitTypeNames[(int)hitType]);
         if (text == null || text.Length == 0)
             Debug.LogWarning("GUA trying to add null or empty Event Label");
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Event)
             return;
         string data = escapeString(text);
         sb.Append("&el=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 500)
             Debug.LogWarning("GUA Event Label is too long, max 500 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds event value (must be >= 0).
@@ -887,12 +1324,12 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addEventValue(int value)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Event)
             Debug.LogWarning("GUA trying to add Event Value to wrong hit type: " + hitTypeNames[(int)hitType]);
         if (value < 0)
             Debug.LogWarning("GUA Event Value is invalid (negative): " + value);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Event || value < 0)
             return;
         sb.Append("&ev=");
@@ -912,21 +1349,21 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addTransactionID(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Transaction && hitType != HitType.Item)
             Debug.LogWarning("GUA trying to add Transaction ID to wrong hit type: " + hitTypeNames[(int)hitType]);
         if (text == null || text.Length == 0)
             Debug.LogWarning("GUA trying to add null or empty Transaction ID");
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Transaction && hitType != HitType.Item)
             return;
         string data = escapeString(text);
         sb.Append("&ti=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 500)
             Debug.LogWarning("GUA Transaction ID is too long, max 500 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds affiliation or store name.
@@ -935,19 +1372,19 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addTransactionAffiliation(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Transaction)
             Debug.LogWarning("GUA trying to add Transaction Affiliation to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Transaction)
             return;
         string data = escapeString(text);
         sb.Append("&ta=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 500)
             Debug.LogWarning("GUA Transaction Affiliation is too long, max 500 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds total revenue for transaction, including shipping or tax costs.
@@ -957,10 +1394,10 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addTransactionRevenue(double currency)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Transaction)
             Debug.LogWarning("GUA trying to add Transaction Revenue to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Transaction)
             return;
         sb.Append("&tr=");
@@ -974,10 +1411,10 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addTransactionShipping(double currency)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Transaction)
             Debug.LogWarning("GUA trying to add Transaction Shipping to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Transaction)
             return;
         sb.Append("&ts=");
@@ -991,10 +1428,10 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addTransactionTax(double currency)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Transaction)
             Debug.LogWarning("GUA trying to add Transaction Tax to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Transaction)
             return;
         sb.Append("&tt=");
@@ -1007,21 +1444,21 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addItemName(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Item)
             Debug.LogWarning("GUA trying to add Item Name to wrong hit type: " + hitTypeNames[(int)hitType]);
         if (text == null || text.Length == 0)
             Debug.LogWarning("GUA trying to add null or empty Item Name");
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Item)
             return;
         string data = escapeString(text);
         sb.Append("&in=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 500)
             Debug.LogWarning("GUA Item Name is too long, max 500 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds price for a single item or unit.
@@ -1031,10 +1468,10 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addItemPrice(double currency)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Item)
             Debug.LogWarning("GUA trying to add Item Price to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Item)
             return;
         sb.Append("&ip=");
@@ -1047,10 +1484,10 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addItemQuantity(int value)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Item)
             Debug.LogWarning("GUA trying to add Item Quantity to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Item)
             return;
         sb.Append("&iq=");
@@ -1063,19 +1500,19 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addItemCode(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Item)
             Debug.LogWarning("GUA trying to add Item Code to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Item)
             return;
         string data = escapeString(text);
         sb.Append("&ic=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 500)
             Debug.LogWarning("GUA Item Code is too long, max 500 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds category that item belongs to.
@@ -1084,19 +1521,19 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addItemCategory(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Item)
             Debug.LogWarning("GUA trying to add Item Category to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Item)
             return;
         string data = escapeString(text);
         sb.Append("&iv=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 500)
             Debug.LogWarning("GUA Item Category is too long, max 500 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds currency type for all transaction currency values.
@@ -1107,19 +1544,19 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addCurrencyCode(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Transaction && hitType != HitType.Item)
             Debug.LogWarning("GUA trying to add Currency Code to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Transaction && hitType != HitType.Item)
             return;
         string data = escapeString(text);
         sb.Append("&cu=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 10)
             Debug.LogWarning("GUA Currency Code is too long, max 10 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
 
@@ -1133,21 +1570,21 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addSocialNetwork(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Social)
             Debug.LogWarning("GUA trying to add Social Network to wrong hit type: " + hitTypeNames[(int)hitType]);
         if (text == null || text.Length == 0)
             Debug.LogWarning("GUA trying to add null or empty Social Network");
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Social)
             return;
         string data = escapeString(text);
         sb.Append("&sn=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 50)
             Debug.LogWarning("GUA Social Network is too long, max 50 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds social interaction type (max 50 bytes). *Required* for Social hit type!
@@ -1157,21 +1594,21 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addSocialAction(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Social)
             Debug.LogWarning("GUA trying to add Social Action to wrong hit type: " + hitTypeNames[(int)hitType]);
         if (text == null || text.Length == 0)
             Debug.LogWarning("GUA trying to add null or empty Social Action");
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Social)
             return;
         string data = escapeString(text);
         sb.Append("&sa=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 50)
             Debug.LogWarning("GUA Social Action is too long, max 50 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds target of social interaction. *Required* for Social hit type!
@@ -1181,21 +1618,21 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addSocialActionTarget(string text, bool allowNonEscaped = false)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Social)
             Debug.LogWarning("GUA trying to add Social Action Target to wrong hit type: " + hitTypeNames[(int)hitType]);
         if (text == null || text.Length == 0)
             Debug.LogWarning("GUA trying to add null or empty Social Action Target");
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Social)
             return;
         string data = allowNonEscaped ? escapeString(text) : WWW.EscapeURL(text);
         sb.Append("&st=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 2048)
             Debug.LogWarning("GUA Social Action Target is too long, max 2048 bytes");
-#endif
+#       endif // debug warnings
     }
 
 
@@ -1209,19 +1646,19 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addUserTimingCategory(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Timing)
             Debug.LogWarning("GUA trying to add User Timing Category to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Timing)
             return;
         string data = escapeString(text);
         sb.Append("&utc=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 150)
             Debug.LogWarning("GUA User Timing Category is too long, max 150 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds user timing variable.
@@ -1230,19 +1667,19 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addUserTimingVariableName(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Timing)
             Debug.LogWarning("GUA trying to add User Timing Variable Name to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Timing)
             return;
         string data = escapeString(text);
         sb.Append("&utv=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 500)
             Debug.LogWarning("GUA User Timing Variable Name is too long, max 500 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds user timing value in milliseconds.
@@ -1251,10 +1688,10 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addUserTimingTime(int value)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Timing)
             Debug.LogWarning("GUA trying to add User Timing Time to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Timing)
             return;
         sb.Append("&utt=");
@@ -1267,19 +1704,19 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addUserTimingLabel(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Timing)
             Debug.LogWarning("GUA trying to add User Timing Label to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Timing)
             return;
         string data = escapeString(text);
         sb.Append("&utl=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 500)
             Debug.LogWarning("GUA User Timing Label is too long, max 500 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds time it took for a page to load.
@@ -1288,10 +1725,10 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addPageLoadTime(int value)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Timing)
             Debug.LogWarning("GUA trying to add Page Load Time to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Timing)
             return;
         sb.Append("&plt=");
@@ -1304,10 +1741,10 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addDNSTime(int value)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Timing)
             Debug.LogWarning("GUA trying to add DNS Time to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Timing)
             return;
         sb.Append("&dns=");
@@ -1320,10 +1757,10 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addPageDownloadTime(int value)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Timing)
             Debug.LogWarning("GUA trying to add Page Download Time to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Timing)
             return;
         sb.Append("&pdt=");
@@ -1336,10 +1773,10 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addRedirectResponseTime(int value)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Timing)
             Debug.LogWarning("GUA trying to add Redirect Response Time to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Timing)
             return;
         sb.Append("&rrt=");
@@ -1352,10 +1789,10 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addTCPConnectTime(int value)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Timing)
             Debug.LogWarning("GUA trying to add TCP Connect Time to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Timing)
             return;
         sb.Append("&tcp=");
@@ -1368,10 +1805,10 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addServerResponseTime(int value)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Timing)
             Debug.LogWarning("GUA trying to add Server Response Time to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Timing)
             return;
         sb.Append("&srt=");
@@ -1389,19 +1826,19 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addExceptionDescription(string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Exception)
             Debug.LogWarning("GUA trying to add Exception Description to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Exception)
             return;
         string data = escapeString(text);
         sb.Append("&exd=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 150)
             Debug.LogWarning("GUA Exception Description is too long, max 150 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds info whether exception was fatal or not.
@@ -1410,10 +1847,10 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addExceptionIsFatal(bool value)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType != HitType.Exception)
             Debug.LogWarning("GUA trying to add Exception Is Fatal to wrong hit type: " + hitTypeNames[(int)hitType]);
-#endif
+#       endif // debug warnings
         if (hitType != HitType.Exception)
             return;
         sb.Append(value ? "&exf=1" : "&exf=0");
@@ -1431,10 +1868,10 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addCustomDimension(int index, string text)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (index < 1 || index > 200)
             Debug.LogWarning("GUA trying to add Custom Dimension with illegal index (must be 1-200): " + index);
-#endif
+#       endif // debug warnings
         if (index < 1 || index > 200)
             return;
         string data = escapeString(text);
@@ -1442,10 +1879,10 @@ public sealed class GoogleUniversalAnalytics
         sb.Append(index);
         sb.Append('=');
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 150)
             Debug.LogWarning("GUA Custom Dimension is too long, max 150 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds a custom metric with associated index.
@@ -1455,10 +1892,10 @@ public sealed class GoogleUniversalAnalytics
      */
     public void addCustomMetric(int index, long value)
     {
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (index < 1 || index > 200)
             Debug.LogWarning("GUA trying to add Custom Metric with illegal index (must be 1-200): " + index);
-#endif
+#       endif // debug warnings
         if (index < 1 || index > 200)
             return;
         sb.Append("&cm");
@@ -1482,10 +1919,10 @@ public sealed class GoogleUniversalAnalytics
         string data = escapeString(text);
         sb.Append("&xid=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (data.Length > 40)
             Debug.LogWarning("GUA Experiment ID is too long, max 40 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
     //! Adds a content experiment variant. Should be used with experiment ID.
@@ -1498,12 +1935,12 @@ public sealed class GoogleUniversalAnalytics
         string data = escapeString(text);
         sb.Append("&xvar=");
         sb.Append(data);
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         // Note: Max length is not actually specified in measurement protocol
         //       parameter specs (as of now), so this is self-imposed:
         if (data.Length > 40)
             Debug.LogWarning("GUA Experiment Variant is too long, max 40 bytes: " + data);
-#endif
+#       endif // debug warnings
     }
 
 
@@ -1695,26 +2132,391 @@ public sealed class GoogleUniversalAnalytics
     }
 
     //! Helper for sending a typical app screen hit.
-    /*! \sa addApplicationVersion
-     * \sa addContentDescription
+    /*! \sa addScreenName
      */
     public void sendAppScreenHit(string screenName)
     {
         if (analyticsDisabled)
             return;
 
-        beginHit(HitType.Appview);
-        addApplicationVersion();
-        addContentDescription(screenName);
+        beginHit(HitType.Screenview);
+        addScreenName(screenName);
         sendHit();
     }
 
 
-    //! Finalizes the "Hit" being described, and sends it using UnityEngine.WWW.
+    //
+    // Methods which handle queue of hits cached when being offline
+    //
+
+#if !UNITY_WEBPLAYER
+    private System.DateTime? epoch = null;
+
+    private long getPOSIXTimeMilliseconds()
+    {
+        if (!epoch.HasValue)
+            epoch = new System.DateTime(1970, 1, 1);
+        return (long)(System.DateTime.UtcNow - epoch.Value).TotalMilliseconds;
+    }
+
+    private void stopOfflineCacheReader()
+    {
+        if (offlineCacheReader != null)
+        {
+            offlineCacheReader.Close();
+            offlineCacheReader.Dispose();
+            offlineCacheReader = null;
+        }
+    }
+
+    private void stopOfflineCacheWriter()
+    {
+        if (offlineCacheWriter != null)
+        {
+            try
+            {
+                offlineCacheWriter.Close();
+            }
+            catch (Exception)
+            {
+            }
+            offlineCacheWriter.Dispose();
+            offlineCacheWriter = null;
+        }
+    }
+
+    //! Closes offline cache file (if it's open for reading or writing).
+    public void closeOfflineCacheFile()
+    {
+        stopOfflineCacheReader();
+        stopOfflineCacheWriter();
+        PlayerPrefs.Save();
+    }
+
+    private static string offlineQueueLengthPrefKey = "GoogleUniversalAnalytics_offlineQueueLength";
+    private static string offlineQueueSentHitsPrefKey = "GoogleUniversalAnalytics_offlineQueueSentHits";
+
+    private void increasePlayerPrefOfflineQueueLength()
+    {
+        if (offlineQueueLength == -1)
+            offlineQueueLength = PlayerPrefs.GetInt(offlineQueueLengthPrefKey, 0);
+        ++offlineQueueLength;
+        PlayerPrefs.SetInt(offlineQueueLengthPrefKey, offlineQueueLength);
+    }
+
+    private void increasePlayerPrefOfflineQueueSentHits()
+    {
+        if (offlineQueueSentHits == -1)
+            offlineQueueSentHits = PlayerPrefs.GetInt(offlineQueueSentHitsPrefKey, 0);
+        ++offlineQueueSentHits;
+        PlayerPrefs.SetInt(offlineQueueSentHitsPrefKey, offlineQueueSentHits);
+    }
+
+    private void clearOfflineQueue()
+    {
+        stopOfflineCacheReader();
+        stopOfflineCacheWriter();
+        try
+        {
+            File.Delete(offlineCacheFilePath);
+        }
+        catch (Exception
+#              if DEBUG_WARNINGS
+               ex
+#              endif
+               )
+        {
+#           if DEBUG_WARNINGS
+            Debug.LogWarning("GUA can't delete offline cache file " + offlineCacheFilePath + ": " + ex.ToString());
+#           endif // debug warnings
+            // in unlikely case of error deleting file, we won't remove the 
+            // offline queue player prefs (things should still keep working
+            // for further cached hits if the file is usable - but we reset
+            // the sent hits amount to length, i.e. all "have been sent")
+            offlineQueueSentHits = offlineQueueLength;
+            PlayerPrefs.SetInt(offlineQueueSentHitsPrefKey, offlineQueueSentHits);
+            PlayerPrefs.Save();
+            return;
+        }
+        PlayerPrefs.DeleteKey(offlineQueueSentHitsPrefKey);
+        PlayerPrefs.DeleteKey(offlineQueueLengthPrefKey);
+        PlayerPrefs.Save();
+        offlineQueueLength = 0;
+        offlineQueueSentHits = 0;
+    }
+
+    private bool saveHitToOfflineQueue(string hitData)
+    {
+        // must not have the reader open
+        stopOfflineCacheReader();
+
+        if (offlineCacheWriter == null)
+        {
+            try
+            {
+                offlineCacheWriter = File.AppendText(offlineCacheFilePath);
+            }
+            catch (Exception
+#                  if DEBUG_WARNINGS
+                   ex
+#                  endif
+                  )
+            {
+#               if DEBUG_WARNINGS
+                Debug.LogWarning("GUA can't open (append) offline cache file " + offlineCacheFilePath + ": " + ex.ToString());
+#               endif // debug warnings
+                sb.Length = 0; // can't help, have to discard after all
+                hitType = HitType.None;
+                return false;
+            }
+            offlineCacheWriter.AutoFlush = false;
+            offlineCacheWriter.NewLine = "\n";
+        }
+
+        try
+        {
+            long posixTimeMilliseconds = getPOSIXTimeMilliseconds();
+#           if DEBUG_LOGS
+            Debug.Log("GUA saveHitToOfflineQueue time and data: " + posixTimeMilliseconds + " " + hitData);
+#           endif // debug logs
+
+            offlineCacheWriter.Write("0\t"); // version
+            offlineCacheWriter.Write(posixTimeMilliseconds);
+            offlineCacheWriter.Write('\t');
+            offlineCacheWriter.WriteLine(hitData);
+            offlineCacheWriter.Flush();
+
+            increasePlayerPrefOfflineQueueLength();
+        }
+        catch (Exception
+#              if DEBUG_WARNINGS
+               ex
+#              endif
+              )
+        {
+#           if DEBUG_WARNINGS
+            Debug.LogWarning("GUA can't write to offline cache file " + offlineCacheFilePath + ": " + ex.ToString());
+#           endif // debug warnings
+            return false;
+        }
+
+        return true;
+    }
+
+    //! Returns true if we have pending hits queued when being offline and could send them now.
+    public bool pendingQueuedOfflineHits()
+    {
+        if (!internetReachable || analyticsDisabled)
+            return false;
+        if (offlineQueueLength == -1)
+            offlineQueueLength = PlayerPrefs.GetInt(offlineQueueLengthPrefKey, 0);
+        if (offlineQueueSentHits == -1)
+            offlineQueueSentHits = PlayerPrefs.GetInt(offlineQueueSentHitsPrefKey, 0);
+        return offlineQueueLength > offlineQueueSentHits;
+    }
+
+    private static char[] tabRowSplitter = new char[] { '\t' };
+
+    //! Sends one pending hit from the offline queue, if possible.
+    public bool sendOnePendingOfflineHit()
+    {
+        if (!pendingQueuedOfflineHits())
+            return false;
+        if (isHitBeingBuilt)
+        {
+#           if DEBUG_WARNINGS
+            Debug.LogWarning("GUA can't try to sendOnePendingOfflineHit() because a new hit was already being built and not sent yet");
+#           endif // debug warnings
+            return false;
+        }
+
+        // must not have the writer open
+        stopOfflineCacheWriter();
+
+        if (offlineCacheReader == null)
+        {
+            try
+            {
+                offlineCacheReader = File.OpenText(offlineCacheFilePath);
+            }
+            catch (Exception
+#                  if DEBUG_WARNINGS
+                   ex
+#                  endif
+                  )
+            {
+#               if DEBUG_WARNINGS
+                Debug.LogWarning("GUA can't open (read) offline cache file " + offlineCacheFilePath + ": " + ex.ToString());
+#               endif // debug warnings
+                return false;
+            }
+
+            // skip entries from the queue file which have already been sent
+            try
+            {
+                for (int a = 0; a < offlineQueueSentHits; ++a)
+                {
+                    offlineCacheReader.ReadLine(); // not interested in return value
+                }
+            }
+            catch (Exception /*ex*/)
+            {
+#               if DEBUG_WARNINGS
+                Debug.LogWarning("GUA offline cache file had less hits than expected (clearing whole cache)");
+#               endif // debug warnings
+                // there was less stuff than expected, just clean up
+                // (there won't be anything to send)
+                clearOfflineQueue();
+                return false;
+            }
+        }
+
+        long posixTimeMillisecondsNow = getPOSIXTimeMilliseconds();
+
+        string line = null;
+        bool stopAndClear = false;
+
+        try
+        {
+            line = offlineCacheReader.ReadLine();
+        }
+        catch (Exception /*ex*/
+#              if DEBUG_WARNINGS
+               ex
+#              endif
+              )
+        {
+#           if DEBUG_WARNINGS
+            Debug.LogWarning("GUA can't read from offline cache file " + offlineCacheFilePath + ": " + ex.ToString());
+#           endif // debug warnings
+            // there was less stuff than expected, just clean up
+            // (there won't be anything to send)
+            stopAndClear = true;
+        }
+
+        if (line == null || line.Length < 20)
+        {
+#           if DEBUG_LOGS
+            Debug.Log("GUA null or too short line in offline cache - end of data: " + line);
+#           endif // debug logs
+            stopAndClear = true;
+        }
+
+        if (stopAndClear)
+        {
+            clearOfflineQueue();
+            return false;
+        }
+        string[] tokens = line.Split(tabRowSplitter);
+
+#       if DEBUG_WARNINGS
+        if (tokens.Length != 3)
+        {
+            Debug.LogWarning("GUA offline queue file has erroneous row: " + line);
+        }
+#       endif // debug warnings
+        if (tokens.Length < 3 ||
+            !tokens[0].Equals("0")) // version check
+        {
+            increasePlayerPrefOfflineQueueSentHits(); // skipping row entry
+            return false;
+        }
+
+        // 1st token is timestamp when hit was made
+        long posixTimeMillisecondsThen;
+        if (!Int64.TryParse(tokens[1], out posixTimeMillisecondsThen))
+        {
+#           if DEBUG_WARNINGS
+            Debug.LogWarning("GUA offline queue hit has erroneous time: " + line);
+#           endif // debug warnings
+            increasePlayerPrefOfflineQueueSentHits(); // skipping row entry
+            return false;
+        }
+
+        // 2nd token is the hit data
+        sb.Append(tokens[2]);
+
+        // add time delta as queue time
+        int queueTime = (int)(posixTimeMillisecondsNow - posixTimeMillisecondsThen);
+        addQueueTime(queueTime);
+
+        increasePlayerPrefOfflineQueueSentHits();
+
+#       if DEBUG_LOGS
+        Debug.Log("GUA.sendOnePendingOfflineHit (useHTTPS:" + useHTTPS + ")");
+#       endif // debug logs
+
+        finalizeAndSendHit();
+
+        if (offlineQueueSentHits >= offlineQueueLength)
+        {
+#           if DEBUG_LOGS
+            Debug.Log("GUA offline queue done");
+#           endif // debug logs
+            clearOfflineQueue();
+        }
+
+        return true;
+    }
+
+#endif // not webplayer
+    // (end of purely offline cache specific methods)
+
+
+    void addCommonOptionalHitParams()
+    {
+        // append app name if we have one
+        if (appName != null && appName.Length > 0)
+        {
+            sb.Append("&an=");
+            sb.Append(appName);
+        }
+
+        // append app ID if we have one
+        if (appID != null && appID.Length > 0)
+        {
+            sb.Append("&aid=");
+            sb.Append(appID);
+        }
+
+        // append app version if we have one
+        if (appVersion != null && appVersion.Length > 0)
+        {
+            sb.Append("&av=");
+            sb.Append(appVersion);
+        }
+
+        // append user ID if we have one
+        if (userID != null && userID.Length > 0)
+        {
+            sb.Append("&uid=");
+            sb.Append(userID);
+        }
+
+        // append user IP override if we have one
+        if (userIP != null && userIP.Length > 0)
+        {
+            sb.Append("&uip=");
+            sb.Append(userIP);
+        }
+
+        // append user agent override if we have one
+        if (userAgent != null && userAgent.Length > 0)
+        {
+            sb.Append("&ua=");
+            sb.Append(userAgent);
+        }
+    }
+
+    //! Finalizes the "Hit" being described, and tries to send or cache it.
     /*! The request is processed in background (either by an UnityEngine.WWW
      *  object, or by the browser when using web player in browser).
-     * \return true when successful, or false in error case (e.g. no Hit being constructed or no internet reachability).
-     * \todo Way to get constructed WWW object when successful? (doesn't apply to Web Player platforms)
+     *  If internet is not reachable and offline hits queueing is enabled,
+     *  the hit is saved to a queue file and sending of it will be tried
+     *  later.
+     * \return true when successful (hit is sent, or cached when being offline
+     *         and queueing is enabled), or false in error case (e.g. no Hit
+     *         being constructed or we're offline with queueing disabled).
      */
     public bool sendHit()
     {
@@ -1726,7 +2528,7 @@ public sealed class GoogleUniversalAnalytics
             return false;
         }
 
-#if DEBUG_WARNINGS
+#       if DEBUG_WARNINGS
         if (hitType == HitType.None)
             Debug.LogWarning("GUA trying to sendHit of type None (without beginHit?)");
         ++sessionHitCount;
@@ -1737,62 +2539,143 @@ public sealed class GoogleUniversalAnalytics
             sessionHitCount = 0;
             sessionHitCountResetPending = false;
         }
-#endif
-        // TODO: Possibility to put important hit types to queue (e.g. transaction)?
-        //       Could just add the result at this point to queue. When able to send,
-        //       should also automatically add queue time. If any hit types are
-        //       allowed for queueing, could still prioritize more important ones.
-        if (hitType == HitType.None ||
-            Application.internetReachability == NetworkReachability.NotReachable)
+#       endif // debug warnings
+
+        if (hitType == HitType.None)
             return false;
 
+        addCommonOptionalHitParams();
+
+        // if internet is not reachable, hit is queued or discarded
+        if (!internetReachable)
+        {
+#           if UNITY_WEBPLAYER
+            return false; // no offline queueing with webplayer
+#           else // or not webplayer:
+            if (!useOfflineCache)
+            {
+                // shouldn't really get here, but handle this just in case
+                sb.Length = 0; // discard
+                hitType = HitType.None;
+                return false;
+            }
+            string hitData = sb.ToString();
+            sb.Length = 0;
+            hitType = HitType.None;
+            return saveHitToOfflineQueue(hitData);
+#           endif // not webplayer
+        }
+
+#       if DEBUG_LOGS
+        Debug.Log("GUA.sendHit (useHTTPS:" + useHTTPS + ")");
+#       endif // debug logs
+
+        finalizeAndSendHit();
+
+        return true;
+    }
+
+#if !UNITY_WEBPLAYER
+    private WWW beginWWWRequest(string postDataString)
+    {
+        byte[] postData = System.Text.Encoding.UTF8.GetBytes(postDataString);
+#       if DEBUG_WARNINGS
+        if (postData.Length >= 8192)
+            Debug.LogWarning("GUA hit post data is at maximum length (8192 bytes)!");
+#       endif // debug warnings
+
+#       if UNITY_IPHONE
+        if (customHeaders != null)
+            return new WWW(useHTTPS ? httpsCollectUrl : httpCollectUrl, postData, customHeaders);
+        else
+#       endif // unity iphone (iOS)
+        {
+            return new WWW(useHTTPS ? httpsCollectUrl : httpCollectUrl, postData);
+        }
+    }
+
+    private IEnumerator doWWWRequestAndCheckResult(string postDataString)
+    {
+        bool sendFailed_saveToOffline;
+
+        WWW www = beginWWWRequest(postDataString);
+        yield return www;
+
+        if (www.error != null && www.error.Length > 0)
+        {
+#           if DEBUG_LOGS
+            Debug.Log("GUA hit sending failed (lost network? saving to offline cache), www.error: " + www.error);
+#           endif
+            netAccessStatus = NetAccessStatus.Error;
+            sendFailed_saveToOffline = true;
+        }
+        else
+        {
+            byte[] result = www.bytes;
+            if (result != null && result.Length > 3 &&
+                result[0] == 'G' && result[1] == 'I' && result[2] == 'F')
+            {
+#               if DEBUG_LOGS
+                Debug.Log("GUA hit was sent successfully");
+#               endif
+                sendFailed_saveToOffline = false;
+            }
+            else
+            {
+#               if DEBUG_LOGS
+                Debug.Log("GUA hit sending returned erroneous response (network login screen?)");
+                //Debug.Log(www.data); // for debug peeking at data
+#               endif
+                netAccessStatus = NetAccessStatus.Mismatch;
+                sendFailed_saveToOffline = true;
+            }
+        }
+
+        if (sendFailed_saveToOffline)
+        {
+            // note: when this one will eventually be sent again, there will be two cache busters but that's ok
+            saveHitToOfflineQueue(postDataString);
+        }
+    }
+#endif // not webplayer
+
+    // Returns a WWW object only if needReturnWWW is true and not running in a web player.
+    private WWW finalizeAndSendHit(bool needReturnWWW = false)
+    {
         // append cache buster (should be last)
         sb.Append("&z=");
         sb.Append(UnityEngine.Random.Range(0, 0x7fffffff) ^ 0x13377AA7);
 
-#if UNITY_WEBPLAYER
+#       if UNITY_WEBPLAYER
         sb.Append("\");}");
-#endif
+#       endif // webplayer
 
         string postDataString = sb.ToString();
-#if DEBUG_LOGS
-        Debug.Log("GUA postData: " + postDataString);
-#endif
+#       if DEBUG_LOGS
+        Debug.Log("GUA postDataString: " + postDataString);
+#       endif // debug logs
 
-#if UNITY_WEBPLAYER
+        // reset string builder and currently built hit type
+        sb.Length = 0;
+        hitType = HitType.None;
+
+#       if UNITY_WEBPLAYER
+
         Application.ExternalEval(postDataString);
-        // reset string builder and currently built hit type
-        sb.Length = 0;
-        hitType = HitType.None;
-        
-        return true;
-#else
-        // freeze the string builder's post data to byte array
-        byte[] postData = System.Text.Encoding.UTF8.GetBytes(postDataString);
-        // reset string builder and currently built hit type
-        sb.Length = 0;
-        hitType = HitType.None;
+        return null;
 
-#if DEBUG_WARNINGS
-        if (postData.Length >= 8192)
-            Debug.LogWarning("GUA hit post data is at maximum length (8192 bytes)!");
-#endif
+#       else // else other than webplayer platform:
 
-#if DEBUG_LOGS
-        Debug.Log("GUA.sendHit (useHTTPS:" + useHTTPS + ")");
-#endif
-
-#if UNITY_IPHONE
-        if (customHeaders != null)
-            new WWW(useHTTPS ? httpsCollectUrl : httpCollectUrl, postData, customHeaders);
-        else
-#endif
+        if (useOfflineCache && !needReturnWWW)
         {
-            new WWW(useHTTPS ? httpsCollectUrl : httpCollectUrl, postData);
+            helperBehaviour.StartCoroutine(doWWWRequestAndCheckResult(postDataString));
+            return null;
+        }
+        else // caller needs the returned WWW object:
+        {
+            return beginWWWRequest(postDataString);
         }
 
-        return true;
-#endif // not UNITY_WEBPLAYER
-
+#       endif // not webplayer
     }
 }

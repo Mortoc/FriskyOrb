@@ -32,12 +32,12 @@ Material:
     m_Floats:
       data:
         first:
-          name: _Shininess
-        second: .147082508
+          name: _GlowStrength
+        second: .899999976
       data:
         first:
-          name: _GlowStrength
-        second: 10
+          name: _Shininess
+        second: .147082508
     m_Colors:
       data:
         first:

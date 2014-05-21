@@ -6,11 +6,9 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: BlackHole
-  m_Shader: {fileID: 4800000, guid: 733ca5c4d156844769e6d7e932242ddc, type: 3}
-  m_ShaderKeywords:
-  - GLOW11_GLOW_GLOWCOLOR
-  - GLOW11_MULTIPLY_GLOWCOLOR
+  m_Name: GroundEffect
+  m_Shader: {fileID: 4800000, guid: 1d870740c0b3b0d498331c98adce9dee, type: 3}
+  m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
     serializedVersion: 2
@@ -19,7 +17,7 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 2800000, guid: 4306e3d1b5b84c5459771c0fe423c572, type: 3}
+          m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -29,29 +27,35 @@ Material:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _ShadowTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 430b0a806e5bc974c8128351642e93f4, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _FalloffTex
+        second:
+          m_Texture: {fileID: 2800000, guid: e9a9781cad112c75d0008dfa8d76c639, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
     m_Floats:
       data:
         first:
           name: _GlowStrength
-        second: 0
-      data:
-        first:
-          name: _Shininess
-        second: .699999988
+        second: 1
     m_Colors:
       data:
         first:
           name: _Color
-        second: {r: 0, g: 0, b: 0, a: 1}
+        second: {r: .658857942, g: .351167947, b: 0, a: 1}
       data:
         first:
           name: _GlowColor
-        second: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
-      data:
-        first:
-          name: _SpecColor
         second: {r: 1, g: 1, b: 1, a: 1}
       data:
         first:
-          name: _Emission
-        second: {r: 1, g: .282352954, b: 0, a: 1}
+          name: _DiffuseColor
+        second: {r: 1, g: 0, b: 0, a: 1}

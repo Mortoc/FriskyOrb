@@ -211,10 +211,6 @@ public class Player : MonoBehaviour
             // Adjust the heading so it's always perpendicular to gravity
             Vector3 right = Vector3.Cross(Heading, gravDir).normalized;
             Heading = Vector3.Cross(gravDir, right).normalized * Heading.magnitude;
-//            Debug.Log("Heading " + Heading + ", Right " + right + ", Up " + (-1.0f * gravDir));
-            Debug.DrawLine(rigidbody.position, rigidbody.position + Heading, Color.red);
-            Debug.DrawLine(rigidbody.position, rigidbody.position + right, Color.green);
-            Debug.DrawLine(rigidbody.position, rigidbody.position + (gravDir * -1.0f), Color.blue);
 
             // Stick down a bit
             rigidbody.AddForce(Physics.gravity * Time.fixedDeltaTime * 0.5f, ForceMode.Impulse);

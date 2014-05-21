@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 public class PlayerMovementController : IPlayerController
 {
-    private const float ACCELERATION = 1000.0f;
+    private const float ACCELERATION = 900.0f;
     private const float STEER_SPEED = 120.0f;
     private const float COUNTER_STEER = -0.1f;
-    private const float MAX_SPEED = 14.0f;
+    private const float MAX_SPEED = 15.0f;
 
     private readonly Player _player;
     private readonly JumpAction _jumpAction;

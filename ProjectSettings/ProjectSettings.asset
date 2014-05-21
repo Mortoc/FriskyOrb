@@ -77,9 +77,9 @@ PlayerSettings:
   metroEnableIndependentInputSource: 0
   metroEnableLowLatencyPresentationAPI: 0
   productGUID: ecce1250aac8ba14bbfc136bc9e85a6c
-  iPhoneBundleVersion: 1.0.7
-  AndroidBundleVersionCode: 8
-  AndroidMinSdkVersion: 14
+  iPhoneBundleVersion: 1.0.9
+  AndroidBundleVersionCode: 10
+  AndroidMinSdkVersion: 9
   AndroidPreferredInstallLocation: 0
   aotOptions: 
   apiCompatibilityLevel: 2
@@ -106,7 +106,7 @@ PlayerSettings:
   iPadHighResLandscapeSplashScreen: {fileID: 0}
   AndroidTargetDevice: 0
   AndroidSplashScreenScale: 0
-  AndroidKeystoreName: Keys/production.keystore
+  AndroidKeystoreName: C:/Users/Morto_000/Documents/Projects/FriskyOrb/Keys/production.keystore
   AndroidKeyaliasName: starbomb production
   resolutionDialogBanner: {fileID: 0}
   m_BuildTargetIcons:

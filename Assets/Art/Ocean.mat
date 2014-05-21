@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Ocean
+  m_Shader: {fileID: 4800000, guid: d4ea9ed1a69da4977a5e55bf4695e27a, type: 3}
+  m_ShaderKeywords:
+  - GLOW11_MULTIPLY_GLOWCOLOR
+  - GLOW11_GLOW_GLOWTEX
+  m_CustomRenderQueue: -1
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 84c028049dd0d1148b26f477ee7148ae, type: 3}
+          m_Scale: {x: 50, y: 50}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _BumpMap
+        second:
+          m_Texture: {fileID: 2800000, guid: ccd700c89f5e9d04cb6e2fd60bb6f21b, type: 3}
+          m_Scale: {x: 50, y: 50}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _GlowTex
+        second:
+          m_Texture: {fileID: 2800000, guid: e80c3c84ea861404d8a427db8b7abf04, type: 3}
+          m_Scale: {x: 25, y: 25}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _Cube
+        second:
+          m_Texture: {fileID: 8900000, guid: c001290d9de48f04287126be7a1a9d99, type: 2}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _SparkleTex
+        second:
+          m_Texture: {fileID: 2800000, guid: a181ca8e3c62f3e4b8f183f6c586b032, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _Illum
+        second:
+          m_Texture: {fileID: 2800000, guid: a330042443557194f9ac3d8aaaa98307, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _ParallaxMap
+        second:
+          m_Texture: {fileID: 2800000, guid: a330042443557194f9ac3d8aaaa98307, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Reflection
+        second: 0
+      data:
+        first:
+          name: _GlowStrength
+        second: .0500000007
+      data:
+        first:
+          name: _Shininess
+        second: 2.10978317
+      data:
+        first:
+          name: _Gloss
+        second: 5.89285707
+      data:
+        first:
+          name: _FrezPow
+        second: .785714269
+      data:
+        first:
+          name: _FrezFalloff
+        second: 4
+      data:
+        first:
+          name: _hdrInt
+        second: 1
+      data:
+        first:
+          name: _FlakeScale
+        second: 5.5
+      data:
+        first:
+          name: _FlakePower
+        second: .535714269
+      data:
+        first:
+          name: _OuterFlakePower
+        second: 9.23214245
+      data:
+        first:
+          name: _Rimpower
+        second: 0
+      data:
+        first:
+          name: _EmissionLM
+        second: 0
+      data:
+        first:
+          name: _Parallax
+        second: .0601785704
+    m_Colors:
+      data:
+        first:
+          name: _Color
+        second: {r: 0, g: 0, b: 0, a: 1}
+      data:
+        first:
+          name: _GlowColor
+        second: {r: .198663607, g: .017301036, b: .29411763, a: 1}
+      data:
+        first:
+          name: _SpecColor
+        second: {r: .578701794, g: .544117689, b: 1, a: 1}
+      data:
+        first:
+          name: _ReflectColor
+        second: {r: 1, g: 1, b: 1, a: .5}
+      data:
+        first:
+          name: _paintColor2
+        second: {r: 0, g: .188235298, b: .749019623, a: 1}
+      data:
+        first:
+          name: _RimColor
+        second: {r: 1, g: 1, b: 1, a: 1}

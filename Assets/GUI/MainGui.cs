@@ -24,12 +24,12 @@ public class MainGui : MonoBehaviour
         }
     }
 
-    private SmoothedVector _particleUp = new SmoothedVector(2.0f);
+    private SmoothedVector _particleUp = new SmoothedVector(1.0f);
     void Update()
     {
-        if( Input.acceleration.sqrMagnitude > 0.00001f )
+        if( Input.acceleration.sqrMagnitude > Mathf.Epsilon )
         {
-            _particleUp.AddSample(Input.acceleration.normalized);
+            _particleUp.AddSample(Input.acceleration);
             _particles.transform.up = _particleUp.GetSmoothedVector();
         }
     }

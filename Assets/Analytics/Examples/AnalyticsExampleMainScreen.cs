@@ -4,13 +4,16 @@
 // http://strobotnik.com
 // http://jet.ro
 //
-// $Revision: 392 $
+// $Revision: 635 $
 //
 // File version history:
 // 2013-09-01, 1.1.1 - Initial version
 // 2013-09-25, 1.1.3 - Unity 3.5 support.
 // 2013-12-17, 1.2.0 - Added warning for missing Analytics object and check
 //                     for Analytics.gua.analyticsDisabled in custom Quit hit.
+// 2014-05-12, 1.4.0 - Updated for method renames. (see GoogleUniversalAnalytics.cs)
+//                     Refined showing of network status and added showing
+//                     count of remaining entries in offline hit cache.
 
 using UnityEngine;
 using System.Collections;
@@ -81,13 +84,22 @@ public class AnalyticsExampleMainScreen : MonoBehaviour
 
         GUILayout.Label("---");
 
+        GUILayout.Label("Remaining entries in offline hit cache:");
+        #if UNITY_WEBPLAYER
+        GUILayout.Label("(not applicable with web player)");
+        #else
+        if (Analytics.gua != null)
+            GUILayout.Label(Analytics.gua.remainingEntriesInOfflineCache.ToString());
+        #endif
+
+
         if (GUILayout.Button("Quit"))
         {
             // End session with custom built hit:
             if (!Analytics.gua.analyticsDisabled)
             {
-                Analytics.gua.beginHit(GoogleUniversalAnalytics.HitType.Appview);
-                Analytics.gua.addContentDescription("AnalyticsExample - Quit");
+                Analytics.gua.beginHit(GoogleUniversalAnalytics.HitType.Screenview);
+                Analytics.gua.addScreenName("AnalyticsExample - Quit");
                 Analytics.gua.addSessionControl(false); // end current session
                 Analytics.gua.sendHit();
             }
@@ -99,11 +111,13 @@ public class AnalyticsExampleMainScreen : MonoBehaviour
             Application.Quit();
         }
 
-        string networkReachability = "Network Reachability: none";
+        GUILayout.Label("Verified internet access: " + Analytics.gua.internetReachable);
+
+        string networkReachability = "Unity NetworkReachability: none";
         if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork)
-            networkReachability = "Network Reachability: via carrier data network";
+            networkReachability = "Unity NetworkReachability: via carrier data network";
         else if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
-            networkReachability = "Network Reachability: via local area network";
+            networkReachability = "Unity NetworkReachability: via local area network";
         GUILayout.Label(networkReachability);
 
         GUILayout.EndVertical();

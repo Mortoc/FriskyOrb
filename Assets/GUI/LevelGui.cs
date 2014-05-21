@@ -39,6 +39,7 @@ public class LevelGui : MonoBehaviour
         }
     }
     
+    [SerializeField]
     private float _levelNameDisplayTime = 5.0f;
         
     private void DrawLevelName()

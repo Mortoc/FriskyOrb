@@ -87,7 +87,7 @@ public class Powerup : Doodad
         Vector3 randOffset = UnityEngine.Random.onUnitSphere * _collectAnimationRandomOffsetAmount;
         randOffset.y = Mathf.Abs(randOffset.y);
         float recprAnimateTime = 1.0f / _collectAnimateTime;
-
+        bool particlesFired = false;
         for (float t = 0.0f; t < _collectAnimateTime; t += Time.deltaTime)
         {
             if (!player)
@@ -103,11 +103,20 @@ public class Powerup : Doodad
             transform.localScale = Vector3.Lerp(startScale, Vector3.zero, animPercent);
 
             yield return 0;
+
+            if (!particlesFired && t > _collectAnimateTime * 0.5f && 
+                (transform.position - player.transform.position).sqrMagnitude < (player.transform.localScale.sqrMagnitude * 0.1f) )
+            {
+                particlesFired = true;
+                particleSystem.Play();
+            }
         }
 
         bar.CollectedPowerup();
 
         Score.Instance.RegisterEvent(Score.Event.StarCollect);
+
+        yield return new WaitForSeconds(3.0f);
         GameObject.Destroy(this.gameObject);
     }
 }

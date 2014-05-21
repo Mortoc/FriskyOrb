@@ -39,12 +39,12 @@ Material:
     m_Floats:
       data:
         first:
-          name: _Shininess
-        second: 1
+          name: _GlowStrength
+        second: .5
       data:
         first:
-          name: _GlowStrength
-        second: .699999988
+          name: _Shininess
+        second: 1
       data:
         first:
           name: _rim_power
@@ -60,12 +60,12 @@ Material:
         second: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
       data:
         first:
-          name: _SpecColor
-        second: {r: 1, g: 1, b: 1, a: 1}
-      data:
-        first:
           name: _GlowColor
         second: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
+      data:
+        first:
+          name: _SpecColor
+        second: {r: 1, g: 1, b: 1, a: 1}
       data:
         first:
           name: _Vertex_color

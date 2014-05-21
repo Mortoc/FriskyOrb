@@ -7,10 +7,21 @@ public class ExplodeyBarrell : Doodad
     private float _playerForce = 100.0f;
     [SerializeField]
     private GameObject _explodeFX;
+    [SerializeField]
+    private float _pulseSpeed = 0.66f;
+    [SerializeField]
+    private Material _animateMaterial = null;
 
     void Start()
     {
         rigidbody.Sleep();
+    }
+
+    void Update()
+    {
+        float posSin = Mathf.Sin(Time.time * _pulseSpeed) + 1.0f;
+        float glow = Mathf.SmoothStep(0.0f, 0.5f, posSin * 0.5f);
+        _animateMaterial.SetFloat("_GlowStrength", glow);
     }
 
     void OnCollisionEnter(Collision collision)

@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: 'Material #25'
-  m_Shader: {fileID: 7, guid: 0000000000000000f000000000000000, type: 0}
+  m_Name: 'Material #26'
+  m_Shader: {fileID: 4800000, guid: a53ab4acb5f1f7346b3bc3ccedd3c6de, type: 3}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
@@ -20,9 +20,21 @@ Material:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
-    m_Floats: {}
+    m_Floats:
+      data:
+        first:
+          name: _rim_power
+        second: .5
     m_Colors:
       data:
         first:
           name: _Color
-        second: {r: .588, g: .588, b: .588, a: 1}
+        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+      data:
+        first:
+          name: _Vertex_color
+        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+      data:
+        first:
+          name: _rim_color
+        second: {r: .929411769, g: .866666675, b: 0, a: 1}
