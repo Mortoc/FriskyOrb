@@ -4,10 +4,11 @@ using System.Collections.Generic;
 
 public class PlayerMovementController : IPlayerController
 {
-    private const float ACCELERATION = 900.0f;
-    private const float STEER_SPEED = 120.0f;
-    private const float COUNTER_STEER = -0.1f;
-    private const float MAX_SPEED = 15.0f;
+    private const float ACCELERATION = 1000.0f;
+    private const float STEER_SPEED = 150.0f;
+    private const float COUNTER_STEER = -0.025f;
+    private const float MAX_SPEED = 25.0f;
+	private const float DOWN_FORCE = 100.0f;
 
     private readonly Player _player;
     private readonly JumpAction _jumpAction;
@@ -22,26 +23,30 @@ public class PlayerMovementController : IPlayerController
 
     public void Enable()
     {
-        _inputHandler.OnAction += _jumpAction.PerformAction;
+        _inputHandler.OnJump += _jumpAction.Jump;
+		_inputHandler.OnEndJump += _jumpAction.EndJump;
         _player.OnFixedUpdate += FixedUpdate;
     }
 
     public void Disable()
     {
-        _inputHandler.OnAction -= _jumpAction.PerformAction;
+		_inputHandler.OnJump -= _jumpAction.Jump;
+		_inputHandler.OnEndJump -= _jumpAction.EndJump;
         _player.OnFixedUpdate -= FixedUpdate;
     }
 
     private Vector3 _currentUpVector;
     private void FixedUpdate()
     {
+		_player.rigidbody.AddForce (Physics.gravity.normalized * DOWN_FORCE * Time.fixedDeltaTime);
+		
+		if( _player.rigidbody.velocity.sqrMagnitude < MAX_SPEED * MAX_SPEED )
+			RollForward();
+
         if (_player.IsGrounded)
         {
             _currentUpVector = Physics.gravity.normalized * -1.0f;
             _jumpAction.PlayerLanded();
-
-            if( _player.rigidbody.velocity.sqrMagnitude < MAX_SPEED * MAX_SPEED )
-                RollForward();
 
             Steer();
         }

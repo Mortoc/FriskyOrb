@@ -8,7 +8,7 @@ PhysicMaterial:
   m_Name: Level
   dynamicFriction: .5
   staticFriction: .400000006
-  bounciness: 0
+  bounciness: .0500000007
   frictionCombine: 0
   bounceCombine: 0
   frictionDirection2: {x: 0, y: 0, z: 0}

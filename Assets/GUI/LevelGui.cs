@@ -8,14 +8,21 @@ public class LevelGui : MonoBehaviour
     private GUISkin _originalSkin;
     private string _levelName;
     public Player Player { get; set; }
+    public SweepInText _sweepInText;
     
-    void Start()
+    IEnumerator Start()
     {
         _originalSkin = Instantiate(_skin) as GUISkin;
         _scaledSkin = Instantiate(_skin) as GUISkin;
         _levelName = FindObjectOfType<Level>().Name;
         SetupFontSizes();
+
+        _sweepInText.text = _levelName;
+
+        yield return new WaitForSeconds(0.5f);
+        _sweepInText.Display();
     }
+
 
     private float _cachedFontBasis = 0.0f;
     private void SetupFontSizes()
@@ -38,39 +45,6 @@ public class LevelGui : MonoBehaviour
             _cachedFontBasis = Screen.height;
         }
     }
-    
-    [SerializeField]
-    private float _levelNameDisplayTime = 5.0f;
-        
-    private void DrawLevelName()
-    {
-        Color originalColor = GUI.color;
-        if (Time.timeSinceLevelLoad > _levelNameDisplayTime * 0.8f)
-        {
-            float t = (Time.time - (_levelNameDisplayTime * 0.8f)) * 5.0f;
-            GUI.color = Color.Lerp(originalColor, new Color(0.0f, 0.0f, 0.0f, 0.0f), t);
-        }
-
-        GUILayout.BeginArea(new Rect(0.0f, 0.0f, Screen.width, Screen.height));
-        GUILayout.FlexibleSpace();
-
-        GUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
-
-        GUILayout.BeginVertical();
-        GUILayout.Label("Attempting Track:", GUI.skin.FindStyle("YouDeadMessage"));
-        GUILayout.Label(_levelName, GUI.skin.FindStyle("YouDeadMessage"));
-        GUILayout.EndVertical();
-
-        GUILayout.FlexibleSpace();
-        GUILayout.EndHorizontal();
-
-        GUILayout.FlexibleSpace();
-        GUILayout.FlexibleSpace();
-        GUILayout.EndArea();
-
-        GUI.color = originalColor;
-    }
 
 
     void OnGUI()
@@ -79,15 +53,10 @@ public class LevelGui : MonoBehaviour
 
         GUI.skin = _scaledSkin;
 
-        if (Time.timeSinceLevelLoad < _levelNameDisplayTime)
-        {
-            DrawLevelName();
-        }
-
         Rect screenRect = new Rect(0.0f, 0.0f, Screen.width, Screen.height);
 
-        float pauseButtonSize = Screen.height * 0.15f;
-        float scoreButtonHeight = Screen.height * 0.2f;
+        float pauseButtonSize = Screen.height * 0.1f;
+        float scoreButtonHeight = Screen.height * 0.125f;
         float scoreButtonWidth = scoreButtonHeight * 512.0f / 242.0f;
 
         GUILayout.BeginArea(screenRect);
@@ -148,7 +117,7 @@ public class LevelGui : MonoBehaviour
 
     private void DrawScore(float scoreButtonWidth)
     {
-        int score = Score.Instance.ScoreDisplayValue;
+        int score = (int)Score.Instance.ScoreDisplayValue;
         
         if (score > 9999)
             score = 9999;

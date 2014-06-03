@@ -7,9 +7,10 @@
   Subshader {
      Pass {
         ZWrite off
+        Fog { Color (0, 0, 0) }
         Color [_Color]
         ColorMask RGB
-        Blend One SrcColor
+        Blend SrcColor One
 		Offset -1, -1
         SetTexture [_ShadowTex] {
 		   combine texture * primary, ONE - texture

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections.Generic;
 
@@ -22,13 +22,13 @@ public class MobileInputHandler : InputHandler
             Vector3 touchPos = Input.touches[0].position;
             if (!ExecuteTouchAt(touchPos) && (touchPos.x > Screen.height * .15f || touchPos.y > Screen.height * .85f))
             {
-                ExecuteAction();
+                Jump();
             }
                 
         }
 
 		if( _gamePad && _gamePad.isDown(ControllerButtons.BUTA) )
-			ExecuteAction();
+			Jump();
 		else if( _gamePad && _gamePad.isDown (ControllerButtons.BUTX) )
 		   ExecuteTouchAt (new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0.0f));
 		

@@ -27,28 +27,36 @@ public class EndOfLevelGui : MonoBehaviour
         GUILayout.FlexibleSpace();
 
         GUILayout.BeginHorizontal();
-
         GUILayout.FlexibleSpace();
-
-
-        float newLevelButtonHeight = Screen.height * 0.3f;
+        float newLevelButtonHeight = Screen.height * 0.15f;
         float newLevelButtonWidth = newLevelButtonHeight * 512.0f / 304.0f;
         if (GUILayout.Button("", GUI.skin.FindStyle("NewLevelButton"), GUILayout.Width(newLevelButtonWidth), GUILayout.Height(newLevelButtonHeight)))
-        {
-            Analytics.gua.sendEventHit("ReplayingLevel", "NewLevel", "Score", Score.Instance.ActualScore);
-            Level.StartRandom();
+		{
+			try 
+			{
+				Analytics.gua.sendEventHit("ReplayingLevel", "NewLevel", "Score", (int)Score.Instance.ActualScore);
+			}
+			finally
+			{
+				Level.StartRandom();
+			}
         }
-
         GUILayout.FlexibleSpace();
 
         GUILayout.BeginVertical();
-        GUILayout.Space(Screen.height * 0.05f);
-        float replayButtonHeight = Screen.height * 0.225f;
+        GUILayout.Space(Screen.height * 0.0255f);
+        float replayButtonHeight = Screen.height * 0.115f;
         float replayButtonWidth = replayButtonHeight * 512.0f / 266.0f;
         if (GUILayout.Button("", GUI.skin.FindStyle("ReplayButton"), GUILayout.Width(replayButtonWidth), GUILayout.Height(replayButtonHeight)))
         {
-            Analytics.gua.sendEventHit("ReplayingLevel", "SameLevel", "Score", Score.Instance.ActualScore);
-            Level.Replay();
+			try 
+			{
+            	Analytics.gua.sendEventHit("ReplayingLevel", "SameLevel", "Score", (int)Score.Instance.ActualScore);
+			}
+			finally
+			{
+            	Level.Replay();
+			}
         }
         GUILayout.EndVertical();
 

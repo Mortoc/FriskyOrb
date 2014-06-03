@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Structure
-  m_Shader: {fileID: 4800000, guid: 6a76c20c3bf2541339973e717621b7c0, type: 3}
+  m_Shader: {fileID: 10703, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords:
   - GLOW11_GLOW_GLOWTEX
   - GLOW11_MULTIPLY_GLOWCOLOR
@@ -19,14 +19,7 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 2800000, guid: b384b5b3df85b424db48c846adb4b65a, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _GlowTex
-        second:
-          m_Texture: {fileID: 0}
+          m_Texture: {fileID: 2800000, guid: 3a6f7d342f69151438f49edf8b39a159, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -36,36 +29,39 @@ Material:
           m_Texture: {fileID: 8900000, guid: 1e2c8e5fb15f48e438eb1a6a2a1bc397, type: 2}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
-    m_Floats:
       data:
         first:
-          name: _GlowStrength
-        second: .0199999996
+          name: _GlowTex
+        second:
+          m_Texture: {fileID: 2800000, guid: beb2a03f00e48b943b207f8c81cd83f2, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
       data:
         first:
           name: _Shininess
         second: .1199205
       data:
         first:
+          name: _Rimpower
+        second: .560000002
+      data:
+        first:
           name: _rim_power
         second: 4.03571415
       data:
         first:
-          name: _RimPower
-        second: .270000011
+          name: _GlowStrength
+        second: .0199999996
       data:
         first:
-          name: _Rimpower
-        second: .560000002
+          name: _RimPower
+        second: .270000011
     m_Colors:
       data:
         first:
           name: _Color
         second: {r: .235294104, g: .13494809, b: .13494809, a: 0}
-      data:
-        first:
-          name: _GlowColor
-        second: {r: .242647052, g: 0, b: .062802732, a: 1}
       data:
         first:
           name: _SpecColor
@@ -82,6 +78,10 @@ Material:
         first:
           name: _ReflectColor
         second: {r: 1, g: 1, b: 1, a: .5}
+      data:
+        first:
+          name: _GlowColor
+        second: {r: .242647052, g: 0, b: .062802732, a: 1}
       data:
         first:
           name: _RimColor

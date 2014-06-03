@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class ExplodeyBarrellFX : FX
 {
     [SerializeField]
-    private float _explosionForce = 100.0f;
+    private float _explosionForce = 300.0f;
     [SerializeField]
     private float _fragmentLife = 5.0f;
     [SerializeField]

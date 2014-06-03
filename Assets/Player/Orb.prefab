@@ -5495,7 +5495,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _falloff: 3
-  _initialColor: {r: 1, g: .532994926, b: 0, a: 1}
+  _initialColor: {r: 1, g: .760784328, b: 0, a: 1}
 --- !u!119 &11900000
 Projector:
   m_ObjectHideFlags: 1
@@ -5513,7 +5513,7 @@ Projector:
   m_Material: {fileID: 2100000, guid: 6f5f2d7b61315474c9231bab647f8792, type: 2}
   m_IgnoreLayers:
     serializedVersion: 2
-    m_Bits: 528
+    m_Bits: 2576
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -6574,7 +6574,7 @@ ParticleSystem:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
-  lengthInSec: 1
+  lengthInSec: 2
   startDelay: 0
   speed: 1
   randomSeed: 0

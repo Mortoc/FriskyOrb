@@ -16,8 +16,8 @@ public class Score : MonoBehaviour
 
     [SerializeField]
     private float _pointsAnimateSpeed = 150.0f; // points per second
-    public int ActualScore { get; private set; }
-    public int ScoreDisplayValue { get; private set; }
+    public float ActualScore { get; private set; }
+    public float ScoreDisplayValue { get; private set; }
 
 
     [SerializeField]
@@ -48,11 +48,11 @@ public class Score : MonoBehaviour
 
     private IEnumerator AddPoints(int points)
     {
-        ActualScore += points;
+        ActualScore += (float)points;
 
         while( ScoreDisplayValue < ActualScore )
         {
-            ScoreDisplayValue += Mathf.FloorToInt(Time.deltaTime * _pointsAnimateSpeed);
+            ScoreDisplayValue += Time.deltaTime * _pointsAnimateSpeed;
 
             if (ScoreDisplayValue > ActualScore)
                 ScoreDisplayValue = ActualScore;

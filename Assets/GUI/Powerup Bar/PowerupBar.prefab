@@ -27,6 +27,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -41,7 +42,7 @@ MonoBehaviour:
   _powerupsUntilFull: 40
   _activateSound: {fileID: 8300000, guid: 80afba955476023409d05063249f9c41, type: 3}
   _deactivateSound: {fileID: 8300000, guid: aaa2f334eb781984eaa93a9de950c280, type: 3}
-  _powerupBarHeight: .660000026
+  _powerupBarHeight: .330000013
   _powerupBarBackground: {fileID: 2800000, guid: 9ea3fc9ad1bfd2c439086d51bec4d9b0,
     type: 3}
   _powerupBarFullBackground: {fileID: 2800000, guid: a6a56193cbdfe0d42ad23b46c8dda0b6,

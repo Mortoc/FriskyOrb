@@ -41,14 +41,13 @@ public class MainGui : MonoBehaviour
         
         GUILayout.BeginArea(new Rect(0.0f, 0.0f, Screen.width, Screen.height));
 
-        GUILayout.BeginVertical();
-        GUILayout.FlexibleSpace();
+		GUILayout.BeginVertical();
+		GUILayout.Space (Screen.height * 0.1f);
 
-
-        GUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
-
-        float newLevelButtonHeight = Screen.height * 0.3f;
+		GUILayout.BeginHorizontal();
+		GUILayout.FlexibleSpace();
+        
+        float newLevelButtonHeight = Screen.height * 0.2f;
         float newLevelButtonWidth = newLevelButtonHeight * 512.0f / 304.0f;
 
         if (GUILayout.Button("", GUI.skin.FindStyle("NewLevelButton"), GUILayout.Width(newLevelButtonWidth), GUILayout.Height(newLevelButtonHeight)))
@@ -71,10 +70,9 @@ public class MainGui : MonoBehaviour
 
         if (!String.IsNullOrEmpty(_personalBest))
         {
+            GUILayout.BeginArea(new Rect(Screen.width * 0.05f, Screen.height * 0.5f, Screen.width * 0.9f, Screen.height * 0.65f), GUI.skin.box);
 
-            GUILayout.BeginArea(new Rect(Screen.width * 0.1f, Screen.height * 0.66f, Screen.width * 0.8f, Screen.height * 0.45f), GUI.skin.box);
-
-            float replayButtonHeight = Screen.height * 0.225f;
+            float replayButtonHeight = Screen.height * 0.15f;
             float replayButtonWidth = replayButtonHeight * 512.0f / 266.0f;
 
             GUILayout.BeginHorizontal();
@@ -92,18 +90,16 @@ public class MainGui : MonoBehaviour
             GUILayout.Label(_personalBestLevel, GUI.skin.FindStyle("YourBestData"), GUILayout.Width(Screen.width * 0.1f));
 
             GUILayout.FlexibleSpace();
-            GUILayout.EndVertical();
-
-            GUILayout.FlexibleSpace();
-
-
-            GUILayout.BeginVertical();
-            GUILayout.FlexibleSpace();
+			GUILayout.BeginHorizontal();
+			GUILayout.FlexibleSpace();
             if (GUILayout.Button("", GUI.skin.FindStyle("ReplayButton"), GUILayout.Width(replayButtonWidth), GUILayout.Height(replayButtonHeight)))
             {
                 Analytics.gua.sendEventHit("MainManu", "ReplayedBestLevel", "LevelSeed", PlayerPrefs.GetInt("best_score_level_seed"));
                 Level.Start(PlayerPrefs.GetInt("best_score_level_seed"));
             }
+			
+			GUILayout.FlexibleSpace();
+			GUILayout.EndHorizontal();
             GUILayout.FlexibleSpace();
             GUILayout.EndVertical();
 

@@ -30,13 +30,20 @@ public abstract class InputHandler : MonoBehaviour
     public abstract float SteeringAmount();
 
     // User has activated their current action (default jump)
-    public event Action OnAction;
+    public event Action OnJump;
+	public event Action OnEndJump;
 
-    protected void ExecuteAction()
+    protected void Jump()
     {
-        if (OnAction != null)
-            OnAction();
+        if (OnJump != null)
+            OnJump();
     }
+
+	protected void EndJump()
+	{
+		if (OnEndJump != null)
+			OnEndJump ();
+	}
 
     public interface ITouchRegion
     {

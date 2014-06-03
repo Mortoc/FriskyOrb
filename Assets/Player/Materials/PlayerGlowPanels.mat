@@ -50,12 +50,12 @@ Material:
         second: 1
       data:
         first:
-          name: _rim_power
-        second: 1.08928561
-      data:
-        first:
           name: _GlowStrength
         second: 1
+      data:
+        first:
+          name: _rim_power
+        second: 1.08928561
       data:
         first:
           name: _Parallax
@@ -71,6 +71,10 @@ Material:
         second: {r: 1, g: 1, b: 1, a: 1}
       data:
         first:
+          name: _GlowColor
+        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+      data:
+        first:
           name: _Vertex_color
         second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
       data:
@@ -79,13 +83,9 @@ Material:
         second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
       data:
         first:
-          name: _GlowColor
-        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+          name: _DiffuseColor
+        second: {r: 0, g: .188235298, b: .749019623, a: 1}
       data:
         first:
           name: _Emission
         second: {r: 1, g: 1, b: 1, a: 1}
-      data:
-        first:
-          name: _DiffuseColor
-        second: {r: 0, g: .188235298, b: .749019623, a: 1}
