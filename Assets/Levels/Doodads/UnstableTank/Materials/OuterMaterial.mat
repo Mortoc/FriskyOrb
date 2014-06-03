@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: OuterMaterial
-  m_Shader: {fileID: 4800000, guid: 137a7854d151f314486625150e73e021, type: 3}
+  m_Shader: {fileID: 10720, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
@@ -16,6 +16,13 @@ Material:
       data:
         first:
           name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 57b1a9cef67ca1c4d84505f392a3e058, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _GlowTex
         second:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
@@ -27,22 +34,15 @@ Material:
           m_Texture: {fileID: 8900000, guid: b4806c8ed7cc4844b9ce7232d37a59f1, type: 2}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _GlowTex
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
     m_Floats:
-      data:
-        first:
-          name: _FresnelPower
-        second: .75
       data:
         first:
           name: _GlowStrength
         second: 1
+      data:
+        first:
+          name: _FresnelPower
+        second: .75
     m_Colors:
       data:
         first:
@@ -50,9 +50,9 @@ Material:
         second: {r: .0235294122, g: 0, b: .160784319, a: 0}
       data:
         first:
-          name: _ReflectColor
-        second: {r: 1, g: 1, b: 1, a: .5}
-      data:
-        first:
           name: _GlowColor
         second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _ReflectColor
+        second: {r: 1, g: 1, b: 1, a: .5}

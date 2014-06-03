@@ -10,7 +10,7 @@ Material:
   m_Shader: {fileID: 4800000, guid: 8912568cc364544c684c9fc88c4e5286, type: 3}
   m_ShaderKeywords:
   - GLOW11_MULTIPLY_GLOWCOLOR
-  - GLOW11_GLOW_MAINTEX
+  - GLOW11_GLOW_GLOWTEX
   m_CustomRenderQueue: -1
   m_SavedProperties:
     serializedVersion: 2
@@ -31,17 +31,17 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
-          name: _GlowTex
-        second:
-          m_Texture: {fileID: 2800000, guid: 0f6377872e339455d9912675771556d1, type: 3}
-          m_Scale: {x: 1, y: 5}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
           name: _Detail
         second:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _GlowTex
+        second:
+          m_Texture: {fileID: 2800000, guid: a4bb9240f1d233449b1bd69a989d6997, type: 3}
+          m_Scale: {x: 1, y: 5}
           m_Offset: {x: 0, y: 0}
       data:
         first:
@@ -78,12 +78,12 @@ Material:
         second: .767857134
       data:
         first:
-          name: _GlowStrength
-        second: .5
-      data:
-        first:
           name: _Shininess
         second: 1
+      data:
+        first:
+          name: _GlowStrength
+        second: .699999988
       data:
         first:
           name: _rim_power
@@ -199,12 +199,12 @@ Material:
         second: {r: 1, g: 1, b: 1, a: 1}
       data:
         first:
-          name: _GlowColor
-        second: {r: 0, g: .188235298, b: .749019623, a: 1}
-      data:
-        first:
           name: _SpecColor
         second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _GlowColor
+        second: {r: 0, g: .251308918, b: 1, a: 1}
       data:
         first:
           name: _Vertex_color

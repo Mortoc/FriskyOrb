@@ -86,8 +86,8 @@ public class LevelGui : MonoBehaviour
 
         Rect screenRect = new Rect(0.0f, 0.0f, Screen.width, Screen.height);
 
-        float pauseButtonSize = Screen.height * 0.15f;
-        float scoreButtonHeight = Screen.height * 0.2f;
+        float pauseButtonSize = Screen.height * 0.1f;
+        float scoreButtonHeight = Screen.height * 0.125f;
         float scoreButtonWidth = scoreButtonHeight * 512.0f / 242.0f;
 
         GUILayout.BeginArea(screenRect);
@@ -148,7 +148,7 @@ public class LevelGui : MonoBehaviour
 
     private void DrawScore(float scoreButtonWidth)
     {
-        int score = Score.Instance.ScoreDisplayValue;
+        int score = (int)Score.Instance.ScoreDisplayValue;
         
         if (score > 9999)
             score = 9999;

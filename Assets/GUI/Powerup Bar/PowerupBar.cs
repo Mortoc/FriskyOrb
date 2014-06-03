@@ -84,36 +84,36 @@ public class PowerupBar : MonoBehaviour
         _powerupBarGuiArea.width = Screen.width - _powerupBarGuiArea.x;
         _powerupBarGuiArea.height = Screen.height - _powerupBarGuiArea.y;   
         
-        if( PowerupReady )
-        {
-            _powerupButtonArea.width = Screen.height * _powerupButtonHeight;
-            _powerupButtonArea.height = _powerupButtonArea.width;
-            _powerupButtonArea.x = Screen.width - _powerupButtonArea.width;
-            _powerupButtonArea.y = Screen.height - (_powerupButtonArea.height - (_powerupBarGuiArea.width * 0.5f));
-
-            GUI.DrawTexture(_powerupGooGuiArea, _powerupBarBackground);
-            GUI.DrawTexture(_powerupBarGuiArea, _powerupBarForeground);
-            GUI.DrawTexture(_powerupBarGuiArea, _powerupBarFullBackground);
-
-            Color guiColor = GUI.color;
-            _tempGuiColor.r = guiColor.r;
-            _tempGuiColor.g = guiColor.g;
-            _tempGuiColor.b = guiColor.b;
-            _tempGuiColor.a = Mathf.Abs(Mathf.Sin(Time.time * _powerupBarFullPulseRate));
-            GUI.color = _tempGuiColor;
-            GUI.DrawTexture(_powerupButtonArea, _powerupButtonGlow);
-
-            _tempGuiColor.a = Mathf.Clamp01((Time.time - _powerupButtonFadeStart) * _powerupButtonFadeTimeRecip);
-            GUI.color = _tempGuiColor;
-
-            if( GUI.Button(_powerupButtonArea, "", _powerupButton) )
-            {
-                ExecutePowerup(GameObject.FindObjectOfType<Player>());
-            }
-            GUI.color = guiColor;
-        }
-        else
-        {
+//        if( PowerupReady )
+//        {
+//            _powerupButtonArea.width = Screen.height * _powerupButtonHeight;
+//            _powerupButtonArea.height = _powerupButtonArea.width;
+//            _powerupButtonArea.x = Screen.width - _powerupButtonArea.width;
+//            _powerupButtonArea.y = Screen.height - (_powerupButtonArea.height - (_powerupBarGuiArea.width * 0.5f));
+//
+//            GUI.DrawTexture(_powerupGooGuiArea, _powerupBarBackground);
+//            GUI.DrawTexture(_powerupBarGuiArea, _powerupBarForeground);
+//            GUI.DrawTexture(_powerupBarGuiArea, _powerupBarFullBackground);
+//
+//            Color guiColor = GUI.color;
+//            _tempGuiColor.r = guiColor.r;
+//            _tempGuiColor.g = guiColor.g;
+//            _tempGuiColor.b = guiColor.b;
+//            _tempGuiColor.a = Mathf.Abs(Mathf.Sin(Time.time * _powerupBarFullPulseRate));
+//            GUI.color = _tempGuiColor;
+//            GUI.DrawTexture(_powerupButtonArea, _powerupButtonGlow);
+//
+//            _tempGuiColor.a = Mathf.Clamp01((Time.time - _powerupButtonFadeStart) * _powerupButtonFadeTimeRecip);
+//            GUI.color = _tempGuiColor;
+//
+//            if( GUI.Button(_powerupButtonArea, "", _powerupButton) )
+//            {
+//                ExecutePowerup(GameObject.FindObjectOfType<Player>());
+//            }
+//            GUI.color = guiColor;
+//        }
+//        else
+//        {
             _powerupGooGuiArea.width = _powerupBarGuiArea.width;
             _powerupGooGuiArea.height = _powerupBarGuiArea.height * PowerupPercent;
             _powerupGooGuiArea.x = _powerupBarGuiArea.x;
@@ -121,7 +121,7 @@ public class PowerupBar : MonoBehaviour
 
             GUI.DrawTexture(_powerupGooGuiArea, _powerupBarBackground);
             GUI.DrawTexture(_powerupBarGuiArea, _powerupBarForeground);
-        }
+//        }
         
     }
 

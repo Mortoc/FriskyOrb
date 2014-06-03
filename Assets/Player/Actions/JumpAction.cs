@@ -4,89 +4,76 @@ using System;
 using System.Collections.Generic;
 
 
-public class JumpAction : IPlayerAction
+public class JumpAction
 {
-    private const float JUMP_STEER_STRENGTH = 50.0f;
-    private const float JUMP_STRENGTH = 75.0f;
+    private const float JUMP_STRENGTH = 100.0f;
     private FX _jumpEffect;
 
     private Player _player;
     private float _playerDrag = 1.0f;
-    private int _jumpCount = 2;
-    private int _availablejumpCount;
-
-    private float _minTimeBetweenJumps = 0.4f;
-
+    
     // Filter out any "landed" actions that happen immediately after the jump started
     private float _ignoreLandedFilterTime = 0.5f;
     private float _initialJumpTime = -1.0f;
-    private bool _hasJumped = false;
-
-    private InputHandler _inputHandler;
+    
+	public bool JumpEnded { get; set; }
+	private bool _landed = true;
 
     public JumpAction(Player player)
     {
+		JumpEnded = true;
         _player = player;
         _jumpEffect = _player.JumpFX;
-        _availablejumpCount = _jumpCount;
         _playerDrag = player.rigidbody.drag;
-
-        _inputHandler = GameObject.FindObjectOfType<InputHandler>();
     }
 
     public void PlayerLanded()
     {
-        if (_hasJumped && Time.time - _ignoreLandedFilterTime > _initialJumpTime)
-        {
-            _hasJumped = false;
-            _player.rigidbody.drag = _playerDrag;
-            _availablejumpCount = _jumpCount;
-        }
+		if( Time.time - _ignoreLandedFilterTime > _initialJumpTime ) 
+		{
+			_landed = true;
+			if ( !JumpEnded )
+	        {
+				ApplyEndJump();
+	        }
+		}
     }
 
-    public void PerformAction()
+    public void Jump()
     {
-        // Have we done all the jumps available
-        // before landing again?
-        //Debug.Log("Checking if we can jump: availableJumps: " + _availablejumpCount + ", minTime since last jump: " + _minTimeBetweenJumps + ", time since last jump: " + (Time.time - _initialJumpTime));
-        if (_availablejumpCount > 0 && Time.time - _minTimeBetweenJumps > _initialJumpTime)
-        {
-			
-			_jumpEffect.SendMessage("FirstJump", _availablejumpCount == _jumpCount);
-
-            // Cost another jump if the user wasn't grounded
-            // when doing this jump
-            if (!_hasJumped && !_player.IsGrounded)
-            {
-                //Debug.Log("Cost an extra jump cause we weren't grounded");
-                _availablejumpCount--;
-            }
-
-
-            _hasJumped = true;
-            _initialJumpTime = Time.time;
-            _availablejumpCount--;
-
-            ApplyJump();
-
-            // If this isn't our first jump, allow
-            // the user to steer a bit in the air
-            if( _availablejumpCount < _jumpCount )
-            {
-                SteerDuringJump();
-            }
-
-            Score.Instance.RegisterEvent(Score.Event.Jump);
-        }
+		if( JumpEnded && _landed )
+		{
+			_landed = false;
+			JumpEnded = false;
+			_jumpEffect.SendMessage("FirstJump", true);
+			_initialJumpTime = Time.time;
+			ApplyJump();
+		}
     }
+
+	public void EndJump()
+	{
+		if (JumpEnded)
+			return;
+		
+		_player.rigidbody.AddForce(Physics.gravity.normalized * JUMP_STRENGTH, ForceMode.Impulse);
+		ApplyEndJump();
+	}
+
+	private void ApplyEndJump()
+	{
+		if (!JumpEnded)
+		{
+			_player.rigidbody.drag = _playerDrag;
+			JumpEnded = true;
+		}
+	}
 
     private void ApplyJump()
     {
         if (!_player)
             return;
 
-        _player.rigidbody.drag = 0.0f;
-        
         if( _player.rigidbody.velocity.y < 0.0f )
         {
             Vector3 vel = _player.rigidbody.velocity;
@@ -95,24 +82,7 @@ public class JumpAction : IPlayerAction
         }
 
         _player.rigidbody.AddForce(Physics.gravity.normalized * -1.0f * JUMP_STRENGTH, ForceMode.Impulse);
-
         _jumpEffect.PerformFX();
     }
 
-    private void SteerDuringJump()
-    {
-        if (!_player)
-            return;
-
-        float steerAmount = _inputHandler.SteeringAmount();
-        Quaternion steerRot = Quaternion.AngleAxis(steerAmount * 2.0f * Mathf.PI * Time.fixedDeltaTime, Vector3.up);
-
-        Vector3 heading = _player.rigidbody.velocity;
-        heading.y = 0.0f;
-        heading.Normalize();
-        Vector3 newHeading = steerRot * heading;
-
-        Vector3 right = Vector3.Cross(Vector3.up, newHeading) * steerAmount;
-        _player.rigidbody.AddForce(right * JUMP_STEER_STRENGTH, ForceMode.Impulse);
-    }
 }

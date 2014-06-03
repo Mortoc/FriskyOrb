@@ -20,16 +20,10 @@ public class CameraController : MonoBehaviour
     private float _lookAheadDistance = 5.0f;
 
     private SmoothedVector _lookAtTarget = new SmoothedVector(0.33f);
-    private SmoothedVector _currentPosition = new SmoothedVector(0.25f);
+    private SmoothedVector _currentPosition = new SmoothedVector(0.125f);
     private SmoothedVector _velocity = new SmoothedVector(1.0f);
 
     private Vector3 _lastPlayerPosition;
-
-    void Start()
-    {
-        // drop resolution for Glow11 if old android
-        
-    }
 
     void FixedUpdate()
     {
@@ -56,7 +50,28 @@ public class CameraController : MonoBehaviour
             _lastPlayerPosition = playerRB.position;
             
             transform.position = _currentPosition.GetSmoothedVector();
-            transform.LookAt(_lookAtTarget.GetSmoothedVector());
+
+			var smoothedLookAtVector = _lookAtTarget.GetSmoothedVector();
+			Vector3 lookAtPath;
+
+			if( _player.CurrentSegment )
+			{
+				float t = _player.NearestPathT + 0.25f;
+				Spline.Segment path = _player.CurrentSegment.Path;
+
+				if( t > 1.0f ) 
+				{
+					t -= 1.0f;
+					path = _player.CurrentSegment.Next.Path;
+				}
+				lookAtPath = path.GetPoint(t);
+			}
+			else
+			{
+				lookAtPath = smoothedLookAtVector;
+			}
+
+			transform.LookAt(Vector3.Lerp(smoothedLookAtVector, lookAtPath, 0.33f));
         }
         else if (_velocity.HasSamples && !rigidbody)
         {

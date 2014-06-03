@@ -132,6 +132,9 @@ public class Player : MonoBehaviour
         _blackHoleSphere.position = transform.position + _blackHoleSphereOffset * playerToCameraDir;
     }
 
+	public Vector3 NearestPathPoint { get; set; }
+	public float NearestPathT { get; set; }
+
     void FixedUpdate()
     {
         //Debug.Log("Time: " + Time.time.ToString("f2"));
@@ -139,12 +142,12 @@ public class Player : MonoBehaviour
 
         if (CurrentSegment)
         {
-            float approxT = CurrentSegment.Path.GetApproxT(rigidbody.position);
-            Vector3 pointOnSegment;
-            if (approxT > 0.999f)
+			NearestPathT = CurrentSegment.Path.GetApproxT(rigidbody.position);
+            
+			if (NearestPathT > 0.999f)
             {
-                float tOnNext = CurrentSegment.Next.Path.GetApproxT(rigidbody.position);
-                pointOnSegment = CurrentSegment.Next.Path.GetPoint(tOnNext);
+				NearestPathT = CurrentSegment.Next.Path.GetApproxT(rigidbody.position);
+				NearestPathPoint = CurrentSegment.Next.Path.GetPoint(NearestPathT);
 
                 LevelSegment oldSegment = CurrentSegment;
                 CurrentSegment = CurrentSegment.Next;
@@ -152,10 +155,10 @@ public class Player : MonoBehaviour
             }
             else
             {
-                pointOnSegment = CurrentSegment.Path.GetPoint(approxT);
+				NearestPathPoint = CurrentSegment.Path.GetPoint(NearestPathT);
             }
 
-            if (pointOnSegment.y > rigidbody.position.y + _fallToDeathThreshold)
+			if (NearestPathPoint.y > rigidbody.position.y + _fallToDeathThreshold)
             {
                 PlayerDied();
             }
@@ -211,9 +214,6 @@ public class Player : MonoBehaviour
             // Adjust the heading so it's always perpendicular to gravity
             Vector3 right = Vector3.Cross(Heading, gravDir).normalized;
             Heading = Vector3.Cross(gravDir, right).normalized * Heading.magnitude;
-
-            // Stick down a bit
-            rigidbody.AddForce(Physics.gravity * Time.fixedDeltaTime * 0.5f, ForceMode.Impulse);
         }
     }
 
@@ -236,17 +236,21 @@ public class Player : MonoBehaviour
             Destroy(powerupBar.gameObject);
 
 
-        if (!PlayerPrefs.HasKey("best_score") || PlayerPrefs.GetInt("best_score") < Score.Instance.ActualScore)
-        {
-            PlayerPrefs.SetInt("best_score", Score.Instance.ActualScore);
-            PlayerPrefs.SetInt("best_score_level_seed", Level.Seed);
+		try
+		{
+	        if (!PlayerPrefs.HasKey("best_score") || PlayerPrefs.GetInt("best_score") < Score.Instance.ActualScore)
+	        {
+	            PlayerPrefs.SetInt("best_score", (int)Score.Instance.ActualScore);
+	            PlayerPrefs.SetInt("best_score_level_seed", Level.Seed);
 
-            Analytics.gua.sendEventHit("Player", "Death", "WasBestScore", Score.Instance.ActualScore);
-        }
-        else
-        {
-            Analytics.gua.sendEventHit("Player", "Death", "WasNotBestScore", Score.Instance.ActualScore);
-        }
+	            Analytics.gua.sendEventHit("Player", "Death", "WasBestScore", (int)Score.Instance.ActualScore);
+	        }
+	        else
+	        {
+	            Analytics.gua.sendEventHit("Player", "Death", "WasNotBestScore", (int)Score.Instance.ActualScore);
+	        }
+		}
+		catch(System.NullReferenceException) { }
 
     }
 

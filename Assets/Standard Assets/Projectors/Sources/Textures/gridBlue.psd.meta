@@ -20,11 +20,11 @@ TextureImporter:
   grayScaleToAlpha: 0
   generateCubemap: 0
   seamlessCubemap: 0
-  textureFormat: -1
+  textureFormat: -3
   maxTextureSize: 1024
   textureSettings:
     filterMode: 2
-    aniso: 9
+    aniso: 5
     mipBias: 0
     wrapMode: 0
   nPOTScale: 1

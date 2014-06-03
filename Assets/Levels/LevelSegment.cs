@@ -6,9 +6,9 @@ using System.Collections.Generic;
 public class LevelSegment : MonoBehaviour
 {
     private const float PATH_WIDTH = 2.5f;
-    private const float PATH_THICKNESS = 0.75f;
-    private const int SEGMENT_DETAIL = 72;
-    private const int COLLISION_DETAIL_DENOMINATOR = 4;
+    private const float PATH_THICKNESS = 0.5f;
+    private const int SEGMENT_DETAIL = 30;
+    private const int COLLISION_DETAIL_DENOMINATOR = 2;
 
     //private int _id = 0;
 

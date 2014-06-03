@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: BlackHole
-  m_Shader: {fileID: 4800000, guid: 733ca5c4d156844769e6d7e932242ddc, type: 3}
+  m_Shader: {fileID: 10708, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords:
   - GLOW11_GLOW_GLOWCOLOR
   - GLOW11_MULTIPLY_GLOWCOLOR
@@ -32,12 +32,12 @@ Material:
     m_Floats:
       data:
         first:
-          name: _GlowStrength
-        second: 0
-      data:
-        first:
           name: _Shininess
         second: .699999988
+      data:
+        first:
+          name: _GlowStrength
+        second: 0
     m_Colors:
       data:
         first:
@@ -45,12 +45,12 @@ Material:
         second: {r: 0, g: 0, b: 0, a: 1}
       data:
         first:
-          name: _GlowColor
-        second: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
-      data:
-        first:
           name: _SpecColor
         second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _GlowColor
+        second: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
       data:
         first:
           name: _Emission
