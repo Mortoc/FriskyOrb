@@ -13,7 +13,6 @@ public abstract class InputHandler : MonoBehaviour
         switch (Application.platform)
         {
             case RuntimePlatform.Android:
-            case RuntimePlatform.BB10Player:
             case RuntimePlatform.IPhonePlayer:
             case RuntimePlatform.MetroPlayerARM:
             case RuntimePlatform.WP8Player:
