@@ -50,7 +50,7 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .658858955, g: .501249552, b: 0, a: 1}
+        second: {r: .658869505, g: .501257598, b: 0, a: 1}
       data:
         first:
           name: _GlowColor
