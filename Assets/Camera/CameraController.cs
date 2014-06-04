@@ -20,7 +20,7 @@ public class CameraController : MonoBehaviour
     private float _lookAheadDistance = 5.0f;
 
     private SmoothedVector _lookAtTarget = new SmoothedVector(0.33f);
-    private SmoothedVector _currentPosition = new SmoothedVector(0.125f);
+    private SmoothedVector _currentPosition = new SmoothedVector(0.1f);
     private SmoothedVector _velocity = new SmoothedVector(1.0f);
 
     private Vector3 _lastPlayerPosition;
@@ -56,7 +56,7 @@ public class CameraController : MonoBehaviour
 
 			if( _player.CurrentSegment )
 			{
-				float t = _player.NearestPathT + 0.25f;
+				float t = _player.NearestPathT + 0.75f;
 				Spline.Segment path = _player.CurrentSegment.Path;
 
 				if( t > 1.0f ) 
@@ -71,7 +71,7 @@ public class CameraController : MonoBehaviour
 				lookAtPath = smoothedLookAtVector;
 			}
 
-			transform.LookAt(Vector3.Lerp(smoothedLookAtVector, lookAtPath, 0.33f));
+			transform.LookAt(Vector3.Lerp(smoothedLookAtVector, lookAtPath, 0.1f));
         }
         else if (_velocity.HasSamples && !rigidbody)
         {

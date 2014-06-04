@@ -1703,7 +1703,7 @@ MonoBehaviour:
       m_Top: 0
       m_Bottom: 0
     m_Font: {fileID: 12800000, guid: db3296d7b637dfd48ba9f02030676edf, type: 3}
-    m_FontSize: 28
+    m_FontSize: 32
     m_FontStyle: 0
     m_Alignment: 0
     m_WordWrap: 0

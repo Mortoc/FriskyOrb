@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: PlayerGlowPanels
-  m_Shader: {fileID: 4800000, guid: 733ca5c4d156844769e6d7e932242ddc, type: 3}
+  m_Shader: {fileID: 4800000, guid: a53ab4acb5f1f7346b3bc3ccedd3c6de, type: 3}
   m_ShaderKeywords:
   - GLOW11_GLOW_GLOWCOLOR
   - GLOW11_MULTIPLY_GLOWCOLOR
@@ -67,6 +67,10 @@ Material:
         second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
       data:
         first:
+          name: _Emission
+        second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
           name: _SpecColor
         second: {r: 1, g: 1, b: 1, a: 1}
       data:
@@ -75,17 +79,13 @@ Material:
         second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
       data:
         first:
+          name: _DiffuseColor
+        second: {r: 0, g: .188235298, b: .749019623, a: 1}
+      data:
+        first:
           name: _Vertex_color
         second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
       data:
         first:
           name: _rim_color
         second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
-      data:
-        first:
-          name: _DiffuseColor
-        second: {r: 0, g: .188235298, b: .749019623, a: 1}
-      data:
-        first:
-          name: _Emission
-        second: {r: 1, g: 1, b: 1, a: 1}

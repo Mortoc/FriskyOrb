@@ -4,11 +4,7 @@ using System.Collections.Generic;
 
 public class PlayerMovementController : IPlayerController
 {
-    private const float ACCELERATION = 1000.0f;
-    private const float STEER_SPEED = 150.0f;
-    private const float COUNTER_STEER = -0.025f;
-    private const float MAX_SPEED = 25.0f;
-	private const float DOWN_FORCE = 100.0f;
+    private const float SPEED = 20.0f;
 
     private readonly Player _player;
     private readonly JumpAction _jumpAction;
@@ -35,46 +31,21 @@ public class PlayerMovementController : IPlayerController
         _player.OnFixedUpdate -= FixedUpdate;
     }
 
-    private Vector3 _currentUpVector;
     private void FixedUpdate()
     {
-		_player.rigidbody.AddForce (Physics.gravity.normalized * DOWN_FORCE * Time.fixedDeltaTime);
-		
-		if( _player.rigidbody.velocity.sqrMagnitude < MAX_SPEED * MAX_SPEED )
-			RollForward();
+		float t = _player.NearestPathT + 0.25f;
+		Spline.Segment path = _player.CurrentSegment.Path;
 
-        if (_player.IsGrounded)
-        {
-            _currentUpVector = Physics.gravity.normalized * -1.0f;
-            _jumpAction.PlayerLanded();
+		if( t > 1.0f ) 
+		{
+			t -= 1.0f;
+			path = _player.CurrentSegment.Next.Path;
+		}
+		    
+        Vector3 dir = (path.GetPoint(t) - _player.NearestPathPoint).normalized;
 
-            Steer();
-        }
-    }
+        _player.rigidbody.AddForce(dir * SPEED * Time.fixedDeltaTime, ForceMode.VelocityChange);
+        
 
-    private void RollForward()
-    {
-        Vector3 rollAxis = Vector3.Cross(_currentUpVector, _player.Heading);
-        _player.rigidbody.AddTorque(rollAxis * Time.fixedDeltaTime, ForceMode.Impulse);
-
-        float steerAmount = Mathf.Abs(_inputHandler.SteeringAmount());
-
-        Vector3 accel = _player.Heading * ACCELERATION * Time.fixedDeltaTime;
-        _player.rigidbody.AddForce(accel, ForceMode.Acceleration);
-
-        float counterAccel = Mathf.Lerp(0.0f, COUNTER_STEER, steerAmount); // reduce accleration while turning hard
-        _player.rigidbody.AddForce(accel * counterAccel, ForceMode.Impulse);
-    }
-
-    private void Steer()
-    {
-        float steerAmount = _inputHandler.SteeringAmount();
-        Quaternion steerRot = Quaternion.AngleAxis(
-            steerAmount * STEER_SPEED * Time.fixedDeltaTime,
-            _currentUpVector
-        );
-        _player.Heading = steerRot * _player.Heading;
-        Vector3 right = Vector3.Cross(_currentUpVector, _player.Heading) * steerAmount;
-        _player.rigidbody.AddForce(right * Time.fixedDeltaTime * 100.0f, ForceMode.Impulse);
     }
 }

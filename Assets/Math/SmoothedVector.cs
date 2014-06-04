@@ -38,6 +38,9 @@ public class SmoothedVector
 
 	public Vector3 GetSmoothedVector()
 	{
+        if (_interval == 0.0f)
+            return _samples[0].Position;
+
 		float recpCount = 1.0f / (float)_samples.Count;
 		Vector3 avg = Vector3.zero;
 		

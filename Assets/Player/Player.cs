@@ -198,7 +198,7 @@ public class Player : MonoBehaviour
     }
 
     // Look ahead a bit to see where gravity should be
-    private const float GRAV_SAMPLE_DIST = 1.25f;
+    private const float GRAV_SAMPLE_DIST = 1.75f;
     private void AdjustGravity()
     {
         Vector3 gravDir = Physics.gravity.normalized;
@@ -224,6 +224,13 @@ public class Player : MonoBehaviour
         if (IsImmortal)
             return;
 
+        var powerupBar = FindObjectOfType<PowerupBar>();
+        if (powerupBar && powerupBar.PowerupReady)
+        {
+            powerupBar.ExecutePowerup(this);
+            return;
+        }
+
         if (OnDeath != null)
             OnDeath();
 
@@ -231,7 +238,6 @@ public class Player : MonoBehaviour
         DeathFX.PerformFX();
         Destroy(gameObject);
 
-        var powerupBar = FindObjectOfType<PowerupBar>();
         if( powerupBar )
             Destroy(powerupBar.gameObject);
 

@@ -18,7 +18,6 @@ public class PowerupBar : MonoBehaviour
     void Start()
     {
 		_fullRecip = 1.0f / _powerupsUntilFull;
-        _powerupButtonFadeTimeRecip = 1.0f / _powerupButtonFadeTime;
 		PowerupReady = false;
     }
 
@@ -30,7 +29,6 @@ public class PowerupBar : MonoBehaviour
         if (_currentPowerups >= _powerupsUntilFull)
         {
             PowerupReady = true;
-            _powerupButtonFadeStart = Time.time;
         }
         else
         {
@@ -50,28 +48,9 @@ public class PowerupBar : MonoBehaviour
 
     [SerializeField]
     private Texture _powerupBarFullBackground;
-    [SerializeField]
-    private float _powerupBarFullPulseRate = 3.0f;
 
     [SerializeField]
     private Texture _powerupBarForeground;
-
-    [SerializeField]
-    private GUIStyle _powerupButton;
-    [SerializeField]
-    private Texture _powerupButtonGlow;
-    [SerializeField]
-    private float _powerupButtonHeight = 0.33f;
-    private Rect _powerupButtonArea;
-
-    private float _powerupButtonFadeStart = 0.0f;
-
-    [SerializeField]
-    private float _powerupButtonFadeTime = 0.33f;
-    private float _powerupButtonFadeTimeRecip = 0.0f;
-
-    private Color _tempGuiColor = Color.black;
-
 
     
     void OnGUI()
@@ -132,7 +111,7 @@ public class PowerupBar : MonoBehaviour
 
     public bool PowerupReady { get; private set; }
 
-    private void ExecutePowerup(Player player)
+    public void ExecutePowerup(Player player)
     {
         if (!audio)
             gameObject.AddComponent<AudioSource>();

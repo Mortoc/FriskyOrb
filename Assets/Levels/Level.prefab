@@ -1,0 +1,563 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &100000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400000}
+  - 114: {fileID: 11400002}
+  - 114: {fileID: 11400004}
+  - 114: {fileID: 11400006}
+  - 114: {fileID: 11400008}
+  - 114: {fileID: 11400010}
+  - 114: {fileID: 11400000}
+  m_Layer: 8
+  m_Name: Level
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &400000
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 208a2ecbba00d904fabd6d09b6d2fc88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _skin: {fileID: 11400000, guid: 2d831c5a0b6294b439ddbd36bade89ae, type: 2}
+  _sweepInTime: .5
+  _sweepOutTime: .200000003
+  _displayTime: 2
+--- !u!114 &11400002
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ddf47dad4326034cbf911830111efc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _powerupPrefab: {fileID: 11400000, guid: 718c381df9473d34eb4dc2f9f2cdad0f, type: 2}
+  _doodads:
+  - Name: Explodey Barrell
+    Prefab: {fileID: 100004, guid: d6ccf97073699374893ef96af0822074, type: 2}
+    Difficulty: 1.10000002
+  _tweakables:
+  - Name: Hello World
+    StartSegment: 0
+    ApproxSegmentLength: 10
+    SegmentLengthJitter: 0
+    Curviness: 0
+    MinHeightDifference: 0
+    MaxHeightDifference: 0
+    AscendOnly: 0
+    ChanceOfDoodad: 0
+    MaxDoodadDifficulty: 1
+    MaxDifficulty: 1
+    ChanceOfPowerupString: 0
+    PowerupStringAvgLength: 0
+    PowerupStringLengthJitter: 0
+  - Name: Learn To Steer
+    StartSegment: 2
+    ApproxSegmentLength: 40
+    SegmentLengthJitter: 5
+    Curviness: 3
+    MinHeightDifference: 0
+    MaxHeightDifference: 0
+    AscendOnly: 0
+    ChanceOfDoodad: 0
+    MaxDoodadDifficulty: 1
+    MaxDifficulty: 1
+    ChanceOfPowerupString: 1
+    PowerupStringAvgLength: 5
+    PowerupStringLengthJitter: 3
+  - Name: Who Left These Here?
+    StartSegment: 10
+    ApproxSegmentLength: 35
+    SegmentLengthJitter: 2
+    Curviness: 3
+    MinHeightDifference: 0
+    MaxHeightDifference: 0
+    AscendOnly: 0
+    ChanceOfDoodad: .899999976
+    MaxDoodadDifficulty: 10
+    MaxDifficulty: 0
+    ChanceOfPowerupString: 1
+    PowerupStringAvgLength: 4
+    PowerupStringLengthJitter: 2
+  - Name: Tricksy Tracks
+    StartSegment: 15
+    ApproxSegmentLength: 35
+    SegmentLengthJitter: 0
+    Curviness: .5
+    MinHeightDifference: 0
+    MaxHeightDifference: 0
+    AscendOnly: 0
+    ChanceOfDoodad: 0
+    MaxDoodadDifficulty: 0
+    MaxDifficulty: 100
+    ChanceOfPowerupString: .5
+    PowerupStringAvgLength: 4
+    PowerupStringLengthJitter: 2
+  - Name: Before The Mountain
+    StartSegment: 19
+    ApproxSegmentLength: 20
+    SegmentLengthJitter: 0
+    Curviness: 0
+    MinHeightDifference: 0
+    MaxHeightDifference: 0
+    AscendOnly: 0
+    ChanceOfDoodad: 0
+    MaxDoodadDifficulty: 0
+    MaxDifficulty: 0
+    ChanceOfPowerupString: 1
+    PowerupStringAvgLength: 6
+    PowerupStringLengthJitter: 2
+  - Name: Behold, A Mountain
+    StartSegment: 20
+    ApproxSegmentLength: 50
+    SegmentLengthJitter: 0
+    Curviness: 1
+    MinHeightDifference: 20
+    MaxHeightDifference: 20
+    AscendOnly: 1
+    ChanceOfDoodad: 0
+    MaxDoodadDifficulty: 0
+    MaxDifficulty: 0
+    ChanceOfPowerupString: 1
+    PowerupStringAvgLength: 20
+    PowerupStringLengthJitter: 0
+  - Name: You Probably Won't Pass
+    StartSegment: 21
+    ApproxSegmentLength: 45
+    SegmentLengthJitter: 3
+    Curviness: 5
+    MinHeightDifference: 2
+    MaxHeightDifference: 8
+    AscendOnly: 0
+    ChanceOfDoodad: 0
+    MaxDoodadDifficulty: 0
+    MaxDifficulty: 5
+    ChanceOfPowerupString: .5
+    PowerupStringAvgLength: 8
+    PowerupStringLengthJitter: 2
+  - Name: Really?
+    StartSegment: 40
+    ApproxSegmentLength: 45
+    SegmentLengthJitter: 5
+    Curviness: 5
+    MinHeightDifference: 1
+    MaxHeightDifference: 5
+    AscendOnly: 0
+    ChanceOfDoodad: 1
+    MaxDoodadDifficulty: 3
+    MaxDifficulty: 20
+    ChanceOfPowerupString: .5
+    PowerupStringAvgLength: 8
+    PowerupStringLengthJitter: 2
+  - Name: Gettin Harder
+    StartSegment: 50
+    ApproxSegmentLength: 40
+    SegmentLengthJitter: 5
+    Curviness: 10
+    MinHeightDifference: 0
+    MaxHeightDifference: 15
+    AscendOnly: 0
+    ChanceOfDoodad: .5
+    MaxDoodadDifficulty: 100
+    MaxDifficulty: 10000
+    ChanceOfPowerupString: .25
+    PowerupStringAvgLength: 4
+    PowerupStringLengthJitter: 1
+  - Name: End Game
+    StartSegment: 60
+    ApproxSegmentLength: 45
+    SegmentLengthJitter: 6
+    Curviness: 12
+    MinHeightDifference: 2
+    MaxHeightDifference: 20
+    AscendOnly: 0
+    ChanceOfDoodad: 1.5
+    MaxDoodadDifficulty: 100
+    MaxDifficulty: 10000
+    ChanceOfPowerupString: 1
+    PowerupStringAvgLength: 4
+    PowerupStringLengthJitter: 1
+  _segmentProfiles:
+  - Name: Flat
+    AllowsDoodads: 1
+    Difficulty: 1
+    Left:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    Right:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+  - Name: Sorta Skinny
+    AllowsDoodads: 1
+    Difficulty: 2
+    Left:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: .14151746
+        value: .495503277
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: .844720066
+        value: .496261269
+        inSlope: .0404630713
+        outSlope: .0404630713
+        tangentMode: 0
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    Right:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: .14151746
+        value: .495503277
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: .844720066
+        value: .496261269
+        inSlope: .0404630713
+        outSlope: .0404630713
+        tangentMode: 0
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+  - Name: Weeeird
+    AllowsDoodads: 1
+    Difficulty: 12
+    Left:
+      serializedVersion: 2
+      m_Curve:
+      - time: -.00341005973
+        value: 1.00185788
+        inSlope: .1475932
+        outSlope: .1475932
+        tangentMode: 0
+      - time: .700357258
+        value: .0583129525
+        inSlope: -1.12408221
+        outSlope: 7.30071497
+        tangentMode: 1
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    Right:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: .256638229
+        value: .112413645
+        inSlope: 0
+        outSlope: 6.41476297
+        tangentMode: 1
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+  - Name: Weeeird Mirrored
+    AllowsDoodads: 1
+    Difficulty: 12
+    Left:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - time: .256638229
+        value: .112413645
+        inSlope: 0
+        outSlope: 6.41476297
+        tangentMode: 1
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    Right:
+      serializedVersion: 2
+      m_Curve:
+      - time: -.00341005973
+        value: 1.00185788
+        inSlope: .1475932
+        outSlope: .1475932
+        tangentMode: 0
+      - time: .700357258
+        value: .0583129525
+        inSlope: -1.12408221
+        outSlope: 7.30071497
+        tangentMode: 1
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+  - Name: Skinny
+    AllowsDoodads: 0
+    Difficulty: 25
+    Left:
+      serializedVersion: 2
+      m_Curve:
+      - time: -.00341005973
+        value: 1.00185788
+        inSlope: .1475932
+        outSlope: .1475932
+        tangentMode: 0
+      - time: .206227228
+        value: .24636957
+        inSlope: Infinity
+        outSlope: .0938397422
+        tangentMode: 1
+      - time: .78162241
+        value: .999128997
+        inSlope: Infinity
+        outSlope: .0281457007
+        tangentMode: 1
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    Right:
+      serializedVersion: 2
+      m_Curve:
+      - time: -.00341005973
+        value: 1.00185788
+        inSlope: .1475932
+        outSlope: .1475932
+        tangentMode: 0
+      - time: .206227228
+        value: .24636957
+        inSlope: Infinity
+        outSlope: .0938397422
+        tangentMode: 1
+      - time: .78162241
+        value: .999128997
+        inSlope: Infinity
+        outSlope: .0281457007
+        tangentMode: 1
+      - time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+  - Name: Schwooop
+    AllowsDoodads: 1
+    Difficulty: 150
+    Left:
+      serializedVersion: 2
+      m_Curve:
+      - time: -.00341005973
+        value: 1.00281906
+        inSlope: .1475932
+        outSlope: .1475932
+        tangentMode: 0
+      - time: .299879164
+        value: .702225804
+        inSlope: -.0299866647
+        outSlope: -.0299866647
+        tangentMode: 0
+      - time: .699859023
+        value: 1.19955635
+        inSlope: .0634345189
+        outSlope: .0634345189
+        tangentMode: 0
+      - time: 1
+        value: 1.00096118
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    Right:
+      serializedVersion: 2
+      m_Curve:
+      - time: -.00341005973
+        value: 1.00281906
+        inSlope: .1475932
+        outSlope: .1475932
+        tangentMode: 0
+      - time: .299723208
+        value: 1.19824672
+        inSlope: -.0299866647
+        outSlope: -.0299866647
+        tangentMode: 0
+      - time: .698747158
+        value: .703270435
+        inSlope: -.0198833905
+        outSlope: -.0198833905
+        tangentMode: 0
+      - time: 1
+        value: 1.00096118
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+  _viewDistance: 6
+  _levelTrackMaterial: {fileID: 2100000, guid: d96e93e390971a44f970aadc824ba8da, type: 2}
+  _playerPrefab: {fileID: 11400000, guid: 6a07642956a95ff49bf45ba2da1205a3, type: 2}
+  _endGuiPrefab: {fileID: 100000, guid: 4f848cef20a25e4409ea852814e357f8, type: 2}
+--- !u!114 &11400004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1dc65473e801e74a8c3105d304d8e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _skin: {fileID: 11400000, guid: 2d831c5a0b6294b439ddbd36bade89ae, type: 2}
+  _sweepInText: {fileID: 11400000}
+--- !u!114 &11400006
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28c9882125574df4ebab40cd876ebf42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Background: {r: 0, g: 0, b: 0, a: 1}
+  DarkBlue: {r: .0235294122, g: 0, b: .160784319, a: 1}
+  Pink: {r: 1, g: 0, b: .988235295, a: 1}
+  Orange: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+  Yellow: {r: .929411769, g: .866666675, b: 0, a: 1}
+  Green: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
+  Blue: {r: 0, g: .188235298, b: .749019623, a: 1}
+  Red: {r: 1, g: 0, b: .258823544, a: 1}
+--- !u!114 &11400008
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37f8c18a8f078054f8d3cf0d4aa389b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pointsAnimateSpeed: 20
+  SegmentCompleteValue: 1
+  StarCollectValue: 0
+  ExplodeBarrellValue: 0
+  ActivatePowerupValue: 0
+  JumpValue: 0
+--- !u!114 &11400010
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2ac23ef217896747843c7dc2f10baa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _levelNamesCSV: {fileID: 4900000, guid: f45d58c7ce8f02b4995af92b443a4ac4, type: 3}
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 100000}
+  m_IsPrefabParent: 1
+  m_IsExploded: 1

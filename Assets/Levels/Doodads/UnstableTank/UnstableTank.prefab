@@ -2564,7 +2564,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c2947534b8361841af653af65c96216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _explosionForce: 100
+  _explosionForce: 65
   _fragmentLife: 15
   _particleSystem: {fileID: 19800000}
   _explosionSounds:

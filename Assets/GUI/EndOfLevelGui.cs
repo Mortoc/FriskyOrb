@@ -32,14 +32,11 @@ public class EndOfLevelGui : MonoBehaviour
         float newLevelButtonWidth = newLevelButtonHeight * 512.0f / 304.0f;
         if (GUILayout.Button("", GUI.skin.FindStyle("NewLevelButton"), GUILayout.Width(newLevelButtonWidth), GUILayout.Height(newLevelButtonHeight)))
 		{
-			try 
-			{
+            if (Analytics.gua != null)
 				Analytics.gua.sendEventHit("ReplayingLevel", "NewLevel", "Score", (int)Score.Instance.ActualScore);
-			}
-			finally
-			{
-				Level.StartRandom();
-			}
+			
+			Level.StartRandom();
+		
         }
         GUILayout.FlexibleSpace();
 
@@ -49,14 +46,10 @@ public class EndOfLevelGui : MonoBehaviour
         float replayButtonWidth = replayButtonHeight * 512.0f / 266.0f;
         if (GUILayout.Button("", GUI.skin.FindStyle("ReplayButton"), GUILayout.Width(replayButtonWidth), GUILayout.Height(replayButtonHeight)))
         {
-			try 
-			{
+            if( Analytics.gua != null )
             	Analytics.gua.sendEventHit("ReplayingLevel", "SameLevel", "Score", (int)Score.Instance.ActualScore);
-			}
-			finally
-			{
-            	Level.Replay();
-			}
+			
+        	Level.Replay();
         }
         GUILayout.EndVertical();
 

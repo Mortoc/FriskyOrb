@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: 'Material #2'
-  m_Shader: {fileID: 4800000, guid: 733ca5c4d156844769e6d7e932242ddc, type: 3}
+  m_Shader: {fileID: 4800000, guid: a53ab4acb5f1f7346b3bc3ccedd3c6de, type: 3}
   m_ShaderKeywords:
   - GLOW11_MULTIPLY_GLOWCOLOR
   m_CustomRenderQueue: -1
@@ -31,12 +31,16 @@ Material:
     m_Floats:
       data:
         first:
+          name: _Shininess
+        second: .078125
+      data:
+        first:
           name: _GlowStrength
         second: .5
       data:
         first:
-          name: _Shininess
-        second: .078125
+          name: _rim_power
+        second: .5
     m_Colors:
       data:
         first:
@@ -50,3 +54,11 @@ Material:
         first:
           name: _DiffuseColor
         second: {r: 1, g: 0, b: 0, a: 1}
+      data:
+        first:
+          name: _Vertex_color
+        second: {r: .064414762, g: .426470578, b: 0, a: .627451003}
+      data:
+        first:
+          name: _rim_color
+        second: {r: .151041508, g: 1, b: 0, a: 1}
