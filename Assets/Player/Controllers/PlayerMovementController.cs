@@ -4,7 +4,11 @@ using System.Collections.Generic;
 
 public class PlayerMovementController : IPlayerController
 {
-    private const float SPEED = 20.0f;
+    private const float FORWARD_POWER = 15000.0f;
+    private const float TOP_SPEED = 50.0f;
+    private const float PLAYER_RADIUS = 0.25f;
+    private const float STEERING_SPEED = 150.0f;
+    private const float TRACTION = 3.33f;
 
     private readonly Player _player;
     private readonly JumpAction _jumpAction;
@@ -31,21 +35,27 @@ public class PlayerMovementController : IPlayerController
         _player.OnFixedUpdate -= FixedUpdate;
     }
 
+    private float CurrentPower(float speed)
+    {
+        return Mathf.Lerp(FORWARD_POWER, 0.0f, speed / TOP_SPEED);
+    }
+
     private void FixedUpdate()
     {
-		float t = _player.NearestPathT + 0.25f;
-		Spline.Segment path = _player.CurrentSegment.Path;
+        Vector3 velocity = _player.rigidbody.velocity;
+        float speed = velocity.magnitude;
+        float accel = CurrentPower(speed);
+        Vector3 left = Vector3.Cross(Vector3.up, _player.Heading);
+        _player.rigidbody.AddForce(_player.Heading * accel * Time.fixedDeltaTime);
 
-		if( t > 1.0f ) 
-		{
-			t -= 1.0f;
-			path = _player.CurrentSegment.Next.Path;
-		}
-		    
-        Vector3 dir = (path.GetPoint(t) - _player.NearestPathPoint).normalized;
+        float steeringAmount = _inputHandler.SteeringAmount();
+        float leftDotVel = Vector3.Dot(left, velocity);
 
-        _player.rigidbody.AddForce(dir * SPEED * Time.fixedDeltaTime, ForceMode.VelocityChange);
-        
+        if (leftDotVel * steeringAmount < 0.0f)
+        {
+            steeringAmount *= TRACTION;
+        }
 
+        _player.rigidbody.AddForce(left * STEERING_SPEED * steeringAmount * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 }

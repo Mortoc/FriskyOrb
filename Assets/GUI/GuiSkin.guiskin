@@ -1362,7 +1362,7 @@ MonoBehaviour:
     m_RichText: 1
     m_TextClipping: 0
     m_ImagePosition: 0
-    m_ContentOffset: {x: 0, y: 0}
+    m_ContentOffset: {x: 0, y: -4}
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 0
@@ -1413,14 +1413,14 @@ MonoBehaviour:
       m_Top: 0
       m_Bottom: 0
     m_Font: {fileID: 12800000, guid: 3d6d678cd563eaa4492af6057801a06a, type: 3}
-    m_FontSize: 17
+    m_FontSize: 18
     m_FontStyle: 0
     m_Alignment: 0
     m_WordWrap: 0
     m_RichText: 1
     m_TextClipping: 0
     m_ImagePosition: 0
-    m_ContentOffset: {x: 0, y: 0}
+    m_ContentOffset: {x: -1, y: 0}
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 0

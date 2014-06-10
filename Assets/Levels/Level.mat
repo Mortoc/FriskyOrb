@@ -26,7 +26,7 @@ Material:
         first:
           name: _BumpMap
         second:
-          m_Texture: {fileID: 2800000, guid: 19245bf97cefb9c4394880b398eefe1c, type: 3}
+          m_Texture: {fileID: 2800000, guid: 9c3478159609c7645bc7bbf154658520, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -71,6 +71,13 @@ Material:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _BRDFTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 0f6377872e339455d9912675771556d1, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
     m_Floats:
       data:
         first:
@@ -79,7 +86,7 @@ Material:
       data:
         first:
           name: _Shininess
-        second: 1
+        second: .0545551963
       data:
         first:
           name: _GlowStrength

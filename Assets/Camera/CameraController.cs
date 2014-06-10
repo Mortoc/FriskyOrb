@@ -56,7 +56,7 @@ public class CameraController : MonoBehaviour
 
 			if( _player.CurrentSegment )
 			{
-				float t = _player.NearestPathT + 0.75f;
+				float t = _player.NearestPathT + 0.8f;
 				Spline.Segment path = _player.CurrentSegment.Path;
 
 				if( t > 1.0f ) 
@@ -70,7 +70,7 @@ public class CameraController : MonoBehaviour
 			{
 				lookAtPath = smoothedLookAtVector;
 			}
-
+            
 			transform.LookAt(Vector3.Lerp(smoothedLookAtVector, lookAtPath, 0.1f));
         }
         else if (_velocity.HasSamples && !rigidbody)

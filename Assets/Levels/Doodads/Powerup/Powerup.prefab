@@ -167,11 +167,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dde9cc75d222b954cb3be6c8ac198e89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _collectAnimateTime: 1
+  _collectAnimateTime: .5
   _collectAnimationRandomOffsetAmount: .5
   _spinRate: 500
   _spinObj: {fileID: 400002}
-  _bounceEffect: .150000006
+  _bounceEffect: 1
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

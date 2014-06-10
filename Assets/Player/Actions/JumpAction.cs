@@ -10,7 +10,6 @@ public class JumpAction
     private FX _jumpEffect;
 
     private Player _player;
-    private float _playerDrag = 1.0f;
     
     // Filter out any "landed" actions that happen immediately after the jump started
     private float _ignoreLandedFilterTime = 0.5f;
@@ -24,10 +23,10 @@ public class JumpAction
 		JumpEnded = true;
         _player = player;
         _jumpEffect = _player.JumpFX;
-        _playerDrag = player.rigidbody.drag;
+        _player.OnGrounded += PlayerLanded;
     }
 
-    public void PlayerLanded()
+    private void PlayerLanded()
     {
 		if( Time.time - _ignoreLandedFilterTime > _initialJumpTime ) 
 		{
@@ -56,7 +55,7 @@ public class JumpAction
 		if (JumpEnded)
 			return;
 		
-		_player.rigidbody.AddForce(Physics.gravity.normalized * JUMP_STRENGTH, ForceMode.Impulse);
+		_player.rigidbody.AddForce(Physics.gravity.normalized * 2.0f * JUMP_STRENGTH, ForceMode.Impulse);
 		ApplyEndJump();
 	}
 
@@ -64,7 +63,6 @@ public class JumpAction
 	{
 		if (!JumpEnded)
 		{
-			_player.rigidbody.drag = _playerDrag;
 			JumpEnded = true;
 		}
 	}

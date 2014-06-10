@@ -271,6 +271,9 @@ public class LevelSegment : MonoBehaviour
                 t = 1.0f; // make sure the last update is at the perfect end
         }
 
+        verts[0] -= Vector3.up * 0.025f;
+        verts[1] -= Vector3.up * 0.025f;
+
         Mesh result = new Mesh();
         result.vertices = verts;
         result.normals = norms;

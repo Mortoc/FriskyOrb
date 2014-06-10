@@ -154,10 +154,10 @@ public class Level : MonoBehaviour
         _player.OnDeath += () => Instantiate(_endGuiPrefab);
 
         // Setup Camera
-        _camera = Camera.main.gameObject.AddComponent<CameraController>();
+        _camera = Camera.main.gameObject.GetComponent<CameraController>();
         _camera.Player = _player;
 
-        SegmentCompletedCount = 1;
+        SegmentCompletedCount = 0;
     }
 
     public int SegmentCompletedCount { get; private set; }

@@ -131,9 +131,6 @@ public class PowerupBar : MonoBehaviour
         player.Controller = powerupController;
         powerupController.PowerupEnded += () => {
             player.Controller = originalController;
-            player.IsImmortal = false;
-            player.rigidbody.isKinematic = false;
-            
             player.AnimateColor(Palette.Instance.Orange, 2.5f);
         };
     }

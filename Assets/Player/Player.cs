@@ -47,8 +47,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    private int _groundMask;
-
     public bool IsGrounded { get; private set; }
 
     private void UpdateIsGrounded()
@@ -88,7 +86,6 @@ public class Player : MonoBehaviour
 
         Level = GameObject.FindObjectOfType<Level>();
         _startingGravityMag = Physics.gravity.magnitude;
-        _groundMask = 1 << LayerMask.NameToLayer("Level");
          
         _initialGroundParticleOffset = transform.position - _groundEffectParticles.transform.position;
         _blackHoleSphereOffset = (_blackHoleSphere.position - transform.position).magnitude;
@@ -138,12 +135,11 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         //Debug.Log("Time: " + Time.time.ToString("f2"));
-        OnFixedUpdate();
-
+        
         if (CurrentSegment)
         {
 			NearestPathT = CurrentSegment.Path.GetApproxT(rigidbody.position);
-            
+
 			if (NearestPathT > 0.999f)
             {
 				NearestPathT = CurrentSegment.Next.Path.GetApproxT(rigidbody.position);
@@ -164,9 +160,9 @@ public class Player : MonoBehaviour
             }
         }
 
-        AdjustGravity();
-
         _groundEffectParticles.transform.position = rigidbody.position - _initialGroundParticleOffset;
+
+        OnFixedUpdate();
     }
 
     public void AnimateColor(Color toColor, float time)
@@ -178,7 +174,7 @@ public class Player : MonoBehaviour
     private System.Collections.IEnumerator AnimateColorCoroutine(Color toColor, float time, Material mat)
     {
         float recipTime = 1.0f / time;
-        Color startColor = mat.color;
+        Color startColor = mat.GetColor("_Vertex_color");
 
         Color startGlowColor = Color.black;
         
@@ -189,7 +185,7 @@ public class Player : MonoBehaviour
         {
             yield return 0;
 
-            mat.color = Color.Lerp(startColor, toColor, t);
+            mat.SetColor("_Vertex_color", Color.Lerp(startColor, toColor, t));
 
             if (mat.HasProperty("_GlowColor"))
                 mat.SetColor("_GlowColor", Color.Lerp(startGlowColor, toColor, t));
@@ -197,33 +193,8 @@ public class Player : MonoBehaviour
 
     }
 
-    // Look ahead a bit to see where gravity should be
-    private const float GRAV_SAMPLE_DIST = 1.75f;
-    private void AdjustGravity()
-    {
-        Vector3 gravDir = Physics.gravity.normalized;
-        Vector3 samplePos = rigidbody.position +
-            (Heading * GRAV_SAMPLE_DIST) +
-            (-GRAV_SAMPLE_DIST * gravDir);
-
-        RaycastHit rh;
-        if (Physics.Raycast(samplePos, gravDir, out rh, 3.0f * GRAV_SAMPLE_DIST, _groundMask))
-        {
-            Physics.gravity = rh.normal * _startingGravityMag * -1.0f;
-
-            // Adjust the heading so it's always perpendicular to gravity
-            Vector3 right = Vector3.Cross(Heading, gravDir).normalized;
-            Heading = Vector3.Cross(gravDir, right).normalized * Heading.magnitude;
-        }
-    }
-
-    public bool IsImmortal { get; set; }
-
     private void PlayerDied()
     {
-        if (IsImmortal)
-            return;
-
         var powerupBar = FindObjectOfType<PowerupBar>();
         if (powerupBar && powerupBar.PowerupReady)
         {

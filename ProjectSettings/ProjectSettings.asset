@@ -30,8 +30,8 @@ PlayerSettings:
   displayResolutionDialog: 1
   allowedAutorotateToPortrait: 1
   allowedAutorotateToPortraitUpsideDown: 1
-  allowedAutorotateToLandscapeRight: 0
-  allowedAutorotateToLandscapeLeft: 0
+  allowedAutorotateToLandscapeRight: 1
+  allowedAutorotateToLandscapeLeft: 1
   useOSAutorotation: 1
   use32BitDisplayBuffer: 1
   use24BitDepthBuffer: 1
@@ -85,7 +85,7 @@ PlayerSettings:
   iPhoneTargetOSVersion: 14
   uIPrerenderedIcon: 0
   uIRequiresPersistentWiFi: 0
-  uIStatusBarHidden: 0
+  uIStatusBarHidden: 1
   uIExitOnSuspend: 1
   uIStatusBarStyle: 1
   iPhoneSplashScreen: {fileID: 0}

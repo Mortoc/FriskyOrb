@@ -11,7 +11,7 @@
         Color [_Color]
         ColorMask RGB
         Blend SrcColor One
-		Offset -1, -1
+		Offset -1, -10
         SetTexture [_ShadowTex] {
 		   combine texture * primary, ONE - texture
            Matrix [_Projector]
