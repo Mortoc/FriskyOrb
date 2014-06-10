@@ -15,6 +15,7 @@ public class GroundGlow : MonoBehaviour
 
     void Start()
     {
+        _projector.material = Instantiate(_projector.material) as Material;
         Setup();
     }
 
