@@ -16,16 +16,14 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    private Vector3 _followDistance = new Vector3(0.0f, 2.5f, -1.5f);
+    private Vector3 _followDistance = new Vector3(0.0f, 3.5f, -4.5f);
     private float _lookAheadDistance = 5.0f;
 
-    private SmoothedVector _lookAtTarget = new SmoothedVector(0.33f);
-    private SmoothedVector _currentPosition = new SmoothedVector(0.1f);
     private SmoothedVector _velocity = new SmoothedVector(1.0f);
 
     private Vector3 _lastPlayerPosition;
 
-    void FixedUpdate()
+    void OnPreRender()
     {
         if (Player)
         {
@@ -33,25 +31,16 @@ public class CameraController : MonoBehaviour
 
             Vector3 lookAtPos = playerRB.position + (Player.Heading * _lookAheadDistance);
 
-            // If the player is falling off the bottom of the screen, look down a bit more
-            Vector3 playerPosInView = camera.WorldToViewportPoint(playerRB.position);
-            if (playerPosInView.y < 0.2f)
-                _lookAtTarget.AddSample(lookAtPos + (Vector3.down * 0.5f));
-            else
-                _lookAtTarget.AddSample(lookAtPos);
-
             Quaternion viewRotation = Quaternion.FromToRotation(
                 Vector3.forward,
                 (lookAtPos - playerRB.position).normalized
             );
-            _currentPosition.AddSample(playerRB.position + (viewRotation * _followDistance));
+            transform.position = playerRB.position + (viewRotation * _followDistance);
 
             _velocity.AddSample(_lastPlayerPosition - playerRB.position);
             _lastPlayerPosition = playerRB.position;
             
-            transform.position = _currentPosition.GetSmoothedVector();
-
-			var smoothedLookAtVector = _lookAtTarget.GetSmoothedVector();
+            
 			Vector3 lookAtPath;
 
 			if( _player.CurrentSegment )
@@ -67,11 +56,11 @@ public class CameraController : MonoBehaviour
 				lookAtPath = path.GetPoint(t);
 			}
 			else
-			{
-				lookAtPath = smoothedLookAtVector;
+            {
+                lookAtPath = lookAtPos;
 			}
-            
-			transform.LookAt(Vector3.Lerp(smoothedLookAtVector, lookAtPath, 0.1f));
+
+            transform.LookAt(Vector3.Lerp(lookAtPos, lookAtPath, 0.1f));
         }
         else if (_velocity.HasSamples && !rigidbody)
         {
