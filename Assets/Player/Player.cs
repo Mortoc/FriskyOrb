@@ -22,13 +22,11 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _fallToDeathThreshold = 30.0f;
 
-    [SerializeField]
-    private Transform _blackHoleSphere;
-    private float _blackHoleSphereOffset;
-
     public FX JumpFX;
     public FX DeathFX;
     public FX PowerupFX;
+
+	private Material[] _materials;
 
     public Level Level { get; private set; }
     public LevelSegment CurrentSegment { get; set; }
@@ -88,27 +86,10 @@ public class Player : MonoBehaviour
         _startingGravityMag = Physics.gravity.magnitude;
          
         _initialGroundParticleOffset = transform.position - _groundEffectParticles.transform.position;
-        _blackHoleSphereOffset = (_blackHoleSphere.position - transform.position).magnitude;
-
+     
         GameObject.FindObjectOfType<LevelGui>().Player = this;
-
-        CreateSpecks();
-    }
-
-    private void CreateSpecks()
-    {
-        // TODO: CombineChildren to reduce draw calls
-        for (int i = 0; i < 7; ++i)
-        {
-            GameObject speck = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            
-            speck.transform.localScale = Vector3.one * 0.015f;
-            Collider.DestroyImmediate(speck.collider);
-            speck.transform.position = _blackHoleSphere.position +
-                UnityEngine.Random.onUnitSphere * 0.28f;
-            speck.renderer.sharedMaterial = renderer.sharedMaterial;
-            speck.transform.parent = _blackHoleSphere;
-        }
+		GetComponentInChildren<PlayerExplodeFX> ().Player = this;
+		_materials = renderer.materials;
     }
 
     private void BecameGrounded()
@@ -123,19 +104,11 @@ public class Player : MonoBehaviour
 		audio.Stop();
     }
 
-    void Update()
-    {
-        Vector3 playerToCameraDir = (Camera.main.transform.position - transform.position).normalized;
-        _blackHoleSphere.position = transform.position + _blackHoleSphereOffset * playerToCameraDir;
-    }
-
 	public Vector3 NearestPathPoint { get; set; }
 	public float NearestPathT { get; set; }
 
     void FixedUpdate()
     {
-        //Debug.Log("Time: " + Time.time.ToString("f2"));
-        
         if (CurrentSegment)
         {
 			NearestPathT = CurrentSegment.Path.GetApproxT(rigidbody.position);
@@ -162,8 +135,21 @@ public class Player : MonoBehaviour
 
         _groundEffectParticles.transform.position = rigidbody.position - _initialGroundParticleOffset;
 
+		UpdateMaterials();
+
         OnFixedUpdate();
     }
+
+	private void UpdateMaterials()
+	{
+		Vector3 axis = rigidbody.velocity.normalized;
+		foreach(Material mat in renderer.materials) 
+		{
+			mat.SetVector("_stretchAxis", axis);
+			//mat.SetFloat("_stretch", (Mathf.Sin(Time.time * Mathf.PI) - 1.0f) / 5.0f);
+			mat.SetFloat("_stretch", 0.0f);
+		}
+	}
 
     public void AnimateColor(Color toColor, float time)
     {
@@ -174,21 +160,12 @@ public class Player : MonoBehaviour
     private System.Collections.IEnumerator AnimateColorCoroutine(Color toColor, float time, Material mat)
     {
         float recipTime = 1.0f / time;
-        Color startColor = mat.GetColor("_Vertex_color");
-
-        Color startGlowColor = Color.black;
-        
-        if( mat.HasProperty("_GlowColor") )
-            startGlowColor = mat.GetColor("_GlowColor");
+		Color startColor = mat.GetColor("_rimColor");
 
         for( float t = 0; t < 1.0f; t += Time.deltaTime * recipTime )
         {
             yield return 0;
-
-            mat.SetColor("_Vertex_color", Color.Lerp(startColor, toColor, t));
-
-            if (mat.HasProperty("_GlowColor"))
-                mat.SetColor("_GlowColor", Color.Lerp(startGlowColor, toColor, t));
+			mat.SetColor("_rimColor", Color.Lerp(startColor, toColor, t));
         }
 
     }
@@ -211,7 +188,6 @@ public class Player : MonoBehaviour
 
         if( powerupBar )
             Destroy(powerupBar.gameObject);
-
 
 		try
 		{

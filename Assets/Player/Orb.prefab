@@ -1156,24 +1156,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &100122
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 400122}
-  - 33: {fileID: 3300116}
-  - 23: {fileID: 2300116}
-  - 114: {fileID: 11400006}
-  m_Layer: 9
-  m_Name: Sphere
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &100124
 GameObject:
   m_ObjectHideFlags: 0
@@ -1221,7 +1203,6 @@ Transform:
   - {fileID: 400002}
   - {fileID: 400004}
   - {fileID: 400120}
-  - {fileID: 400122}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &400002
@@ -2002,18 +1983,6 @@ Transform:
   - {fileID: 400006}
   m_Father: {fileID: 400000}
   m_RootOrder: 3
---- !u!4 &400122
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100122}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .0136373043, y: .015961362, z: -.0515560284}
-  m_LocalScale: {x: .533779383, y: .533779383, z: .533779383}
-  m_Children: []
-  m_Father: {fileID: 400000}
-  m_RootOrder: 4
 --- !u!4 &400124
 Transform:
   m_ObjectHideFlags: 1
@@ -3313,26 +3282,6 @@ Renderer:
   m_ScaleInLightmap: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!23 &2300116
-Renderer:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100122}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_LightmapIndex: 255
-  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
-  m_Materials:
-  - {fileID: 2100000, guid: 29139e5f1be087e4b893bbcfbd5a375d, type: 2}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 0
-  m_LightProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
 --- !u!33 &3300000
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -3739,13 +3688,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100118}
   m_Mesh: {fileID: 4300000, guid: a68949a685bbc514689bffa1c20e6f57, type: 3}
---- !u!33 &3300116
-MeshFilter:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100122}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!54 &5400000
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -5429,7 +5371,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _groundEffectParticles: {fileID: 19800002}
   _fallToDeathThreshold: 8
-  _blackHoleSphere: {fileID: 400122}
   JumpFX: {fileID: 11400002}
   DeathFX: {fileID: 11400004}
   PowerupFX: {fileID: 11400008}
@@ -5457,22 +5398,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a1d80656fea00845978872339ac43f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _explodeForce: 40
+  _explodeForce: 25
   _rotateForce: 30
   _clip: {fileID: 8300000, guid: 8c26a648aad10407c95b4024c99f9a3b, type: 3}
---- !u!114 &11400006
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4921bdbc4e59e2b4d932a1013e63e721, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  axis: {x: 0, y: 0, z: 1}
-  speed: 180
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1

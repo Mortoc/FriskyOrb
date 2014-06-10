@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: PlayerGlowPanels
-  m_Shader: {fileID: 4800000, guid: a53ab4acb5f1f7346b3bc3ccedd3c6de, type: 3}
+  m_Shader: {fileID: 4800000, guid: 3dacbce8269f14682960644dda2540de, type: 3}
   m_ShaderKeywords:
   - GLOW11_GLOW_GLOWCOLOR
   - GLOW11_MULTIPLY_GLOWCOLOR
@@ -50,6 +50,14 @@ Material:
         second: 1
       data:
         first:
+          name: _rimPower
+        second: 2.66071439
+      data:
+        first:
+          name: _stretch
+        second: -1.375
+      data:
+        first:
           name: _GlowStrength
         second: 1
       data:
@@ -75,12 +83,20 @@ Material:
         second: {r: 1, g: 1, b: 1, a: 1}
       data:
         first:
-          name: _GlowColor
-        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+          name: _vertexColor
+        second: {r: 1, g: .567786098, b: .0761147141, a: 1}
       data:
         first:
-          name: _DiffuseColor
-        second: {r: 0, g: .188235298, b: .749019623, a: 1}
+          name: _rimColor
+        second: {r: .290078938, g: .164702773, b: .0220792759, a: 1}
+      data:
+        first:
+          name: _stretchAxis
+        second: {r: 0, g: 1, b: 0, a: 0}
+      data:
+        first:
+          name: _GlowColor
+        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
       data:
         first:
           name: _Vertex_color
@@ -89,3 +105,11 @@ Material:
         first:
           name: _rim_color
         second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+      data:
+        first:
+          name: _DiffuseColor
+        second: {r: 0, g: .188235298, b: .749019623, a: 1}
+      data:
+        first:
+          name: _stretchCenter
+        second: {r: 0, g: 0, b: 0, a: 1}
