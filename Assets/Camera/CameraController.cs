@@ -12,16 +12,19 @@ public class CameraController : MonoBehaviour
         set 
         { 
             _player = value;
-            _lastPlayerPosition = value.rigidbody.position;
+            _player.OnDeath += PlayerDied;
         }
     }
 
     private Vector3 _followDistance = new Vector3(0.0f, 3.5f, -4.5f);
     private float _lookAheadDistance = 5.0f;
 
-    private SmoothedVector _velocity = new SmoothedVector(1.0f);
 
-    private Vector3 _lastPlayerPosition;
+    private void PlayerDied()
+    {
+        gameObject.AddComponent<Rigidbody>();
+        rigidbody.velocity = _player.rigidbody.velocity;
+    }
 
     void OnPreRender()
     {
@@ -37,10 +40,6 @@ public class CameraController : MonoBehaviour
             );
             transform.position = playerRB.position + (viewRotation * _followDistance);
 
-            _velocity.AddSample(_lastPlayerPosition - playerRB.position);
-            _lastPlayerPosition = playerRB.position;
-            
-            
 			Vector3 lookAtPath;
 
 			if( _player.CurrentSegment )
@@ -61,11 +60,6 @@ public class CameraController : MonoBehaviour
 			}
 
             transform.LookAt(Vector3.Lerp(lookAtPos, lookAtPath, 0.1f));
-        }
-        else if (_velocity.HasSamples && !rigidbody)
-        {
-            gameObject.AddComponent<Rigidbody>();
-            rigidbody.velocity = _velocity.GetSmoothedVector();
         }
     }
 }

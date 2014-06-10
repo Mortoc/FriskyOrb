@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class MobileInputHandler : InputHandler
 {
-    private float _steeringAdaptSpeed = 2.0f;
+    private float _steeringAdaptSpeed = 3.0f;
 	private PadController _gamePad = null;
 
     private float _steering = 0.0f;
@@ -33,7 +33,7 @@ public class MobileInputHandler : InputHandler
                 case TouchPhase.Moved:
                 case TouchPhase.Stationary:
                     // Steer
-                    float steerScale = 8.0f;
+                    float steerScale = 20.0f;
                     if (Screen.orientation == ScreenOrientation.Landscape)
                         steerScale *= 2.0f;
 

@@ -10,8 +10,8 @@ PlayerSettings:
   targetGlesGraphics: 1
   targetResolution: 0
   accelerometerFrequency: 60
-  companyName: Mortco
-  productName: Starbomb
+  companyName: Deep Sea Studios
+  productName: Rt. Infinity
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   defaultScreenWidth: 1024
@@ -30,8 +30,8 @@ PlayerSettings:
   displayResolutionDialog: 1
   allowedAutorotateToPortrait: 1
   allowedAutorotateToPortraitUpsideDown: 1
-  allowedAutorotateToLandscapeRight: 1
-  allowedAutorotateToLandscapeLeft: 1
+  allowedAutorotateToLandscapeRight: 0
+  allowedAutorotateToLandscapeLeft: 0
   useOSAutorotation: 1
   use32BitDisplayBuffer: 1
   use24BitDepthBuffer: 1
@@ -88,7 +88,7 @@ PlayerSettings:
   uIStatusBarHidden: 1
   uIExitOnSuspend: 1
   uIStatusBarStyle: 1
-  iPhoneSplashScreen: {fileID: 0}
+  iPhoneSplashScreen: {fileID: 2800000, guid: a11d25ce953641640b5e20b93861a301, type: 3}
   iPhoneHighResSplashScreen: {fileID: 0}
   iPhoneTallHighResSplashScreen: {fileID: 0}
   iPadPortraitSplashScreen: {fileID: 0}
@@ -96,14 +96,14 @@ PlayerSettings:
   iPadLandscapeSplashScreen: {fileID: 0}
   iPadHighResLandscapeSplashScreen: {fileID: 0}
   AndroidTargetDevice: 0
-  AndroidSplashScreenScale: 0
+  AndroidSplashScreenScale: 2
   AndroidKeystoreName: C:/Users/Morto_000/Documents/Projects/FriskyOrb/Keys/production.keystore
   AndroidKeyaliasName: starbomb production
   resolutionDialogBanner: {fileID: 0}
   m_BuildTargetIcons:
   - m_BuildTarget: 
     m_Icons:
-    - m_Icon: {fileID: 2800000, guid: 57b1a9cef67ca1c4d84505f392a3e058, type: 3}
+    - m_Icon: {fileID: 2800000, guid: bdda44319f5df994189f49d0828adfe7, type: 3}
       m_Size: 128
   m_BuildTargetBatching:
   - m_BuildTarget: Android
