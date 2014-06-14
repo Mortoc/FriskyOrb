@@ -50,14 +50,6 @@ Material:
         second: 1
       data:
         first:
-          name: _rimPower
-        second: 2.66071439
-      data:
-        first:
-          name: _stretch
-        second: -1.375
-      data:
-        first:
           name: _GlowStrength
         second: 1
       data:
@@ -68,6 +60,14 @@ Material:
         first:
           name: _Parallax
         second: .0199999996
+      data:
+        first:
+          name: _rimPower
+        second: 2.66071439
+      data:
+        first:
+          name: _stretch
+        second: .714285672
     m_Colors:
       data:
         first:
@@ -81,18 +81,6 @@ Material:
         first:
           name: _SpecColor
         second: {r: 1, g: 1, b: 1, a: 1}
-      data:
-        first:
-          name: _vertexColor
-        second: {r: 1, g: .567786098, b: .0761147141, a: 1}
-      data:
-        first:
-          name: _rimColor
-        second: {r: .290078938, g: .164702773, b: .0220792759, a: 1}
-      data:
-        first:
-          name: _stretchAxis
-        second: {r: 0, g: 1, b: 0, a: 0}
       data:
         first:
           name: _GlowColor
@@ -111,5 +99,29 @@ Material:
         second: {r: 0, g: .188235298, b: .749019623, a: 1}
       data:
         first:
+          name: _vertexColor
+        second: {r: 1, g: .567786098, b: .0761147141, a: 1}
+      data:
+        first:
+          name: _rimColor
+        second: {r: .290078938, g: .164702773, b: .0220792759, a: 1}
+      data:
+        first:
+          name: _stretchAxis
+        second: {r: 0, g: 1, b: 0, a: 0}
+      data:
+        first:
           name: _stretchCenter
         second: {r: 0, g: 0, b: 0, a: 1}
+      data:
+        first:
+          name: _stretchStart
+        second: {r: 0, g: 0, b: 0, a: 0}
+      data:
+        first:
+          name: _stretchEmd
+        second: {r: 0, g: 1, b: 0, a: 1}
+      data:
+        first:
+          name: _stretchEnd
+        second: {r: 0, g: 1, b: 0, a: 1}
