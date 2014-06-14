@@ -17,7 +17,8 @@ public class PlayerMovementController : IPlayerController
     public PlayerMovementController(Player player)
     {
         _player = player;
-        _jumpAction = new JumpAction(_player);
+        _jumpAction = _player.GetComponent<JumpAction>();
+        _jumpAction.Setup(_player);
         _inputHandler = GameObject.FindObjectOfType<InputHandler>();
     }
 

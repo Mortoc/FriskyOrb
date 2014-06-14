@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
     public event Action<Collision> CollisionExited;
     public event Action<Collision> CollisionStay;
 
+    public float Stretch { get; set; }
+
 
     [SerializeField]
     private ParticleSystem _groundEffectParticles;
@@ -145,11 +147,12 @@ public class Player : MonoBehaviour
 		Vector3 axis = rigidbody.velocity.normalized;
 		foreach(Material mat in renderer.materials) 
 		{
-			mat.SetVector("_stretchAxis", axis);
-			//mat.SetFloat("_stretch", (Mathf.Sin(Time.time * Mathf.PI) - 1.0f) / 5.0f);
-			mat.SetFloat("_stretch", 0.0f);
+            mat.SetVector("_stretchEnd", axis);
+            mat.SetFloat("_stretch", Stretch);
 		}
 	}
+
+    
 
     public void AnimateColor(Color toColor, float time)
     {
@@ -167,8 +170,9 @@ public class Player : MonoBehaviour
             yield return 0;
 			mat.SetColor("_rimColor", Color.Lerp(startColor, toColor, t));
         }
-
     }
+
+
 
     private void PlayerDied()
     {

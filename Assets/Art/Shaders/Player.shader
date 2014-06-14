@@ -6,8 +6,9 @@ Shader "RtInfinity/Player"
 		_rimPower("Rim Power", Range(-1,10) ) = 0.5
 		_rimColor("Rim Color", Color) = (1,1,1,1)
 		
-		_stretch("Stretch", Range(-3,10) ) = 0.0
-		_stretchAxis("Stretch Axis", Vector ) = (0.0, 1.0, 0.0, 1.0)
+		_stretch("Stretch", Range(-5,5) ) = 1
+		_stretchStart("Stretch Start", Vector ) = (0.0, 0.0, 0.0, 1.0)
+		_stretchEnd("Stretch End", Vector ) = (0.0, 1.0, 0.0, 1.0)
 	}
 	
 	SubShader 
@@ -31,7 +32,8 @@ Shader "RtInfinity/Player"
 		float _rimPower;
 		float4 _rimColor;
 		float _stretch;
-		float4 _stretchAxis;
+		float4 _stretchStart;
+		float4 _stretchEnd;
 
 		struct EditorSurfaceOutput {
 			half3 Albedo;
@@ -73,37 +75,44 @@ Shader "RtInfinity/Player"
 			float4 color : COLOR;
 		};
 
-		void vert (inout appdata_full v, out Input o) {			
+		void vert (inout appdata_full v, out Input o) {	
+			float effectiveStretch = 0;
+			if( _stretch < 0 )
+				effectiveStretch = -1 / ((_stretch * 0.5) - 1);
+			else
+				effectiveStretch = _stretch + 1;
+
 	 		float3 pos = v.vertex.xyz;
-	 		
-	 		float3 axis = _stretchAxis.xyz;
-	 		
+	 		float3 axis = normalize(mul(_World2Object, _stretchEnd).xyz - mul(_World2Object, _stretchStart).xyz);
 	 		float axisT = dot(pos, axis);
-	 		float3 axisPos = axisT * axis;
-	 		
-	 		float axisDist = length(axisPos);
-	 		float squeeze = smoothstep(0, 1, axisDist);
-	 		
-	 		float axisDistFactor1 = squeeze * squeeze;
-	 		float axisDistFactor2 = 4 * (squeeze - axisDistFactor1);
-	 		squeeze = lerp(squeeze, axisDistFactor2, 1);
-	 		
-	 		pos = pos * lerp(.9, 1.1, squeeze * _stretch);
+			float3 axisPos = axisT * axis;
+			float3 axisToVert = pos - axisPos;
+			
+	 		float3 stretchedAxisPos = effectiveStretch * axisPos;
+						
+			float squeeze = smoothstep(0, 1, 2 * abs(axisT/2));
+			float centerScale = 1.0 / effectiveStretch;
+			float minorAxisScale = lerp(centerScale, 1, squeeze);
+
+	 		pos = stretchedAxisPos + (axisToVert * minorAxisScale);
 	 		
 	 		v.vertex.xyz = pos;
+			o.color = v.color;
 		}
 		
 		void surf (Input IN, inout EditorSurfaceOutput o) {
 			o.Normal = float3(0.0,0.0,1.0);
+			o.Alpha = 1.0;
+			o.Albedo = 0.0;
 			o.Emission = 0.0;
-							
+			o.Gloss = 0.0;
+			o.Specular = 0.0;
+
 			float fresnel = 1.0 - dot(normalize(IN.viewDir.xyz), float3(0,0,1));
 			float4 rimPower = pow(fresnel, _rimPower).xxxx;
 			float4 lightColor = rimPower * _rimColor;
 			float4 surfColor =_vertexColor * IN.color;
 			o.Emission = lightColor + surfColor;
-			
-			o.Normal = normalize(o.Normal);
 		}
 		
 		ENDCG

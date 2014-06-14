@@ -67,7 +67,7 @@ Material:
       data:
         first:
           name: _stretch
-        second: .714285672
+        second: 5
     m_Colors:
       data:
         first:
@@ -116,11 +116,7 @@ Material:
       data:
         first:
           name: _stretchStart
-        second: {r: 0, g: 0, b: 0, a: 0}
-      data:
-        first:
-          name: _stretchEmd
-        second: {r: 0, g: 1, b: 0, a: 1}
+        second: {r: 0, g: 0, b: 0, a: 1}
       data:
         first:
           name: _stretchEnd

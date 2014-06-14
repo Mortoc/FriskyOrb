@@ -14,6 +14,7 @@ GameObject:
   - 135: {fileID: 13500000}
   - 114: {fileID: 11400000}
   - 82: {fileID: 8200002}
+  - 114: {fileID: 11400006}
   m_Layer: 9
   m_Name: Orb
   m_TagString: Untagged
@@ -5401,6 +5402,81 @@ MonoBehaviour:
   _explodeForce: 25
   _rotateForce: 30
   _clip: {fileID: 8300000, guid: 8c26a648aad10407c95b4024c99f9a3b, type: 3}
+--- !u!114 &11400006
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebafc77d073a038439f59214daa5962e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _jumpStrength: 100
+  _jumpStretchTime: .200000003
+  _jumpStretchCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: -.00680849096
+      value: -.0975385308
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+    - time: .0990968645
+      value: .554260552
+      inSlope: .318875134
+      outSlope: .318875134
+      tangentMode: 0
+    - time: .99829495
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  _downShootStretchTime: .150000006
+  _downShootStretchCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: .102482647
+      value: .487008542
+      inSlope: .0985261351
+      outSlope: .0985261351
+      tangentMode: 0
+    - time: 1
+      value: -.00254452229
+      inSlope: -.949688137
+      outSlope: -.949688137
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  _landStretchTime: .25
+  _landStretchCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: -.000816729385
+      value: -.200604096
+      inSlope: -5.21286154
+      outSlope: -5.21286154
+      tangentMode: 10
+    - time: .0969461501
+      value: -.710228443
+      inSlope: -.00624968624
+      outSlope: -.00624968624
+      tangentMode: 0
+    - time: .995085239
+      value: .00705370633
+      inSlope: -1.11249506
+      outSlope: -1.11249506
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
