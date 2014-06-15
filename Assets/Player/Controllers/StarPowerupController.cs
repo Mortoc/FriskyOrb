@@ -53,13 +53,13 @@ public class StarPowerupController : IPlayerController
         headingDuringMoveBackToTrack.AddSample(_player.Heading);
 
         float playerSpeed = 20.0f;
-        float dist = 0.4f;
+        float dist = 1.0f;
         do {
             Vector3 diff = targetPosition - playerRB.position;
             dist = diff.magnitude;
             Vector3 dir = diff / dist;
 
-            playerRB.position = playerRB.position + (dir * playerSpeed * Time.fixedDeltaTime);
+			playerRB.position = playerRB.position + (dir * playerSpeed * Time.fixedDeltaTime);
             headingDuringMoveBackToTrack.AddSample(dir);
             _player.Heading = headingDuringMoveBackToTrack.GetSmoothedVector();
             
@@ -79,7 +79,7 @@ public class StarPowerupController : IPlayerController
                 audio.PlayOneShot(BeforeEndSound);
                 BeforeEndSound = null;
             }
-
+			/*
             float t = time / POWERUP_DURATION;
             tInSegment = startT + (t * POWERUP_DURATION * PLAYER_SPEED) - segmentsIn;
 
@@ -95,10 +95,11 @@ public class StarPowerupController : IPlayerController
             _player.Heading = (targetPosition - playerRB.position).normalized;
             playerRB.position = targetPositionSmoothed.GetSmoothedVector();
             yield return untilNextFixedUpdate;
+            */
         }
 
         // Return the player to rigidbody control and give her a kick
-        float kick = 150.0f;
+		float kick = 150.0f;
         playerRB.isKinematic = false;
 
         float lookAhead = tInSegment + (kick * 0.001f);
