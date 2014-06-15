@@ -13,12 +13,9 @@ Shader "RtInfinity/Player"
 	
 	SubShader 
 	{
-		Tags
-		{
-			"Queue"="Geometry"
-			"IgnoreProjector"="False"
-			"RenderType"="Opaque"
-		}
+	
+		Tags { "QUEUE"="Geometry" "RenderType"="Opaque" " IgnoreProjector"="True"}	  
+		LOD 100
 
 		Cull Back
 		ZWrite On

@@ -7,10 +7,10 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: PowerupOrbiter
-  m_Shader: {fileID: 4800000, guid: a53ab4acb5f1f7346b3bc3ccedd3c6de, type: 3}
+  m_Shader: {fileID: 4800000, guid: 164b4fff0da9b41c180c8c9211e57fdf, type: 3}
   m_ShaderKeywords:
   - GLOW11_MULTIPLY_GLOWCOLOR
-  - GLOW11_GLOW_VERTEXCOLOR
+  - GLOW11_GLOW_GLOWCOLOR
   m_CustomRenderQueue: -1
   m_SavedProperties:
     serializedVersion: 2
@@ -19,7 +19,7 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 2800000, guid: fe8e19273eb6b1445ab9efcf7ae63d03, type: 3}
+          m_Texture: {fileID: 2800000, guid: 430b0a806e5bc974c8128351642e93f4, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -44,11 +44,15 @@ Material:
       data:
         first:
           name: _GlowStrength
-        second: .5
+        second: 2
       data:
         first:
           name: _rim_power
         second: 2.61642838
+      data:
+        first:
+          name: _InvFade
+        second: 1
       data:
         first:
           name: _RimPower
@@ -72,16 +76,20 @@ Material:
         second: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
       data:
         first:
-          name: _DiffuseColor
-        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
-      data:
-        first:
           name: _Vertex_color
         second: {r: .117241383, g: 1, b: 0, a: 1}
       data:
         first:
           name: _rim_color
         second: {r: 0, g: .411764711, b: .0901960805, a: 1}
+      data:
+        first:
+          name: _DiffuseColor
+        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+      data:
+        first:
+          name: _TintColor
+        second: {r: .5, g: .5, b: .5, a: .5}
       data:
         first:
           name: _RimColor

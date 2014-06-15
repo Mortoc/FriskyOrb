@@ -44,11 +44,15 @@ Material:
       data:
         first:
           name: _GlowStrength
-        second: 1
+        second: .200000003
       data:
         first:
           name: _rim_power
         second: 2.02714276
+      data:
+        first:
+          name: _RimPower
+        second: .991071343
       data:
         first:
           name: _rimPower
@@ -56,11 +60,7 @@ Material:
       data:
         first:
           name: _stretch
-        second: 5
-      data:
-        first:
-          name: _RimPower
-        second: .991071343
+        second: -8.51494963e-09
     m_Colors:
       data:
         first:
@@ -88,16 +88,20 @@ Material:
         second: {r: 1, g: .532994926, b: 0, a: 1}
       data:
         first:
+          name: _RimColor
+        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+      data:
+        first:
           name: _DiffuseColor
         second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
       data:
         first:
           name: _vertexColor
-        second: {r: 1, g: .567786098, b: .0761147141, a: 1}
+        second: {r: 0, g: 0, b: 0, a: 1}
       data:
         first:
           name: _rimColor
-        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+        second: {r: .514705896, g: .274335623, b: 0, a: 1}
       data:
         first:
           name: _stretchAxis
@@ -114,10 +118,6 @@ Material:
         first:
           name: _stretchEnd
         second: {r: 0, g: 1, b: 0, a: 1}
-      data:
-        first:
-          name: _RimColor
-        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
       data:
         first:
           name: _VertexColor

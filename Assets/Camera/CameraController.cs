@@ -16,7 +16,7 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    private Vector3 _followDistance = new Vector3(0.0f, 3.5f, -4.5f);
+    private Vector3 _followDistance = new Vector3(0.0f, 3.5f, -6.0f);
     private float _lookAheadDistance = 5.0f;
 
 

@@ -7,8 +7,10 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: 'Material #3'
-  m_Shader: {fileID: 10703, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: []
+  m_Shader: {fileID: 10752, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords:
+  - GLOW11_MULTIPLY_GLOWCOLOR
+  - GLOW11_GLOW_GLOWCOLOR
   m_CustomRenderQueue: -1
   m_SavedProperties:
     serializedVersion: 2
@@ -24,7 +26,7 @@ Material:
         first:
           name: _GlowTex
         second:
-          m_Texture: {fileID: 2800000, guid: 7a632f967e8ad42f5bd275898151ab6a, type: 3}
+          m_Texture: {fileID: 2800000, guid: b84caaf848b0b9b4383def0aebfc6128, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -35,7 +37,7 @@ Material:
       data:
         first:
           name: _GlowStrength
-        second: 2
+        second: 1
     m_Colors:
       data:
         first:

@@ -51,15 +51,11 @@ Material:
       data:
         first:
           name: _GlowStrength
-        second: 1
+        second: .200000003
       data:
         first:
           name: _rim_power
         second: 1.08928561
-      data:
-        first:
-          name: _Parallax
-        second: .0199999996
       data:
         first:
           name: _rimPower
@@ -67,7 +63,11 @@ Material:
       data:
         first:
           name: _stretch
-        second: 5
+        second: 3.40597985e-08
+      data:
+        first:
+          name: _Parallax
+        second: .0199999996
     m_Colors:
       data:
         first:
@@ -100,11 +100,11 @@ Material:
       data:
         first:
           name: _vertexColor
-        second: {r: 1, g: .567786098, b: .0761147141, a: 1}
+        second: {r: 1, g: .532177985, b: 0, a: 1}
       data:
         first:
           name: _rimColor
-        second: {r: .290078938, g: .164702773, b: .0220792759, a: 1}
+        second: {r: .275557876, g: .279411793, b: 0, a: 1}
       data:
         first:
           name: _stretchAxis

@@ -39,7 +39,6 @@ public class StarPowerupController : IPlayerController
     private System.Collections.IEnumerator ExecutePowerup()
     {
         Vector3 floatOffset = Vector3.up;
-        SmoothedVector targetPositionSmoothed = new SmoothedVector(0.33f);
         YieldInstruction untilNextFixedUpdate = new WaitForFixedUpdate();
         Rigidbody playerRB = _player.rigidbody;
         playerRB.isKinematic = true;
@@ -66,43 +65,11 @@ public class StarPowerupController : IPlayerController
             yield return untilNextFixedUpdate;
         } while( dist > 0.2f );
 
-        // Run along the track
-        float segmentsIn = 0.0f;
-        float tInSegment = startT;
-        AudioSource audio = null;
-        for( float time = 0.0f; time < POWERUP_DURATION; time += Time.fixedDeltaTime )
-        {
-            if( BeforeEndSound && BeforeEndSound.length > (POWERUP_DURATION - time) )
-            {
-                audio = Camera.main.gameObject.AddComponent<AudioSource>();
-                audio.volume = 0.5f;
-                audio.PlayOneShot(BeforeEndSound);
-                BeforeEndSound = null;
-            }
-			/*
-            float t = time / POWERUP_DURATION;
-            tInSegment = startT + (t * POWERUP_DURATION * PLAYER_SPEED) - segmentsIn;
-
-            if( tInSegment >= 0.99f )
-            {
-                segmentsIn += 1.0f;
-                tInSegment -= 1.0f;
-                segment = segment.Next;
-            }
-
-            targetPosition = segment.Path.GetPoint(tInSegment) + floatOffset;
-            targetPositionSmoothed.AddSample(targetPosition);
-            _player.Heading = (targetPosition - playerRB.position).normalized;
-            playerRB.position = targetPositionSmoothed.GetSmoothedVector();
-            yield return untilNextFixedUpdate;
-            */
-        }
-
         // Return the player to rigidbody control and give her a kick
 		float kick = 150.0f;
         playerRB.isKinematic = false;
 
-        float lookAhead = tInSegment + (kick * 0.001f);
+        float lookAhead = startT + (kick * 0.001f);
         if( lookAhead > 1.0f )
         {
             segment = segment.Next;
@@ -133,9 +100,6 @@ public class StarPowerupController : IPlayerController
                 }
             }
         }
-
-        if (audio)
-            AudioSource.Destroy(audio);
 
         if (PowerupEnded != null)
             PowerupEnded();

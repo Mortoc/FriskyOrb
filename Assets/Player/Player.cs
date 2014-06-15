@@ -28,8 +28,6 @@ public class Player : MonoBehaviour
     public FX DeathFX;
     public FX PowerupFX;
 
-	private Material[] _materials;
-
     public Level Level { get; private set; }
     public LevelSegment CurrentSegment { get; set; }
 
@@ -91,7 +89,6 @@ public class Player : MonoBehaviour
      
         GameObject.FindObjectOfType<LevelGui>().Player = this;
 		GetComponentInChildren<PlayerExplodeFX> ().Player = this;
-		_materials = renderer.materials;
     }
 
     private void BecameGrounded()
@@ -145,19 +142,35 @@ public class Player : MonoBehaviour
 	private void UpdateMaterials()
 	{
 		Vector3 axis = rigidbody.velocity.normalized;
-		foreach(Material mat in renderer.materials) 
-		{
-            mat.SetVector("_stretchEnd", axis);
-            mat.SetFloat("_stretch", Stretch);
-		}
+        foreach (Renderer r in PlayerRenderers())
+        {
+            foreach (Material mat in r.materials)
+            {
+                mat.SetVector("_stretchEnd", axis);
+                mat.SetFloat("_stretch", Stretch);
+            }
+        }
 	}
+
+
+    private IEnumerable<Renderer> PlayerRenderers()
+    {
+        foreach(Renderer r in GetComponentsInChildren<Renderer>())
+        {
+            if( r.gameObject.layer == gameObject.layer )
+            {
+                yield return r;
+            }
+        }
+    }
 
     
 
     public void AnimateColor(Color toColor, float time)
     {
-        foreach(Material mat in renderer.materials)
-            StartCoroutine(AnimateColorCoroutine(toColor, time, mat));
+        foreach(Renderer r in PlayerRenderers())
+            foreach(Material mat in r.materials)
+                StartCoroutine(AnimateColorCoroutine(toColor, time, mat));
     }
 
     private System.Collections.IEnumerator AnimateColorCoroutine(Color toColor, float time, Material mat)
