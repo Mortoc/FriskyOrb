@@ -60,7 +60,7 @@ Material:
       data:
         first:
           name: _stretch
-        second: .357142836
+        second: -1.78571427
     m_Colors:
       data:
         first:
@@ -97,7 +97,7 @@ Material:
       data:
         first:
           name: _vertexColor
-        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+        second: {r: 0, g: 0, b: 0, a: 1}
       data:
         first:
           name: _rimColor
@@ -117,7 +117,7 @@ Material:
       data:
         first:
           name: _stretchEnd
-        second: {r: 0, g: 1, b: 0, a: 1}
+        second: {r: 1, g: 1, b: 1, a: 1}
       data:
         first:
           name: _VertexColor
