@@ -13,6 +13,7 @@ GameObject:
   - 114: {fileID: 11400000}
   - 82: {fileID: 8200002}
   - 114: {fileID: 11400006}
+  - 114: {fileID: 11400012}
   m_Layer: 9
   m_Name: Orb
   m_TagString: Untagged
@@ -5824,8 +5825,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aacdb7e0cdc757e48ae23389ad1372a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stretchMaterials:
-  - {fileID: 2100000, guid: 203ed628bd9b34b49a4ad94ed64b6564, type: 2}
   _groundEffectParticles: {fileID: 19800002}
   _fallToDeathThreshold: 8
   JumpFX: {fileID: 11400002}
@@ -5870,69 +5869,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _jumpStrength: 100
-  _jumpStretchTime: .200000003
-  _jumpStretchCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: -.00680849096
-      value: -.0975385308
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-    - time: .0990968645
-      value: .554260552
-      inSlope: .318875134
-      outSlope: .318875134
-      tangentMode: 0
-    - time: .99829495
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  _downShootStretchTime: .150000006
-  _downShootStretchCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: .102482647
-      value: .487008542
-      inSlope: .0985261351
-      outSlope: .0985261351
-      tangentMode: 0
-    - time: 1
-      value: -.00254452229
-      inSlope: -.949688137
-      outSlope: -.949688137
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  _landStretchTime: .25
-  _landStretchCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: -.000816729385
-      value: -.200604096
-      inSlope: -1.05223203
-      outSlope: -1.05223203
-      tangentMode: 10
-    - time: .290522993
-      value: -.507161081
-      inSlope: -.00624968624
-      outSlope: -.00624968624
-      tangentMode: 0
-    - time: .995085239
-      value: .00705370633
-      inSlope: -1.11249506
-      outSlope: -1.11249506
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5961,6 +5897,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _falloff: 5
   _initialColor: {r: 1, g: .760784328, b: 0, a: 1}
+--- !u!114 &11400012
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35c4038286c3345cda1b1e7aea7757c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _positiveImpulseThreshold: 1.04999995
+  _collisionMin: 5
+  _collisionMax: 20
+  _impulseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  _negativeImpulseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: -3.74528503
+      outSlope: -3.74528503
+      tangentMode: 0
+    - time: .987713099
+      value: .00249439478
+      inSlope: .0411990322
+      outSlope: .0411990322
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  _animTime: .200000003
 --- !u!119 &11900000
 Projector:
   m_ObjectHideFlags: 1

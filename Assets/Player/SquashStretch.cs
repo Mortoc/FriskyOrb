@@ -30,9 +30,9 @@ public class SquashStretch : MonoBehaviour
 	private float _animTime = 0.5f;
 
 
-	private List<float> _impulseSamples = new List<float>();
-	private List<float> _accelerationSamples = new List<float>();
-	private List<float> _velocitySamples = new List<float>();
+    //private List<float> _impulseSamples = new List<float>();
+    //private List<float> _accelerationSamples = new List<float>();
+    //private List<float> _velocitySamples = new List<float>();
 
 
 	void Start()
