@@ -486,7 +486,7 @@ MonoBehaviour:
       m_PostInfinity: 2
   _viewDistance: 6
   _levelTrackMaterial: {fileID: 2100000, guid: d96e93e390971a44f970aadc824ba8da, type: 2}
-  _playerPrefab: {fileID: 11400002, guid: c545e67d492f77447b3b52368a4d6d93, type: 2}
+  _playerPrefab: {fileID: 11400000, guid: 6a07642956a95ff49bf45ba2da1205a3, type: 2}
   _endGuiPrefab: {fileID: 100000, guid: 4f848cef20a25e4409ea852814e357f8, type: 2}
 --- !u!114 &11400004
 MonoBehaviour:

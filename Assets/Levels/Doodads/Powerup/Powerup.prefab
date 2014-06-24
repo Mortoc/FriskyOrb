@@ -75,7 +75,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 0901d47889f512545bc7b5842b9aad72, type: 2}
+  - {fileID: 2100000, guid: 557fda2f27bec4a44b8eac197b198106, type: 2}
   - {fileID: 2100000, guid: 557fda2f27bec4a44b8eac197b198106, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
@@ -171,7 +171,7 @@ MonoBehaviour:
   _collectAnimationRandomOffsetAmount: .5
   _spinRate: 500
   _spinObj: {fileID: 400002}
-  _bounceEffect: 1
+  _bounceEffect: .25
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

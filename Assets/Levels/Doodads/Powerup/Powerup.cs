@@ -58,13 +58,33 @@ public class Powerup : Doodad
 
     private System.Collections.IEnumerator BounceOffPlayer(Player player)
     {
+        foreach(Renderer r in GetComponentsInChildren<Renderer>())
+        {
+            foreach(Material m in r.materials)
+            {
+                if (m.HasProperty("_Color"))
+                    m.color = Color.Lerp(Color.black, m.color, 0.5f);
+
+                if( m.HasProperty("_GlowStrength") )
+                    m.SetFloat("_GlowStrength", 0.25f);
+            }
+        }
+
         yield return new WaitForFixedUpdate();
         gameObject.AddComponent<Rigidbody>();
-        Vector3 dir = (transform.position - player.rigidbody.position).normalized;
-        dir = Vector3.Lerp(player.rigidbody.velocity.normalized, dir, .66f);
-        rigidbody.mass = Mathf.Lerp(0.033f, 0.4f, UnityEngine.Random.value);
-        rigidbody.AddForce(dir * player.rigidbody.velocity.magnitude * _bounceEffect, ForceMode.Impulse);
-        rigidbody.AddForce(Vector3.up, ForceMode.Impulse);
+        gameObject.GetComponent<SphereCollider>().isTrigger = false;
+        gameObject.layer = 0;
+        Vector3 dir = transform.position - player.rigidbody.position;
+        dir.y = 0.0f;
+        dir = dir.normalized;
+        dir += Vector3.Lerp(-0.5f * Physics.gravity, -1.0f * Physics.gravity, UnityEngine.Random.value);
+        
+        rigidbody.mass = Mathf.Lerp(0.2f, 0.4f, UnityEngine.Random.value);
+        rigidbody.AddForce
+        (
+            (player.rigidbody.velocity * 0.5f) + (dir * _bounceEffect), 
+            ForceMode.Impulse
+        );
 
         yield return new WaitForSeconds(0.1f);
 

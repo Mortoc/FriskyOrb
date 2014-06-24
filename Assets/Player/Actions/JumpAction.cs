@@ -111,9 +111,6 @@ public class JumpAction : MonoBehaviour
         _player.StartCoroutine(ApplyStretchAnimation(_jumpStretchTime, _jumpStretchCurve));
     }
 
-
-
-
     private System.Collections.IEnumerator ApplyStretchAnimation(float time, AnimationCurve curve)
     {
         float recipTime = 1.0f / time;

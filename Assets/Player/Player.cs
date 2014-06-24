@@ -14,7 +14,8 @@ public class Player : MonoBehaviour
     public event Action<Collision> CollisionStay;
 
     public float Stretch { get; set; }
-
+    [SerializeField]
+    private Material[] _stretchMaterials;
 
     [SerializeField]
     private ParticleSystem _groundEffectParticles;
@@ -142,33 +143,18 @@ public class Player : MonoBehaviour
 	private void UpdateMaterials()
 	{
 		Vector3 axis = rigidbody.velocity.normalized;
-        foreach (Renderer r in PlayerRenderers())
+        
+        foreach (Material mat in _stretchMaterials)
         {
-            foreach (Material mat in r.materials)
-            {
-                mat.SetVector("_stretchEnd", axis);
-                mat.SetFloat("_stretch", Stretch);
-            }
+            mat.SetVector("_stretchEnd", axis);
+            mat.SetFloat("_stretch", Stretch);
         }
 	}
-
-
-    private IEnumerable<Renderer> PlayerRenderers()
-    {
-        foreach(Renderer r in GetComponentsInChildren<Renderer>())
-        {
-            if( r.gameObject.layer == gameObject.layer )
-            {
-                yield return r;
-            }
-        }
-    }
-
     
 
     public void AnimateColor(Color toColor, float time)
     {
-        foreach(Renderer r in PlayerRenderers())
+        foreach(Renderer r in GetComponentsInChildren<Renderer>())
             foreach(Material mat in r.materials)
                 StartCoroutine(AnimateColorCoroutine(toColor, time, mat));
     }
@@ -176,12 +162,15 @@ public class Player : MonoBehaviour
     private System.Collections.IEnumerator AnimateColorCoroutine(Color toColor, float time, Material mat)
     {
         float recipTime = 1.0f / time;
-		Color startColor = mat.GetColor("_rimColor");
-
-        for( float t = 0; t < 1.0f; t += Time.deltaTime * recipTime )
+        if( mat.HasProperty("_rimColor") )
         {
-            yield return 0;
-			mat.SetColor("_rimColor", Color.Lerp(startColor, toColor, t));
+            Color startColor = mat.GetColor("_rimColor");
+
+            for (float t = 0; t < 1.0f; t += Time.deltaTime * recipTime)
+            {
+                yield return 0;
+                mat.SetColor("_rimColor", Color.Lerp(startColor, toColor, t));
+            }
         }
     }
 

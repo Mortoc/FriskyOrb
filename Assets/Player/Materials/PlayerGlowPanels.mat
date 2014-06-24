@@ -63,7 +63,7 @@ Material:
       data:
         first:
           name: _stretch
-        second: 3.40597985e-08
+        second: 0
       data:
         first:
           name: _Parallax
