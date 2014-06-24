@@ -7,7 +7,7 @@ PlayerSettings:
   AndroidProfiler: 0
   defaultScreenOrientation: 4
   targetDevice: 2
-  targetGlesGraphics: 1
+  targetGlesGraphics: -1
   targetResolution: 0
   accelerometerFrequency: 60
   companyName: Deep Sea Studios
@@ -83,18 +83,24 @@ PlayerSettings:
   StripUnusedMeshComponents: 1
   iPhoneSdkVersion: 988
   iPhoneTargetOSVersion: 14
-  uIPrerenderedIcon: 0
+  uIPrerenderedIcon: 1
   uIRequiresPersistentWiFi: 0
   uIStatusBarHidden: 1
   uIExitOnSuspend: 1
   uIStatusBarStyle: 1
   iPhoneSplashScreen: {fileID: 2800000, guid: a11d25ce953641640b5e20b93861a301, type: 3}
-  iPhoneHighResSplashScreen: {fileID: 0}
-  iPhoneTallHighResSplashScreen: {fileID: 0}
-  iPadPortraitSplashScreen: {fileID: 0}
-  iPadHighResPortraitSplashScreen: {fileID: 0}
-  iPadLandscapeSplashScreen: {fileID: 0}
-  iPadHighResLandscapeSplashScreen: {fileID: 0}
+  iPhoneHighResSplashScreen: {fileID: 2800000, guid: a11d25ce953641640b5e20b93861a301,
+    type: 3}
+  iPhoneTallHighResSplashScreen: {fileID: 2800000, guid: a11d25ce953641640b5e20b93861a301,
+    type: 3}
+  iPadPortraitSplashScreen: {fileID: 2800000, guid: a11d25ce953641640b5e20b93861a301,
+    type: 3}
+  iPadHighResPortraitSplashScreen: {fileID: 2800000, guid: a11d25ce953641640b5e20b93861a301,
+    type: 3}
+  iPadLandscapeSplashScreen: {fileID: 2800000, guid: a11d25ce953641640b5e20b93861a301,
+    type: 3}
+  iPadHighResLandscapeSplashScreen: {fileID: 2800000, guid: a11d25ce953641640b5e20b93861a301,
+    type: 3}
   AndroidTargetDevice: 0
   AndroidSplashScreenScale: 2
   AndroidKeystoreName: C:/Users/Morto_000/Documents/Projects/FriskyOrb/Keys/production.keystore
@@ -105,6 +111,22 @@ PlayerSettings:
     m_Icons:
     - m_Icon: {fileID: 2800000, guid: bdda44319f5df994189f49d0828adfe7, type: 3}
       m_Size: 128
+  - m_BuildTarget: iPhone
+    m_Icons:
+    - m_Icon: {fileID: 2800000, guid: 4119e5fd5443d6f46b9814b6d3da1849, type: 3}
+      m_Size: 152
+    - m_Icon: {fileID: 0}
+      m_Size: 144
+    - m_Icon: {fileID: 0}
+      m_Size: 120
+    - m_Icon: {fileID: 0}
+      m_Size: 114
+    - m_Icon: {fileID: 0}
+      m_Size: 76
+    - m_Icon: {fileID: 0}
+      m_Size: 72
+    - m_Icon: {fileID: 0}
+      m_Size: 57
   m_BuildTargetBatching:
   - m_BuildTarget: Android
     m_StaticBatching: 1

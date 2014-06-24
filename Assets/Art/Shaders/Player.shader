@@ -6,7 +6,7 @@ Shader "RtInfinity/Player"
 		_rimPower("Rim Power", Range(-1,10) ) = 0.5
 		_rimColor("Rim Color", Color) = (1,1,1,1)
 		
-		_stretch("Stretch", Range(-5,5) ) = 1
+		_stretch("Stretch", Float ) = 1
 		_stretchStart("Stretch Start", Vector ) = (0.0, 0.0, 0.0, 1.0)
 		_stretchEnd("Stretch End", Vector ) = (0.0, 1.0, 0.0, 1.0)
 	}

@@ -51,12 +51,12 @@ Material:
         second: 2.61642838
       data:
         first:
-          name: _InvFade
-        second: 1
-      data:
-        first:
           name: _RimPower
         second: .991071343
+      data:
+        first:
+          name: _InvFade
+        second: 1
     m_Colors:
       data:
         first:
@@ -84,15 +84,15 @@ Material:
         second: {r: 0, g: .411764711, b: .0901960805, a: 1}
       data:
         first:
-          name: _DiffuseColor
-        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
-      data:
-        first:
           name: _TintColor
         second: {r: .5, g: .5, b: .5, a: .5}
       data:
         first:
           name: _RimColor
+        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+      data:
+        first:
+          name: _DiffuseColor
         second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
       data:
         first:
