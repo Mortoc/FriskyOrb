@@ -30,7 +30,8 @@ public class LODManager : MonoBehaviour
 
     private void ApplyHighQualitySettings()
     {
-        _glow.enabled = true;
+		// Disabled until the portrait mode glow bug is fixed
+        //_glow.enabled = true;
     }
 
     private void ApplyLowQualitySettings()

@@ -134,23 +134,8 @@ public class Player : MonoBehaviour
 
         _groundEffectParticles.transform.position = rigidbody.position - _initialGroundParticleOffset;
 
-		UpdateMaterials();
-
         OnFixedUpdate();
     }
-
-	private void UpdateMaterials()
-	{
-		Vector3 axis = rigidbody.velocity.normalized;
-        foreach (Renderer r in PlayerRenderers())
-        {
-            foreach (Material mat in r.materials)
-            {
-                mat.SetVector("_stretchEnd", axis);
-                mat.SetFloat("_stretch", Stretch);
-            }
-        }
-	}
 
 
     private IEnumerable<Renderer> PlayerRenderers()

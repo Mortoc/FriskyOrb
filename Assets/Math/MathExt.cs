@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 
 // From http://wiki.unity3d.com/index.php?title=3d_Math_functions
@@ -380,4 +381,61 @@ public static class MathExt
         return retval;
     }
 
+
+	public static Vector4 Average(IEnumerable<Vector4> vectors)
+	{
+		var accum = Vector4.zero;
+		var count = 0.0f;
+		
+		foreach (var vector in vectors) 
+		{
+			accum += vector;
+			count += 1.0f;
+		}
+		
+		return accum / count;
+	}
+
+	public static Vector3 Average(IEnumerable<Vector3> vectors)
+	{
+		var accum = Vector3.zero;
+		var count = 0.0f;
+
+		foreach (var vector in vectors) 
+		{
+			accum += vector;
+			count += 1.0f;
+		}
+
+		return accum / count;
+	}
+	
+	public static Vector2 Average(IEnumerable<Vector2> vectors)
+	{
+		var accum = Vector2.zero;
+		var count = 0.0f;
+		
+		foreach (var vector in vectors) 
+		{
+			accum += vector;
+			count += 1.0f;
+		}
+		
+		return accum / count;
+	}
+	
+	
+	public static float Average(IEnumerable<float> values)
+	{
+		var accum = 0.0f;
+		var count = 0.0f;
+		
+		foreach (var val in values) 
+		{
+			accum += val;
+			count += 1.0f;
+		}
+		
+		return accum / count;
+	}
 }
