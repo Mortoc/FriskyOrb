@@ -2551,7 +2551,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be700855cfc9a2d4cb8116e28c88ffb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerForce: 125
+  _playerForce: 250
   _explodeFX: {fileID: 100064}
 --- !u!114 &11400002
 MonoBehaviour:

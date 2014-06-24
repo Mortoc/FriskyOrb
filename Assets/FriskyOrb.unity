@@ -235,8 +235,8 @@ MonoBehaviour:
     iterations: 8
     blurSpread: .600000024
     innerStrength: 1.25
-    outerStrength: 1.5
-    boostStrength: 2.98000002
+    outerStrength: 1.25
+    boostStrength: 2
     blendMode: 0
     downsampleBlendMode: 0
     falloff:

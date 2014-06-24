@@ -61,4 +61,4 @@ Material:
       data:
         first:
           name: _stretchEnd
-        second: {r: .205235362, g: -.596743643, b: .775741816, a: 0}
+        second: {r: -.12561591, g: -.5906533, b: .797088027, a: 0}

@@ -19,7 +19,7 @@ public class ExplodeyBarrell : Doodad
         {
             Explode(collision.collider.gameObject);
 
-            Vector3 forceDir = (collision.rigidbody.position - rigidbody.position + Vector3.up).normalized;
+            Vector3 forceDir = (collision.rigidbody.position - rigidbody.position + (Vector3.up * 0.25f)).normalized;
             collision.rigidbody.AddForce(forceDir * _playerForce, ForceMode.Impulse);
         }
     }
