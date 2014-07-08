@@ -161,12 +161,19 @@ public class Player : MonoBehaviour
     private System.Collections.IEnumerator AnimateColorCoroutine(Color toColor, float time, Material mat)
     {
         float recipTime = 1.0f / time;
-		Color startColor = mat.GetColor("_rimColor");
+        Color startColor;
 
-        for( float t = 0; t < 1.0f; t += Time.deltaTime * recipTime )
+        if (mat.HasProperty("_rimColor"))
+            startColor = mat.GetColor("_rimColor");
+        else if (mat.HasProperty("_Color"))
+            startColor = mat.color;
+        else
+            yield break;
+
+        for (float t = 0; t < time; t += Time.deltaTime)
         {
             yield return 0;
-			mat.SetColor("_rimColor", Color.Lerp(startColor, toColor, t));
+            mat.SetColor("_rimColor", Color.Lerp(startColor, toColor, t * recipTime));
         }
     }
 

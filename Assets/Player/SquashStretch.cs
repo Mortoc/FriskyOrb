@@ -27,7 +27,10 @@ public class SquashStretch : MonoBehaviour
 	private AnimationCurve _negativeImpulseCurve;
 
 	[SerializeField]
-	private float _animTime = 0.5f;
+	private float _impulseAnimTime = 0.5f;
+
+    [SerializeField]
+    private float _negativeImpulseTime = 0.5f;
 
 
     //private List<float> _impulseSamples = new List<float>();
@@ -74,7 +77,7 @@ public class SquashStretch : MonoBehaviour
 			{
 				_axis = avgContactNorm;
 				float scale = 1.0f + ((hitStrength - _collisionMin) / (_collisionMax - _collisionMin));
-				StartCoroutine (ApplyStretchAnimation (_animTime, _negativeImpulseCurve, scale));
+                StartCoroutine(ApplyStretchAnimation(_negativeImpulseTime, _negativeImpulseCurve, scale));
 			}
 		}
 	}
@@ -86,10 +89,10 @@ public class SquashStretch : MonoBehaviour
 		var impulse = acceleration - _lastAcceleration;
 		var impulseMagnitude = impulse.magnitude;
 
-		if( Vector3.Dot (velocity, _lastVelocity) > 0.0f && impulseMagnitude > _positiveImpulseThreshold )
+		if( impulseMagnitude > _positiveImpulseThreshold )
 		{
 			_axis = impulse / impulseMagnitude; // impulse normalized
-			StartCoroutine(ApplyStretchAnimation(_animTime, _impulseCurve, 1.0f));
+			StartCoroutine(ApplyStretchAnimation(_impulseAnimTime, _impulseCurve, 1.0f));
 		}
 
 		_lastAcceleration = acceleration;

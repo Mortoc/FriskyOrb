@@ -1166,7 +1166,7 @@ GameObject:
   - 4: {fileID: 400122}
   - 33: {fileID: 3300000}
   - 23: {fileID: 2300000}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Torus013
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1216,7 +1216,7 @@ GameObject:
   - 4: {fileID: 400128}
   - 33: {fileID: 3300116}
   - 23: {fileID: 2300116}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Torus012
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1233,7 +1233,7 @@ GameObject:
   - 4: {fileID: 400130}
   - 33: {fileID: 3300118}
   - 23: {fileID: 2300118}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Torus011
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1250,7 +1250,7 @@ GameObject:
   - 4: {fileID: 400132}
   - 33: {fileID: 3300120}
   - 23: {fileID: 2300120}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Torus010
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1267,7 +1267,7 @@ GameObject:
   - 4: {fileID: 400134}
   - 33: {fileID: 3300122}
   - 23: {fileID: 2300122}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Torus009
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1284,7 +1284,7 @@ GameObject:
   - 4: {fileID: 400136}
   - 33: {fileID: 3300124}
   - 23: {fileID: 2300124}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Torus007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1301,7 +1301,7 @@ GameObject:
   - 4: {fileID: 400138}
   - 33: {fileID: 3300126}
   - 23: {fileID: 2300126}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Torus001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1318,7 +1318,7 @@ GameObject:
   - 4: {fileID: 400140}
   - 33: {fileID: 3300128}
   - 23: {fileID: 2300128}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sphere001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1333,7 +1333,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400142}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2165,8 +2165,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100126}
-  m_LocalRotation: {x: .0855313763, y: -.0113895275, z: .13150458, w: .987553179}
-  m_LocalPosition: {x: 2.9405868e-07, y: .0588669442, z: -.971099198}
+  m_LocalRotation: {x: -.932403147, y: .0968086869, z: -.0955768228, w: .334839642}
+  m_LocalPosition: {x: -.123472199, y: -.3809838, z: .22696425}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400004}
@@ -5908,21 +5908,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35c4038286c3345cda1b1e7aea7757c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _positiveImpulseThreshold: 1.04999995
+  _positiveImpulseThreshold: .200000003
   _collisionMin: 5
   _collisionMax: 20
   _impulseCurve:
     serializedVersion: 2
     m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
+    - time: -.0052702222
+      value: .445249319
+      inSlope: 2.07643795
+      outSlope: 2.07643795
       tangentMode: 0
-    - time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
+    - time: .0702508837
+      value: .986733198
+      inSlope: 1.03863287
+      outSlope: 1.03863287
+      tangentMode: 0
+    - time: .716356397
+      value: .196415186
+      inSlope: -2.1019578
+      outSlope: -2.1019578
+      tangentMode: 0
+    - time: .996589959
+      value: -.00763356686
+      inSlope: -.509169698
+      outSlope: -.509169698
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -5941,7 +5951,8 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  _animTime: .200000003
+  _impulseAnimTime: .5
+  _negativeImpulseTime: .25
 --- !u!119 &11900000
 Projector:
   m_ObjectHideFlags: 1

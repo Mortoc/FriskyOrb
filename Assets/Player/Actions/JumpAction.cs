@@ -1,12 +1,10 @@
 using UnityEngine;
-
 using System;
 using System.Collections.Generic;
 
 
 public class JumpAction : MonoBehaviour
 {
-
     [SerializeField]
     private float _jumpStrength = 100.0f;
 
@@ -14,12 +12,7 @@ public class JumpAction : MonoBehaviour
 
     private Player _player;
     
-    // Filter out any "landed" actions that happen immediately after the jump started
-    private float _ignoreLandedFilterTime = 0.5f;
-    private float _initialJumpTime = -1.0f;
-    
 	public bool JumpEnded { get; set; }
-	private bool _landed = true;
 
     public void Setup(Player player)
     {
@@ -31,24 +24,30 @@ public class JumpAction : MonoBehaviour
 
     private void PlayerLanded()
     {
-		if( Time.time - _ignoreLandedFilterTime > _initialJumpTime ) 
-		{
-			_landed = true;
-			if ( !JumpEnded )
-	        {
-				ApplyEndJump();
-	        }
-		}
+		if ( !JumpEnded )
+	    {
+			ApplyEndJump();
+	    }
+    }
+
+    void OnGUI()
+    {
+        GUILayout.Space(10.0f);
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(10.0f);
+
+        GUILayout.Label(_player.IsGrounded ? "Down" : "Up");
+
+        GUILayout.EndHorizontal();
+
     }
 
     public void Jump()
     {
-		if( JumpEnded && _landed )
+        if (JumpEnded && _player.IsGrounded)
 		{
-			_landed = false;
 			JumpEnded = false;
 			_jumpEffect.SendMessage("FirstJump", true);
-			_initialJumpTime = Time.time;
 			ApplyJump();
 		}
     }
