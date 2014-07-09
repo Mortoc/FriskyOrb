@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: 'Material #105'
-  m_Shader: {fileID: 4800000, guid: 3dacbce8269f14682960644dda2540de, type: 3}
+  m_Shader: {fileID: 4800000, guid: e6090b82d7c37154086f6af8c898d1d2, type: 3}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
@@ -30,25 +30,25 @@ Material:
     m_Floats:
       data:
         first:
-          name: _GlowStrength
-        second: 1
-      data:
-        first:
           name: _rimPower
         second: .5
       data:
         first:
           name: _stretch
         second: -.0714285746
+      data:
+        first:
+          name: _rim_power
+        second: .714285731
+      data:
+        first:
+          name: _GlowStrength
+        second: 1
     m_Colors:
       data:
         first:
           name: _Color
         second: {r: .0235294141, g: 0, b: .160784319, a: 1}
-      data:
-        first:
-          name: _GlowColor
-        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
       data:
         first:
           name: _vertexColor
@@ -65,3 +65,19 @@ Material:
         first:
           name: _stretchEnd
         second: {r: 0, g: 1, b: 0, a: 1}
+      data:
+        first:
+          name: _Vertex_color
+        second: {r: .0980392173, g: .0980392173, b: .0980392173, a: 1}
+      data:
+        first:
+          name: _rim_color
+        second: {r: 1, g: .501960814, b: 0, a: 1}
+      data:
+        first:
+          name: _GlowColor
+        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+      data:
+        first:
+          name: _DiffuseColor
+        second: {r: 1, g: 0, b: 0, a: 1}
