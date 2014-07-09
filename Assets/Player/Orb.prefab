@@ -1347,7 +1347,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: .932403147, y: -.0955768228, z: -.0968086869, w: .334839642}
-  m_LocalPosition: {x: -3.9843485e-08, y: .122452408, z: -.0283406917}
+  m_LocalPosition: {x: -3.9843485e-08, y: -.110721782, z: .00322744809}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400124}
@@ -2166,7 +2166,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100126}
   m_LocalRotation: {x: -.932403147, y: .0968086869, z: -.0955768228, w: .334839642}
-  m_LocalPosition: {x: -.123472199, y: -.3809838, z: .22696425}
+  m_LocalPosition: {x: -.174638465, y: -.508530855, z: .38642174}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400004}
@@ -5909,7 +5909,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _positiveImpulseThreshold: .200000003
-  _collisionMin: 2.5
+  _collisionMin: 2
   _collisionMax: 20
   _impulseCurve:
     serializedVersion: 2
@@ -5919,11 +5919,11 @@ MonoBehaviour:
       inSlope: 2.07643795
       outSlope: 2.07643795
       tangentMode: 0
-    - time: .0702508837
-      value: .986733198
-      inSlope: 1.03863287
-      outSlope: 1.03863287
-      tangentMode: 0
+    - time: .0181200393
+      value: .632841587
+      inSlope: 1.21392441
+      outSlope: -.0467626005
+      tangentMode: 1
     - time: .716356397
       value: .196415186
       inSlope: -2.1019578
@@ -5944,8 +5944,8 @@ MonoBehaviour:
       inSlope: -2.21383333
       outSlope: -2.21383333
       tangentMode: 0
-    - time: .0961900502
-      value: -.994495034
+    - time: .016237095
+      value: -.596560895
       inSlope: -.0467896461
       outSlope: -.0467896461
       tangentMode: 0
