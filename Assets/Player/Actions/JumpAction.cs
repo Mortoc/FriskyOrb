@@ -30,18 +30,6 @@ public class JumpAction : MonoBehaviour
 	    }
     }
 
-    void OnGUI()
-    {
-        GUILayout.Space(10.0f);
-        GUILayout.BeginHorizontal();
-        GUILayout.Space(10.0f);
-
-        GUILayout.Label(_player.IsGrounded ? "Down" : "Up");
-
-        GUILayout.EndHorizontal();
-
-    }
-
     public void Jump()
     {
         if (JumpEnded && _player.IsGrounded)
@@ -50,6 +38,10 @@ public class JumpAction : MonoBehaviour
 			_jumpEffect.SendMessage("FirstJump", true);
 			ApplyJump();
 		}
+        else
+        {
+            EndJump();
+        }
     }
 
 	public void EndJump()

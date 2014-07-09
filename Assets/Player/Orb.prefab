@@ -5909,7 +5909,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _positiveImpulseThreshold: .200000003
-  _collisionMin: 5
+  _collisionMin: 2.5
   _collisionMax: 20
   _impulseCurve:
     serializedVersion: 2
@@ -5939,10 +5939,15 @@ MonoBehaviour:
   _negativeImpulseCurve:
     serializedVersion: 2
     m_Curve:
-    - time: 0
-      value: 0
-      inSlope: -3.74528503
-      outSlope: -3.74528503
+    - time: .00503550656
+      value: -.301921785
+      inSlope: -2.21383333
+      outSlope: -2.21383333
+      tangentMode: 0
+    - time: .0961900502
+      value: -.994495034
+      inSlope: -.0467896461
+      outSlope: -.0467896461
       tangentMode: 0
     - time: .987713099
       value: .00249439478

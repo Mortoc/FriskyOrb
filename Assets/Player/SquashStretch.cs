@@ -60,6 +60,21 @@ public class SquashStretch : MonoBehaviour
 	{
 		if (c.gameObject.layer == LayerMask.NameToLayer("Level")) 
 		{
+            foreach(var cp in c.contacts)
+            {
+                Debug.DrawLine(cp.point, cp.point + cp.normal, Color.cyan, 5.0f);
+            }
+
+            var avgContactPos = MathExt.Average
+            (
+                Functional.Map<ContactPoint, Vector3>
+                (
+                    c.contacts,
+                    contact => contact.point
+                )
+            );
+
+
 			var avgContactNorm = MathExt.Average
 			(
 				Functional.Map<ContactPoint, Vector3>
@@ -69,13 +84,17 @@ public class SquashStretch : MonoBehaviour
 				)
 			);
 
+            Debug.DrawLine(avgContactPos, avgContactPos + avgContactNorm, Color.blue, 5.0f);
+
+
 			var relativeVelocityMag = c.relativeVelocity.magnitude;
 			var relativeVelocityNorm = c.relativeVelocity / relativeVelocityMag;
 			var hitStrength = Vector3.Dot(avgContactNorm, relativeVelocityNorm) * relativeVelocityMag;
 
 			if( hitStrength > _collisionMin )
 			{
-				_axis = avgContactNorm;
+                Vector3 collisionRight = Vector3.Cross(_lastVelocity.normalized, avgContactNorm);
+                _axis = Quaternion.Euler(collisionRight * 90.0f) * avgContactNorm;
 				float scale = 1.0f + ((hitStrength - _collisionMin) / (_collisionMax - _collisionMin));
                 StartCoroutine(ApplyStretchAnimation(_negativeImpulseTime, _negativeImpulseCurve, scale));
 			}
@@ -119,12 +138,20 @@ public class SquashStretch : MonoBehaviour
 		}
 	}
 
+    private int _animationId = 0;
 	private System.Collections.IEnumerator ApplyStretchAnimation(float time, AnimationCurve curve, float scale)
 	{
-		float recipTime = 1.0f / time;
-		for (float t = 0.0f; t < time; t += Time.deltaTime)
+        var animationId = ++_animationId;
+        Debug.Log(_animationId + " " + animationId);
+		var recipTime = 1.0f / time;
+		for (var t = 0.0f; t < time; t += Time.deltaTime)
 		{
 			yield return 0;
+
+            // If another animation started after this one, end this one
+            if (_animationId != animationId)
+                yield break;
+
 			_stretch = curve.Evaluate(t * recipTime) * scale;
 		}
 		

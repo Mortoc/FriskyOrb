@@ -117,28 +117,32 @@ public class MobileInputHandler : InputHandler
 		if (Input.touchCount > 0 )
 		{
 			var touch = Input.touches[0];
+            var recipWidth = 1.0f / Screen.width;
+            var steeringButtonWidthPercent = 0.2f;
+            var touchX = recipWidth * touch.position.x;
+
 			switch(touch.phase)
 			{
 				case TouchPhase.Began:
 				case TouchPhase.Moved:
 				case TouchPhase.Stationary:
-					var thirdScreen = Screen.width / 3;
-					if (touch.position.x <= thirdScreen) 
+                    if (touchX < steeringButtonWidthPercent) 
 					{
-						_steering = -1;
+						_steering = -1.0f;
 					} 
-					else if (touch.position.x > thirdScreen && touch.position.x <= thirdScreen * 2)
+                    else if( touchX > (1.0f - steeringButtonWidthPercent))
+                    {
+                        _steering = 1.0f;
+                    }
+					else if(touch.phase == TouchPhase.Began)
 					{
-						_steering = 0;
+						_steering = 0.0f;
 						Jump();
 					}
-					else
-					{
-						_steering = 1;
-					}
+
 					break;
 				case TouchPhase.Ended:
-					_steering = 0;
+					_steering = 0.0f;
 					break;
 			}
 		}
