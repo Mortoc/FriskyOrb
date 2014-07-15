@@ -32,6 +32,7 @@ public class SquashStretch : MonoBehaviour
     [SerializeField]
     private float _negativeImpulseTime = 0.5f;
 
+	private bool _positiveImpulseDisabled = false;
 
     //private List<float> _impulseSamples = new List<float>();
     //private List<float> _accelerationSamples = new List<float>();
@@ -96,9 +97,17 @@ public class SquashStretch : MonoBehaviour
                 Vector3 collisionRight = Vector3.Cross(_lastVelocity.normalized, avgContactNorm);
                 _axis = Quaternion.Euler(collisionRight * 90.0f) * avgContactNorm;
 				float scale = 1.0f + ((hitStrength - _collisionMin) / (_collisionMax - _collisionMin));
+				_positiveImpulseDisabled = true;
                 StartCoroutine(ApplyStretchAnimation(_negativeImpulseTime, _negativeImpulseCurve, scale));
+				StartCoroutine(EnablePosImpulse());
 			}
 		}
+	}
+
+	private System.Collections.IEnumerator EnablePosImpulse()
+	{
+		yield return new WaitForSeconds (_negativeImpulseTime);
+		_positiveImpulseDisabled = false;
 	}
 
 	private void UpdatePhysics()
@@ -108,7 +117,7 @@ public class SquashStretch : MonoBehaviour
 		var impulse = acceleration - _lastAcceleration;
 		var impulseMagnitude = impulse.magnitude;
 
-		if( impulseMagnitude > _positiveImpulseThreshold )
+		if( impulseMagnitude > _positiveImpulseThreshold && !_positiveImpulseDisabled)
 		{
 			_axis = impulse / impulseMagnitude; // impulse normalized
 			StartCoroutine(ApplyStretchAnimation(_impulseAnimTime, _impulseCurve, 1.0f));
@@ -142,7 +151,6 @@ public class SquashStretch : MonoBehaviour
 	private System.Collections.IEnumerator ApplyStretchAnimation(float time, AnimationCurve curve, float scale)
 	{
         var animationId = ++_animationId;
-        Debug.Log(_animationId + " " + animationId);
 		var recipTime = 1.0f / time;
 		for (var t = 0.0f; t < time; t += Time.deltaTime)
 		{

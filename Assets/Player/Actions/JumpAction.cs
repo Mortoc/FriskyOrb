@@ -46,9 +46,9 @@ public class JumpAction : MonoBehaviour
 
 	public void EndJump()
 	{
-		if (JumpEnded)
+		if (JumpEnded || !_player)
 			return;
-		
+
 		_player.rigidbody.AddForce(Physics.gravity.normalized * 2.0f * _jumpStrength, ForceMode.Impulse);
         
 		ApplyEndJump();

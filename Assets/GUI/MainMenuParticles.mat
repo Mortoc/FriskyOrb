@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: MainMenuParticles
-  m_Shader: {fileID: 10708, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 10752, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords:
   - GLOW11_MULTIPLY_GLOWCOLOR
   - GLOW11_GLOW_GLOWCOLOR
@@ -20,7 +20,7 @@ Material:
           name: _MainTex
         second:
           m_Texture: {fileID: 2800000, guid: e611129475fc6a640b0bccb608a8d99d, type: 3}
-          m_Scale: {x: 1, y: 1}
+          m_Scale: {x: 3, y: 3}
           m_Offset: {x: 0, y: 0}
       data:
         first:
@@ -50,17 +50,21 @@ Material:
         second: .699999988
       data:
         first:
-          name: _GlowStrength
-        second: 0
-      data:
-        first:
           name: _rim_power
         second: .5
+      data:
+        first:
+          name: _GlowStrength
+        second: 1
+      data:
+        first:
+          name: _InvFade
+        second: 1
     m_Colors:
       data:
         first:
           name: _Color
-        second: {r: 1, g: 1, b: 1, a: 1}
+        second: {r: .250980407, g: 0, b: .501960814, a: .460000008}
       data:
         first:
           name: _Emission
@@ -71,13 +75,17 @@ Material:
         second: {r: 1, g: 1, b: 1, a: 1}
       data:
         first:
-          name: _GlowColor
-        second: {r: 0, g: 1, b: .00689673424, a: 1}
-      data:
-        first:
           name: _Vertex_color
         second: {r: 0, g: .188235298, b: .749019623, a: 1}
       data:
         first:
           name: _rim_color
         second: {r: 0, g: .0628272295, b: .25, a: 1}
+      data:
+        first:
+          name: _GlowColor
+        second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _TintColor
+        second: {r: .5, g: .5, b: .5, a: .5}

@@ -4,9 +4,17 @@ using System.Text;
 
 public class MainGui : MonoBehaviour
 {
-    public ParticleSystem _particles;
+	[SerializeField]
+	private float _fadeInTime = 1.0f;
+	private float _startTime = 0.0f;
     private string _personalBest = null;
     private string _personalBestLevel = null;
+
+	[SerializeField]
+	private Texture _logo;
+	[SerializeField]
+	private float _logoSize = 0.25f;
+
     void Start()
     {
         if (PlayerPrefs.HasKey("best_score"))
@@ -22,22 +30,25 @@ public class MainGui : MonoBehaviour
             );
             _personalBestLevel = String.Format("\"{0}\"", levelNameManager.GetName(seed));
         }
-    }
 
-    private SmoothedVector _particleUp = new SmoothedVector(1.0f);
-    void Update()
-    {
-        if( Input.acceleration.sqrMagnitude > Mathf.Epsilon )
-        {
-            _particleUp.AddSample(Input.acceleration);
-            _particles.transform.up = _particleUp.GetSmoothedVector();
-        }
+		_startTime = Time.time;
     }
 
     public GUISkin _skin;
     void OnGUI()
     {
+		GUI.color = new Color(1.0f, 1.0f, 1.0f, Mathf.Clamp01((Time.time - _startTime) / _fadeInTime));
         GUI.skin = _skin;
+
+		float aspect = ((float)_logo.height) / ((float)_logo.width);
+		float logoWidth = Screen.width * _logoSize;
+		float logoHeight = logoWidth * aspect;
+
+		GUI.DrawTexture (new Rect (
+			Screen.width * 0.1f,
+			Screen.height * 0.1f,
+			logoWidth, logoHeight
+		), _logo);
         
         GUILayout.BeginArea(new Rect(0.0f, 0.0f, Screen.width, Screen.height));
 
