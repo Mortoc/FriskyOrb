@@ -1,15 +1,17 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Player/SquashStretch.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Procedural/Primitives/2D/ISpline.cs">
     <Files>
-      <File FileName="Assets/Dive/README.TXT" Line="6" Column="1" />
-      <File FileName="Assets/Misc/Functional.cs" Line="1" Column="1" />
-      <File FileName="Assets/Dive/splashscreen.js" Line="1" Column="1" />
-      <File FileName="Assets/GUI/MainGui.cs" Line="1" Column="1" />
-      <File FileName="Assets/Player/Actions/JumpAction.cs" Line="68" Column="15" />
-      <File FileName="Assets/Misc/LODManager.cs" Line="34" Column="32" />
-      <File FileName="Assets/Player/SquashStretch.cs" Line="133" Column="42" />
+      <File FileName="Assets/Procedural/Primitives/2D/ISpline.cs" Line="12" Column="1" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
