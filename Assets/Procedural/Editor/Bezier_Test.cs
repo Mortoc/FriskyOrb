@@ -92,5 +92,44 @@ namespace Procedural.Test
                 UAssert.Within(relativeInTan, relativeOutTan * -1.0f, 0.0001f);
             }
         }
+
+
+        [Test]
+        public void ConstructSmoothClosedSplineVerification()
+        {
+            var points = new Vector3[]{
+                new Vector3(0.0f, 0.0f, 0.0f),
+                new Vector3(1.0f, 0.0f, 0.0f),
+                new Vector3(0.0f, 1.0f, 0.0f),
+                new Vector3(0.0f, 0.0f, 1.0f),
+                new Vector3(1.0f, 1.0f, 0.0f),
+                new Vector3(0.0f, 1.0f, 1.0f),
+                new Vector3(1.0f, 0.0f, 1.0f),
+            };
+            
+            var bezier = Bezier.ConstructSmoothSpline(points, true);
+
+            // Check that the end points are sane
+            UAssert.Within(bezier.ParametricSample(0.0f), points[0], 0.0001f);
+            UAssert.Within(bezier.ParametricSample(1.0f), points[0], 0.0001f);
+
+            // Check that there are no crazy values
+            Vector3 pointCenter = MathExt.Average(points);
+            for(float t = 0.0f; t < 1.0f; t += 0.01f)
+            {
+                UAssert.Within(bezier.ParametricSample(t), pointCenter, 1.0f);
+            }
+
+            // Check that all the spline tangents are locked
+            var controlPoints = new List<Bezier.ControlPoint>(bezier.ControlPoints);
+            for(int i = 1; i < controlPoints.Count - 1; ++i)
+            {
+                var controlPoint = controlPoints[i];
+                var relativeInTan = controlPoint.InTangent - controlPoint.Point;
+                var relativeOutTan = controlPoint.OutTangent - controlPoint.Point;
+
+                UAssert.Within(relativeInTan, relativeOutTan * -1.0f, 0.0001f);
+            }
+        }
     }
 }

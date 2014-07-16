@@ -28,8 +28,42 @@ public class Bezier : ISpline
     }
 
     private ControlPoint[] _controlPoints;
+
+    private static Vector3 NextPoint(Vector3[] points, int currentIdx, bool closed)
+    {
+        var nextIdx = currentIdx + 1;
+        if( nextIdx >= points.Length )
+        {
+            if( closed )
+            {
+                nextIdx = 0;
+            }
+            else
+            {
+                nextIdx = currentIdx;
+            }
+        }
+        return points[nextIdx];
+    }
+
+    private static Vector3 LastPoint(Vector3[] points, int currentIdx, bool closed)
+    {
+        var lastIdx = currentIdx - 1;
+        if( lastIdx < 0 )
+        {
+            if( closed )
+            {
+                lastIdx = points.Length - 1;
+            }
+            else
+            {
+                lastIdx = currentIdx;
+            }
+        }
+        return points[lastIdx];
+    }
     
-    public static Bezier ConstructSmoothSpline(IEnumerable<Vector3> points)
+    public static Bezier ConstructSmoothSpline(IEnumerable<Vector3> points, bool closed = false)
     {
     	var pointsArray = new List<Vector3>(points).ToArray();
     	var ctrlPts = new List<ControlPoint>();
@@ -37,22 +71,26 @@ public class Bezier : ISpline
     	for(int i = 0; i < pointsArray.Length; ++i)
     	{
     		var pnt = pointsArray[i];
-    		var lastPnt = i > 1 ? pointsArray[i - 1] : pnt;
-    		var nextPnt = i < pointsArray.Length - 1 ? pointsArray[i + 1] : pnt;
-
-    		var betweenLastAndPnt = Vector3.Lerp(pnt, lastPnt, 0.5f);
-    		var lastToPntOvershoot = (betweenLastAndPnt - lastPnt) + pnt;
     		
-    		var betweenNextAndPnt = Vector3.Lerp(pnt, nextPnt, 0.5f);
-    		var nextToPntOvershoot = (betweenNextAndPnt - nextPnt) + pnt;
+            var lastPnt = LastPoint(pointsArray, i, closed);
+    		var nextPnt = NextPoint(pointsArray, i, closed);
 
-    		var outTangent = Vector3.Lerp(lastToPntOvershoot, betweenNextAndPnt, 0.5f);
-    		var inTangent = Vector3.Lerp(nextToPntOvershoot, betweenLastAndPnt, 0.5f);
+    		var lastToPntOvershoot = (pnt - lastPnt) + pnt;
+    		var nextToPntOvershoot = (pnt - nextPnt) + pnt;
+
+    		var inTangent = Vector3.Lerp(lastPnt, nextToPntOvershoot, 0.5f);
+    		var outTangent = Vector3.Lerp(nextPnt, lastToPntOvershoot, 0.5f);
+
+            inTangent = Vector3.Lerp(pnt, inTangent, 0.5f);
+            outTangent = Vector3.Lerp(pnt, outTangent, 0.5f);
 
     		var cp = new ControlPoint(pnt, inTangent, outTangent);
 
     		ctrlPts.Add(cp);
     	}
+
+        if(closed)
+            ctrlPts.Add(ctrlPts.First());
 
     	return new Bezier(ctrlPts);
     }
@@ -80,7 +118,6 @@ public class Bezier : ISpline
     {
     	float cpCount = _controlPoints.Length - 1.0f;
     	float segmentSpaceT = Mathf.Clamp01(t) * cpCount;
-
     	int startSegment = Mathf.FloorToInt(segmentSpaceT);
     	float tInSegment = segmentSpaceT - Mathf.Floor(segmentSpaceT);
 

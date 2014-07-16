@@ -1,23 +1,26 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
-public class ModifierStack : MonoBehaviour 
+namespace Procedural
 {
-	private List<IModifier> _modifierStack = new List<IModifier>();
-
-	public void AddModifier(IModifier modifier)
+	public class ModifierStack : MonoBehaviour 
 	{
-		_modifierStack.Add(modifier);
-	}
+		private List<IModifier> _modifierStack = new List<IModifier>();
 
-	public void Collapse()
-	{
-		var mesh = GetComponent<MeshFilter>().mesh;
-		foreach(var modifier in _modifierStack)
+		public void AddModifier(IModifier modifier)
 		{
-			modifier.Modify(mesh);
+			_modifierStack.Add(modifier);
 		}
-		mesh.Optimize();
-		mesh.RecalculateBounds();
+
+		public void Collapse()
+		{
+			var mesh = GetComponent<MeshFilter>().mesh;
+			foreach(var modifier in _modifierStack)
+			{
+				modifier.Modify(mesh);
+			}
+			mesh.Optimize();
+			mesh.RecalculateBounds();
+		}
 	}
 }
