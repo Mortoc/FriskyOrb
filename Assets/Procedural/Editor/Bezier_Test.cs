@@ -27,7 +27,7 @@ namespace Procedural.Test
             // Sample at each control point
             foreach(var cp in _simpleArc.ControlPoints)
             {
-                UAssert.Within(_simpleArc.ParametricSample(currentT), cp.Point, 0.0001f);
+                UAssert.Near(_simpleArc.ParametricSample(currentT), cp.Point, 0.0001f);
                 currentT += cpTStep;
             }
         }
@@ -71,14 +71,14 @@ namespace Procedural.Test
             var bezier = Bezier.ConstructSmoothSpline(points);
 
             // Check that the end points are sane
-            UAssert.Within(bezier.ParametricSample(0.0f), points[0], 0.0001f);
-            UAssert.Within(bezier.ParametricSample(1.0f), points[points.Length - 1], 0.0001f);
+            UAssert.Near(bezier.ParametricSample(0.0f), points[0], 0.0001f);
+            UAssert.Near(bezier.ParametricSample(1.0f), points[points.Length - 1], 0.0001f);
 
             // Check that there are no crazy values
             Vector3 pointCenter = MathExt.Average(points);
             for(float t = 0.0f; t < 1.0f; t += 0.01f)
             {
-                UAssert.Within(bezier.ParametricSample(t), pointCenter, 1.0f);
+                UAssert.Near(bezier.ParametricSample(t), pointCenter, 1.0f);
             }
 
             // Check that all the spline tangents are locked
@@ -89,7 +89,7 @@ namespace Procedural.Test
                 var relativeInTan = controlPoint.InTangent - controlPoint.Point;
                 var relativeOutTan = controlPoint.OutTangent - controlPoint.Point;
 
-                UAssert.Within(relativeInTan, relativeOutTan * -1.0f, 0.0001f);
+                UAssert.Near(relativeInTan, relativeOutTan * -1.0f, 0.0001f);
             }
         }
 
@@ -110,14 +110,14 @@ namespace Procedural.Test
             var bezier = Bezier.ConstructSmoothSpline(points, true);
 
             // Check that the end points are sane
-            UAssert.Within(bezier.ParametricSample(0.0f), points[0], 0.0001f);
-            UAssert.Within(bezier.ParametricSample(1.0f), points[0], 0.0001f);
+            UAssert.Near(bezier.ParametricSample(0.0f), points[0], 0.0001f);
+            UAssert.Near(bezier.ParametricSample(1.0f), points[0], 0.0001f);
 
             // Check that there are no crazy values
             Vector3 pointCenter = MathExt.Average(points);
             for(float t = 0.0f; t < 1.0f; t += 0.01f)
             {
-                UAssert.Within(bezier.ParametricSample(t), pointCenter, 1.0f);
+                UAssert.Near(bezier.ParametricSample(t), pointCenter, 1.0f);
             }
 
             // Check that all the spline tangents are locked
@@ -128,7 +128,24 @@ namespace Procedural.Test
                 var relativeInTan = controlPoint.InTangent - controlPoint.Point;
                 var relativeOutTan = controlPoint.OutTangent - controlPoint.Point;
 
-                UAssert.Within(relativeInTan, relativeOutTan * -1.0f, 0.0001f);
+                UAssert.Near(relativeInTan, relativeOutTan * -1.0f, 0.0001f);
+            }
+        }
+
+        [Test]
+        public void ConstructSmoothStraightLineSpline()
+        {
+            var points = new Vector3[]{
+                new Vector3(-300.0f, 0.0f, 237.0f),
+                new Vector3(1.0f, 25.0f, -187.0f)
+            };
+            
+            var bezier = Bezier.ConstructSmoothSpline(points);
+
+            // Check that all points are linear on the x axis
+            for(float t = 0.0f; t < 1.0f; t += 0.05f)
+            {
+                UAssert.NearLineSegment(points[0], points[1], bezier.ParametricSample(t), 0.001f);
             }
         }
     }
