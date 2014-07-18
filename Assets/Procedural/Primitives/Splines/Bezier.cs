@@ -114,7 +114,7 @@ public class Bezier : ISpline
 		_controlPoints = cpList.ToArray();
 	}
 
-    public Vector3 ParametricSample(float t)
+    public Vector3 PositionSample(float t)
     {
     	float cpCount = _controlPoints.Length - 1.0f;
     	float segmentSpaceT = Mathf.Clamp01(t) * cpCount;
@@ -144,4 +144,23 @@ public class Bezier : ISpline
 			   cpB * 3.0f * pntAFactor * b2 +
 			   pntB * b3;
 	}
+
+    public Vector3 ForwardSample(float t)
+    {
+        if( t < 0.001f )
+        {
+            return (_controlPoints[0].OutTangent - _controlPoints[0].Point).normalized;
+        }
+        else if( t > 0.999f )
+        {
+            int lastIdx = _controlPoints.Length - 1;
+            return (_controlPoints[lastIdx].OutTangent - _controlPoints[lastIdx].Point).normalized;
+        }
+
+        float recipCpCount = 1.0f / (float)_controlPoints.Length;
+        var beforeSample = PositionSample(Mathf.Clamp01(t - (0.01f * recipCpCount)));
+        var afterSample = PositionSample(Mathf.Clamp01(t + (0.01f * recipCpCount)));
+
+        return (afterSample - beforeSample).normalized;
+    }
 }

@@ -1,72 +1,128 @@
 ﻿using UnityEngine;
+
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
-public class Loft
+namespace Procedural
 {
-    public ISpline Path { get; private set; }
-    public ISpline Shape { get; private set; }
-
-    public float Banking { get; set; }
-
-
-    public Loft(ISpline path, ISpline shape)
+    public class Loft
     {
-        if (path == null)
-            throw new ArgumentNullException("path");
-        if (shape == null)
-            throw new ArgumentNullException("shape");
-        
-        Path = path;
-        Shape = shape;
-    }
+        public ISpline Path { get; private set; }
+        public ISpline Shape { get; private set; }
 
-    public Mesh GenerateMesh(uint pathSegments, uint shapeSegments)
-    {
-        if( pathSegments < 2 )
-            throw new ArgumentException("pathSegments must be at least 2");
-        if( shapeSegments < 2 )
-            throw new ArgumentException("pathSegments must be at least 2");
+        public float Banking { get; set; }
 
-        Mesh mesh = new Mesh();
 
-        Vector3[] verts = new Vector3[pathSegments * shapeSegments];
-
-        Func<uint, uint, int> uvToVertIdx = (shapeSegment, pathSegment) => {
-            return (int)((pathSegment * shapeSegments) + shapeSegment);
-        };
-
-        int[] tris = new int[(pathSegments-1) * (shapeSegments-1) * 6];
-
-        float pathStep = 1.0f / (float)pathSegments;
-        float shapeStep = 1.0f / (float)shapeSegments;
-
-        for(uint pathSeg = 0; pathSeg < pathSegments; ++pathSeg)
+        public Loft(ISpline path, ISpline shape)
         {
-            var pathPnt = Path.ParametricSample(pathStep * (float)pathSeg);
-            for(uint shapeSeg = 0; shapeSeg < shapeSegments; ++shapeSeg)
-            {
-                var shapePnt = Shape.ParametricSample(shapeStep * (float)shapeSeg);
-                verts[uvToVertIdx(shapeSeg, pathSeg)] = pathPnt + shapePnt;
-            }
+            if (path == null)
+                throw new ArgumentNullException("path");
+            if (shape == null)
+                throw new ArgumentNullException("shape");
+            
+            Path = path;
+            Shape = shape;
         }
 
-        for(uint pathSeg = 0; pathSeg < pathSegments - 1; ++pathSeg)
+        public Mesh GenerateMesh(uint pathSegments, uint shapeSegments)
         {
-            for(uint shapeSeg = 0; shapeSeg < shapeSegments - 1; ++shapeSeg)
+            if( pathSegments < 2 )
+                throw new ArgumentException("pathSegments must be at least 2");
+            if( shapeSegments < 2 )
+                throw new ArgumentException("pathSegments must be at least 2");
+
+            Mesh mesh = new Mesh();
+
+            Vector3[] verts = new Vector3[(pathSegments+1) * shapeSegments];
+            Vector3[] norms = new Vector3[verts.Length];
+
+            Func<uint, uint, int> uvToVertIdx = (shapeSegment, pathSegment) => {
+                return (int)((pathSegment * shapeSegments) + shapeSegment);
+            };
+
+            int[] tris = new int[pathSegments * shapeSegments * 6];
+
+            float pathStep = 1.0f / (float)pathSegments;
+            float shapeStep = 1.0f / (float)shapeSegments;
+
+            for(uint pathSeg = 0; pathSeg < pathSegments+1; ++pathSeg)
             {
-                var triIdx = uvToVertIdx(pathSeg, shapeSeg) * 6;
-                // tris[triIdx] = uvToVertIdx(pathSeg, shapeSeg);
-                // tris[triIdx + 1] = uvToVertIdx(pathSeg + 1, shapeSeg);
-                // tris[triIdx + 2] = uvToVertIdx(pathSeg, shapeSeg + 1);
+                var pathT = pathStep * (float)pathSeg;
+                var pathPnt = Path.PositionSample(pathT);
+                var pathDir = Path.ForwardSample(pathT);
+                var pathRot = Quaternion.FromToRotation(Vector3.up, pathDir);
 
-                // tris[triIdx + 3] = uvToVertIdx(pathSeg, shapeSeg + 1);
-                // tris[triIdx + 4] = uvToVertIdx(pathSeg + 1, shapeSeg);
-                // tris[triIdx + 5] = uvToVertIdx(pathSeg + 1, shapeSeg + 1);
+                if( pathDir == -Vector3.up )
+                {
+                    // Avoid the gimbal lock
+                    pathRot *= Quaternion.AngleAxis(180.0f, Vector3.up);
+                }
+                
+                for(uint shapeSeg = 0; shapeSeg < shapeSegments; ++shapeSeg)
+                {
+                    var shapePnt = Shape.PositionSample(shapeStep * (float)shapeSeg);
+                    var vertIdx = uvToVertIdx(shapeSeg, pathSeg);
+                    var shapePntRotated = pathRot * shapePnt;
+                    verts[vertIdx] = pathPnt + shapePntRotated;
+                    //norms[vertIdx] = (verts[vertIdx] - pathPnt).normalized;
+                }
             }
-        }
-        mesh.vertices = verts;
-        mesh.triangles = tris;
 
-        return mesh;
+            var triIdx = 0;
+            var lastVertIdx = norms.Length - 1;
+            for(uint pathSeg = 0; pathSeg < pathSegments; ++pathSeg)
+            {
+                for(uint shapeSeg = 0; shapeSeg < shapeSegments; ++shapeSeg)
+                {
+                    var nextShapeSeg = (shapeSeg + 1) % shapeSegments;
+                    var vert1 = uvToVertIdx(shapeSeg, pathSeg);
+                    var vert2 = uvToVertIdx(shapeSeg, pathSeg + 1);
+                    var vert3 = uvToVertIdx(nextShapeSeg, pathSeg);
+                    var vert4 = vert3;
+                    var vert5 = vert2;
+                    var vert6 = uvToVertIdx(nextShapeSeg, pathSeg + 1);
+
+                    tris[triIdx++] = vert1;
+                    tris[triIdx++] = vert2;
+                    tris[triIdx++] = vert3;
+                    tris[triIdx++] = vert4;
+                    tris[triIdx++] = vert5;
+                    tris[triIdx++] = vert6;
+
+                    Vector3 faceNormal1 = Vector3.Cross(verts[vert1] - verts[vert2], verts[vert1] - verts[vert3]).normalized; 
+                    Vector3 faceNormal2 = Vector3.Cross(verts[vert4] - verts[vert5], verts[vert4] - verts[vert6]).normalized; 
+
+                    norms[vert1] += faceNormal1;
+                    norms[vert2] += faceNormal1;
+                    norms[vert3] += faceNormal1;
+                    norms[vert4] += faceNormal2;
+                    norms[vert5] += faceNormal2;
+                    norms[vert6] += faceNormal2;
+                }
+            }
+
+            var lastPathShapeBaseIdx = shapeSegments * pathSegments;
+
+            var firstSegmentNorms = new Vector3[shapeSegments];
+            Array.Copy(norms, firstSegmentNorms, shapeSegments);
+
+            for(var shapeSeg = 0u; shapeSeg < shapeSegments; ++shapeSeg)
+            {
+                norms[shapeSeg] += norms[lastPathShapeBaseIdx + shapeSeg];
+                norms[lastPathShapeBaseIdx + shapeSeg] += firstSegmentNorms[shapeSeg];
+            }
+
+            for(int n = 0; n < norms.Length; ++n)
+            {
+                norms[n] = norms[n].normalized;
+            }
+
+            mesh.vertices = verts;
+            mesh.normals = norms;
+            mesh.triangles = tris;
+
+            return mesh;
+        }
     }
 }

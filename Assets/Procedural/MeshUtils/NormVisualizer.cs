@@ -4,7 +4,7 @@ using System.Collections;
 
 namespace Procedural
 {
-	public class FaceNormVisualizer : MonoBehaviour 
+	public class NormVisualizer : MonoBehaviour 
 	{
 		public Color _color = Color.red;
 
@@ -17,12 +17,12 @@ namespace Procedural
 				Gizmos.color = _color;
 				var mesh = meshFilter.sharedMesh;
 
-				for(int tri = 0; tri < mesh.triangles.Length; tri += 3)
+				for(int v = 0; v < mesh.vertexCount; ++v)
 				{
-					var center = transform.TransformPoint(mesh.FaceCenter(tri));
-					var norm = mesh.FaceNorm(tri);
+					var vert = transform.TransformPoint(mesh.vertices[v]);
+					var norm = mesh.normals[v];
 
-					Gizmos.DrawLine(center, center + norm);
+					Gizmos.DrawLine(vert, vert + norm);
 				}
 			}
 		}

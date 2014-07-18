@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public interface ISpline
 {
-    Vector3 ParametricSample(float t);
+    Vector3 PositionSample(float t);
+    Vector3 ForwardSample(float t);
 }
 
