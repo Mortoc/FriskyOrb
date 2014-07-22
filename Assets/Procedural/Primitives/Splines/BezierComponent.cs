@@ -13,10 +13,10 @@ namespace Procedural
 		public Color _handleColor = Color.Lerp(Color.red, Color.black, 0.85f);
 		public bool _showForwardVectors = false;
 
-		public Vector3[] points = new Vector3[]{
+		public List<Vector3> points = new List<Vector3>(new Vector3[]{
 			new Vector3(0.0f, 1.0f, 0.0f),
             new Vector3(1.0f, 0.0f, 0.0f)
-		};
+		});
 		public bool _continuous = false;
 
 		private uint _pointsHash = 0;
@@ -33,6 +33,15 @@ namespace Procedural
 			UpdateBezier();
 			return _bezier.ForwardSample(t);
 		}
+
+        public bool Closed
+        {
+            get
+            {
+                UpdateBezier();
+                return _bezier.Closed;
+            }
+        }
 
 		private void UpdateBezier()
 		{
@@ -66,7 +75,7 @@ namespace Procedural
 				UpdateBezier();
 
 				Gizmos.color = _splineColor;
-				var last = _bezier.PositionSample(0.0f);
+				var last = transform.TransformPoint(_bezier.PositionSample(0.0f));
 				for(float t = 0.01f; t < 1.0f; t += 0.01f)
 				{
 					var current = transform.TransformPoint(_bezier.PositionSample(t));
@@ -81,6 +90,11 @@ namespace Procedural
 
 					last = current;
 				}
+                if( _continuous )
+                {
+                    var current = transform.TransformPoint(_bezier.PositionSample(0.0f));
+                    Gizmos.DrawLine(last, current);
+                }
 
 				Gizmos.color = _tangentColor;
 				foreach(var cp in _bezier.ControlPoints)

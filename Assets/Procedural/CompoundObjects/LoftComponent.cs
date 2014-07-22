@@ -25,7 +25,7 @@ namespace Procedural
         private void GenerateMesh()
         {
             var pathHash = Path.PointsHash() + pathSegments;
-            var shapeHash = Shape.GetHashCode() + shapeSegments;
+            var shapeHash = Shape.PointsHash() + shapeSegments;
 
             if( pathHash != _pathHash || shapeHash != _shapeHash)
             {
@@ -42,8 +42,9 @@ namespace Procedural
                 
                 if( meshFilter.sharedMesh )
                     DestroyImmediate(meshFilter.sharedMesh);
-
-                meshFilter.sharedMesh = _loft.GenerateMesh((uint)pathSegments, (uint)shapeSegments);
+                    
+                if( pathSegments > 1 && shapeSegments > 2 )
+                    meshFilter.sharedMesh = _loft.GenerateMesh((uint)pathSegments, (uint)shapeSegments);
             }
         }
 

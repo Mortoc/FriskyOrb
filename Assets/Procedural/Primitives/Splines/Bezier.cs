@@ -95,6 +95,17 @@ public class Bezier : ISpline
     	return new Bezier(ctrlPts);
     }
 
+    public bool Closed
+    {
+        get
+        {
+            var firstCp = _controlPoints[0];
+            var lastCp = _controlPoints[_controlPoints.Length - 1];
+
+            return (firstCp.Point - lastCp.Point).sqrMagnitude < 0.0001f;
+        }
+    }
+
 	public Bezier(IEnumerable<ControlPoint> controlPoints)
 	{
 		UpdateControlPoints(controlPoints);
