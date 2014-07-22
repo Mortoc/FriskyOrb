@@ -32,15 +32,23 @@ namespace Procedural
 
         public Mesh GenerateMesh(uint pathSegments, uint shapeSegments)
         {
+<<<<<<< HEAD
             if( pathSegments < 1 )
                 throw new ArgumentException("pathSegments must be at least 1");
             if( shapeSegments < 2 )
                 throw new ArgumentException("shapeSegments must be at least 2");
+=======
+            if( pathSegments < 2 )
+                throw new ArgumentException("pathSegments must be at least 2");
+            if( shapeSegments < 3 )
+                throw new ArgumentException("shapeSegments must be at least 3");
+>>>>>>> FETCH_HEAD
 
             Mesh mesh = new Mesh();
 
-            Vector3[] verts = new Vector3[(pathSegments+1) * shapeSegments];
+            Vector3[] verts = new Vector3[(pathSegments+1) * (shapeSegments+1)];
             Vector3[] norms = new Vector3[verts.Length];
+            Vector2[] uvs = new Vector2[verts.Length];
 
             Func<uint, uint, int> uvToVertIdx = (shapeSegment, pathSegment) => {
                 return (int)((pathSegment * shapeSegments) + shapeSegment);
@@ -49,7 +57,7 @@ namespace Procedural
             int[] tris = new int[pathSegments * shapeSegments * 6];
 
             float pathStep = 1.0f / (float)pathSegments;
-            float shapeStep = 1.0f / (float)shapeSegments;
+            float shapeStep = 1.0f / (float)(shapeSegments-1);
 
             for(uint pathSeg = 0; pathSeg < pathSegments+1; ++pathSeg)
             {
@@ -60,22 +68,24 @@ namespace Procedural
 
                 if( pathDir == -Vector3.up )
                 {
-                    // Avoid the gimbal lock
+                    // Compensate for the gimbal lock when 
+                    // pathDir is polar opposite to up
                     pathRot *= Quaternion.AngleAxis(180.0f, Vector3.up);
                 }
                 
-                for(uint shapeSeg = 0; shapeSeg < shapeSegments; ++shapeSeg)
+                for(uint shapeSeg = 0; shapeSeg < shapeSegments+1; ++shapeSeg)
                 {
-                    var shapePnt = Shape.PositionSample(shapeStep * (float)shapeSeg);
+                    var shapeT = shapeStep * (float)shapeSeg;
+                    var shapePnt = Shape.PositionSample(shapeT);
                     var vertIdx = uvToVertIdx(shapeSeg, pathSeg);
                     var shapePntRotated = pathRot * shapePnt;
                     verts[vertIdx] = pathPnt + shapePntRotated;
-                    //norms[vertIdx] = (verts[vertIdx] - pathPnt).normalized;
+                    uvs[vertIdx].x = shapeT;
+                    uvs[vertIdx].y = pathT;
                 }
             }
 
             var triIdx = 0;
-            var lastVertIdx = norms.Length - 1;
             for(uint pathSeg = 0; pathSeg < pathSegments; ++pathSeg)
             {
                 for(uint shapeSeg = 0; shapeSeg < shapeSegments; ++shapeSeg)
@@ -107,15 +117,35 @@ namespace Procedural
                 }
             }
 
-            var lastPathShapeBaseIdx = shapeSegments * pathSegments;
 
-            var firstSegmentNorms = new Vector3[shapeSegments];
-            Array.Copy(norms, firstSegmentNorms, shapeSegments);
-
-            for(var shapeSeg = 0u; shapeSeg < shapeSegments; ++shapeSeg)
+            // If the path is closed, make sure there is no normal crease at the loop
+            if (Path.Closed)
             {
-                norms[shapeSeg] += norms[lastPathShapeBaseIdx + shapeSeg];
-                norms[lastPathShapeBaseIdx + shapeSeg] += firstSegmentNorms[shapeSeg];
+                var lastPathShapeBaseIdx = shapeSegments * pathSegments;
+                var firstSegmentNorms = new Vector3[shapeSegments];
+                Array.Copy(norms, firstSegmentNorms, shapeSegments);
+
+                for (var shapeSeg = 0u; shapeSeg < shapeSegments; ++shapeSeg)
+                {
+                    norms[shapeSeg] += norms[lastPathShapeBaseIdx + shapeSeg];
+                    norms[lastPathShapeBaseIdx + shapeSeg] += firstSegmentNorms[shapeSeg];
+                }
+            }
+
+            // If the shape is closed, make sure there is no normal crease at the loop
+            if(Shape.Closed)
+            {
+                var firstSegmentNorms = new Vector3[pathSegments];
+                Array.Copy(norms, firstSegmentNorms, pathSegments);
+
+                for (var pathSeg = 0u; pathSeg < pathSegments+1; ++pathSeg)
+                {
+                    var shapeVertsStart = pathSeg * shapeSegments;
+                    var shapeVertsEnd = shapeVertsStart + shapeSegments - 1;
+                    var startNorm = norms[shapeVertsStart];
+                    norms[shapeVertsStart] += norms[shapeVertsEnd];
+                    norms[shapeVertsEnd] += startNorm;
+                }
             }
 
             for(int n = 0; n < norms.Length; ++n)
@@ -124,6 +154,7 @@ namespace Procedural
             }
 
             mesh.vertices = verts;
+            mesh.uv = uvs;
             mesh.normals = norms;
             mesh.triangles = tris;
 

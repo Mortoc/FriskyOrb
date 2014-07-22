@@ -204,5 +204,23 @@ namespace Procedural.Test
 
             UAssert.Near(dir1, dir2, 0.0001f);
         }
+
+        [Test]
+        public void ClosedBezierVerification()
+        {
+
+            var points = new Vector3[]{
+                new Vector3(10.0f, 0.0f, 0.0f),
+                new Vector3(0.0f, 10.0f, 0.0f),
+                new Vector3(-10.0f, 0.0f, 0.0f),
+                new Vector3(0.0f, -10.0f, 0.0f),
+            };
+
+            var closedBezier = Bezier.ConstructSmoothSpline(points, true);
+            var openBezier = Bezier.ConstructSmoothSpline(points, false);
+
+            Assert.IsTrue(closedBezier.Closed);
+            Assert.IsFalse(openBezier.Closed);
+        }
     }
 }

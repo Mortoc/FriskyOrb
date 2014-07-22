@@ -95,6 +95,7 @@ public class Bezier : ISpline
     	return new Bezier(ctrlPts);
     }
 
+<<<<<<< HEAD
     public static Bezier Circle(float radius)
     {
         return Bezier.ConstructSmoothSpline (
@@ -106,6 +107,17 @@ public class Bezier : ISpline
             }, 
             true
         );
+=======
+    public bool Closed
+    {
+        get
+        {
+            var firstCp = _controlPoints[0];
+            var lastCp = _controlPoints[_controlPoints.Length - 1];
+
+            return (firstCp.Point - lastCp.Point).sqrMagnitude < 0.0001f;
+        }
+>>>>>>> FETCH_HEAD
     }
 
 	public Bezier(IEnumerable<ControlPoint> controlPoints)
