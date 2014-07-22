@@ -23,7 +23,7 @@ namespace Procedural
 
 	        var totalHeight = 0.0f;
 		    var scaleDown = 1.0f;
-		    var combineMeshInstances = new CombineInstance[layerCount];
+		    var combineMeshInstances = new List<CombineInstance>();
 	        for(int i = 0; i < layerCount; ++i)
 	        {
 	        	var baseRadius = Mathf.Lerp(8.0f, 10.0f, rand.NextSinglePositive()) * scaleDown;
@@ -36,14 +36,22 @@ namespace Procedural
 		        		Vector3.up * previousTotalHeight, 
 		        		Vector3.up * totalHeight
 		        	}
-		        );
+		        );	
 
-		        combineMeshInstances[i].mesh = Loft.GenerateMesh(
-		        	heightBezier, 
-		        	baseBezier, 
-		        	(uint)heightSegments, 
-		        	(uint)(radiusSegments * scaleDown)
-		        );
+		        var heightSegs = (uint)heightSegments;
+		        var pathSegs = (uint)(radiusSegments * scaleDown);
+
+		        if( heightSegs > 0 && pathSegs > 2 )
+		        {
+		        	var combineMeshInstance = new CombineInstance();
+		        	combineMeshInstance.mesh = Loft.GenerateMesh(
+			        	heightBezier, 
+			        	baseBezier, 
+			        	heightSegs,
+			        	pathSegs
+			        );
+			        combineMeshInstances.Add(combineMeshInstance);
+			    }
 
 		        scaleDown *= Mathf.Lerp(0.75f, 0.9f, rand.NextSinglePositive());
 	        }
@@ -53,8 +61,8 @@ namespace Procedural
 	        	DestroyImmediate(meshFilter.sharedMesh);
 
 	        meshFilter.sharedMesh = new Mesh();
-	        meshFilter.sharedMesh.CombineMeshes(combineMeshInstances, true, false);
-
+	        meshFilter.sharedMesh.CombineMeshes(combineMeshInstances.ToArray(), true, false);
+	        
 	        foreach(var combineInstance in combineMeshInstances)
 	        	DestroyImmediate(combineInstance.mesh);
 		}

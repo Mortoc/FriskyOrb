@@ -11,6 +11,9 @@ namespace Procedural
         public ISpline Path { get; private set; }
         public ISpline Shape { get; private set; }
 
+        public bool StartCap { get; set; }
+        public bool EndCap { get; set; }
+
         public float Banking { get; set; }
 
         public static Mesh GenerateMesh(ISpline path, ISpline shape, uint pathSegments, uint shapeSegments)
@@ -32,29 +35,35 @@ namespace Procedural
 
         public Mesh GenerateMesh(uint pathSegments, uint shapeSegments)
         {
-<<<<<<< HEAD
             if( pathSegments < 1 )
                 throw new ArgumentException("pathSegments must be at least 1");
             if( shapeSegments < 2 )
                 throw new ArgumentException("shapeSegments must be at least 2");
-=======
-            if( pathSegments < 2 )
-                throw new ArgumentException("pathSegments must be at least 2");
-            if( shapeSegments < 3 )
-                throw new ArgumentException("shapeSegments must be at least 3");
->>>>>>> FETCH_HEAD
 
             Mesh mesh = new Mesh();
 
-            Vector3[] verts = new Vector3[(pathSegments+1) * (shapeSegments+1)];
-            Vector3[] norms = new Vector3[verts.Length];
-            Vector2[] uvs = new Vector2[verts.Length];
+            var vertCount = (pathSegments+1) * (shapeSegments+1);
+
+            if( EndCap )
+                vertCount += 2 + shapeSegments;
+            if( StartCap )
+                vertCount += 2 + shapeSegments;
+
+            Vector3[] verts = new Vector3[vertCount];
+            Vector3[] norms = new Vector3[vertCount];
+            Vector2[] uvs = new Vector2[vertCount];
 
             Func<uint, uint, int> uvToVertIdx = (shapeSegment, pathSegment) => {
                 return (int)((pathSegment * shapeSegments) + shapeSegment);
             };
 
-            int[] tris = new int[pathSegments * shapeSegments * 6];
+            var triangleCount = pathSegments * shapeSegments * 6;
+            if( EndCap )
+                triangleCount += shapeSegments * 3;
+            if( StartCap )
+                triangleCount += shapeSegments * 3;
+
+            int[] tris = new int[triangleCount];
 
             float pathStep = 1.0f / (float)pathSegments;
             float shapeStep = 1.0f / (float)(shapeSegments-1);
@@ -151,6 +160,13 @@ namespace Procedural
             for(int n = 0; n < norms.Length; ++n)
             {
                 norms[n] = norms[n].normalized;
+            }
+
+            if( EndCap )
+            {
+                var endCenter = Path.PositionSample(1.0f);
+                var endNormal = Path.ForwardSample(1.0f);
+
             }
 
             mesh.vertices = verts;

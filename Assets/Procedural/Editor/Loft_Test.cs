@@ -178,5 +178,18 @@ namespace Procedural.Test
 
             Mesh.DestroyImmediate(loftMesh);
         }
+
+        [Test]
+        public void EndCapVerification()
+        {
+            var tube = BuildTube(10.0f, 1.0f);
+            tube.EndCap = true;
+            tube.StartCap = false;
+            Mesh loftMesh = tube.GenerateMesh(1, 4);
+
+            Assert.AreEqual(16, loftMesh.triangles.Length);
+
+            Mesh.DestroyImmediate(loftMesh);
+        }
     }
 }
