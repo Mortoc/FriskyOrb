@@ -95,6 +95,19 @@ public class Bezier : ISpline
     	return new Bezier(ctrlPts);
     }
 
+    public static Bezier Circle(float radius)
+    {
+        return Bezier.ConstructSmoothSpline (
+            new Vector3[] {
+                new Vector3(-radius, 0.0f, 0.0f),
+                new Vector3(0.0f, 0.0f, -radius),
+                new Vector3(radius, 0.0f, 0.0f),
+                new Vector3(0.0f, 0.0f, radius)
+            }, 
+            true
+        );
+    }
+
 	public Bezier(IEnumerable<ControlPoint> controlPoints)
 	{
 		UpdateControlPoints(controlPoints);

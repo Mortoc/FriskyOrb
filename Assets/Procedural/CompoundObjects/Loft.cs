@@ -13,6 +13,11 @@ namespace Procedural
 
         public float Banking { get; set; }
 
+        public static Mesh GenerateMesh(ISpline path, ISpline shape, uint pathSegments, uint shapeSegments)
+        {
+            return new Loft(path, shape).GenerateMesh(pathSegments, shapeSegments);
+        }
+
 
         public Loft(ISpline path, ISpline shape)
         {
@@ -27,10 +32,10 @@ namespace Procedural
 
         public Mesh GenerateMesh(uint pathSegments, uint shapeSegments)
         {
-            if( pathSegments < 2 )
-                throw new ArgumentException("pathSegments must be at least 2");
+            if( pathSegments < 1 )
+                throw new ArgumentException("pathSegments must be at least 1");
             if( shapeSegments < 2 )
-                throw new ArgumentException("pathSegments must be at least 2");
+                throw new ArgumentException("shapeSegments must be at least 2");
 
             Mesh mesh = new Mesh();
 
