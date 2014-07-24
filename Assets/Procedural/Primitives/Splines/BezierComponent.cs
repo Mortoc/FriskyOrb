@@ -12,6 +12,8 @@ namespace Procedural
 		public Color _tangentColor = Color.Lerp(Color.red, Color.black, 0.75f);
 		public Color _handleColor = Color.Lerp(Color.red, Color.black, 0.85f);
 		public bool _showForwardVectors = false;
+		public bool _triangulate = false;
+		public int _triangulateSegments = 16;
 
 		public List<Vector3> points = new List<Vector3>(new Vector3[]{
 			new Vector3(0.0f, 1.0f, 0.0f),
@@ -49,6 +51,21 @@ namespace Procedural
 			if( pointsHash != _pointsHash )
 			{
 				_bezier = Bezier.ConstructSmoothSpline(points, _continuous);
+
+				if( _triangulate ) {
+					var meshFilter = GetComponent<MeshFilter>();
+					if( !meshFilter )
+						meshFilter = gameObject.AddComponent<MeshFilter>();
+
+					if( meshFilter.sharedMesh )
+						DestroyImmediate(meshFilter.sharedMesh);
+
+					if( !renderer )
+						gameObject.AddComponent<MeshRenderer>();
+
+					meshFilter.sharedMesh = _bezier.Triangulate(_triangulateSegments);
+				}
+
 				_pointsHash = pointsHash;
 			}
 		}
@@ -56,6 +73,7 @@ namespace Procedural
 		public uint PointsHash()
 		{
 			var result = (uint)points.GetHashCode();
+			result += (uint)_triangulateSegments;
 			foreach(var pnt in points)
 			{	
 				result ^= BitConverter.ToUInt32(BitConverter.GetBytes(pnt.x), 0);
@@ -65,6 +83,9 @@ namespace Procedural
 
 			if( _continuous )
 				result ^= 1;
+
+			if( _triangulate )
+				result ^= 2;
 
 			return result;
 		}

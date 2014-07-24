@@ -1,0 +1,438 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"jus",
+				"justify-content"
+			],
+			[
+				"j",
+				"justify-content"
+			],
+			[
+				"text-",
+				"text-align"
+			],
+			[
+				"flex",
+				"flex-direction"
+			],
+			[
+				"trian",
+				"triangleCount"
+			],
+			[
+				"combine",
+				"combineMeshInstance"
+			],
+			[
+				"heg",
+				"heightSegments"
+			],
+			[
+				"comb",
+				"combineMeshInstances"
+			],
+			[
+				"ne",
+				"NextSinglePositive"
+			],
+			[
+				"shape",
+				"shapeSegments"
+			],
+			[
+				"sha",
+				"shapeSegments"
+			],
+			[
+				"height",
+				"heightSegments"
+			],
+			[
+				"baseH",
+				"baseHeightBezier"
+			],
+			[
+				"base",
+				"baseBezier"
+			],
+			[
+				"shapeSe",
+				"shapeSeg"
+			],
+			[
+				"face",
+				"faceNormal1"
+			],
+			[
+				"shapePnt",
+				"shapePntRotated"
+			],
+			[
+				"_tube",
+				"_tubePath"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 47.0,
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/mortoc/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/Editor/Loft_Test.cs",
+		"/Users/mortoc/Projects/crisply/app/assets/javascripts/v3/activity/stylesheets/bubble-preview.less",
+		"/Users/mortoc/Projects/crisply/app/assets/javascripts/v3/activity/directives/stackedBargraph.js",
+		"/Users/mortoc/Projects/crisply/app/assets/javascripts/v3/activity/controllers/bubblePreviewCtrl.js",
+		"/Users/mortoc/Projects/crisply/app/assets/javascripts/v3/activity/pages/_bubble_preview.html",
+		"/Users/mortoc/Projects/crisply/app/assets/stylesheets/v3/elements.less",
+		"/Users/mortoc/Projects/crisply/app/assets/stylesheets/v3/all.less",
+		"/Users/mortoc/Projects/crisply/db/migrate/20120402144919_add_user_last_logged_in_access.rb",
+		"/Users/mortoc/Projects/crisply/app/assets/stylesheets/application-legacy.css",
+		"/Users/mortoc/Projects/crisply/crweb1-a724.dump",
+		"/Users/mortoc/Projects/crisply/node_modules/karma/node_modules/log4js/examples/example-connect-logger.js",
+		"/Users/mortoc/Projects/crisply/config/environment.rb",
+		"/Users/mortoc/Projects/crisply/app/assets/javascripts/v3/activity/stylesheets/stacked-bargraph.less",
+		"/Users/mortoc/Projects/crisply/app/controllers/v3/start_controller.rb",
+		"/Users/mortoc/Projects/crisply/lib/stats_array.rb",
+		"/Users/mortoc/Projects/crisply/config/initializers/secret_token.rb",
+		"/Users/mortoc/Projects/crisply/db/seeds.rb",
+		"/Users/mortoc/Projects/crisply/app/helpers/source_view_object.rb",
+		"/Users/mortoc/Projects/crisply/app/assets/stylesheets/variables.css.scss",
+		"/Users/mortoc/Projects/crisply/test/feature_test_helper.rb",
+		"/Users/mortoc/Projects/crisply/spec/javascripts/v3/activity/BubblePreviewCtrlSpec.js",
+		"/Users/mortoc/Projects/crisply/app/views/project_assignments/edit_by_user.erb",
+		"/Users/mortoc/Projects/crisply/bower.json",
+		"/Users/mortoc/Projects/crisply/lib/bubble.rb",
+		"/Users/mortoc/Projects/crisply/test/features/edit_timesheet_test.rb",
+		"/Users/mortoc/Projects/crisply/test/functional/v3/timesheets_controller_test.rb",
+		"/Users/mortoc/Projects/crisply/app/assets/javascripts/v3/activity/pages/_edit_time_popover.html",
+		"/Users/mortoc/Projects/crisply/app/assets/javascripts/v3/activity/pages/_activity_item_groups_table.html",
+		"/Users/mortoc/Projects/crisply/app/assets/javascripts/v3/activity/pages/index.html",
+		"/Users/mortoc/Projects/crisply/app/views/v3/dashboard/activity_timeline.html.erb",
+		"/Users/mortoc/Projects/crisply/app/models/activity_item.rb",
+		"/Users/mortoc/Projects/crisply/test/functional/account_controller_test.rb",
+		"/Users/mortoc/Projects/crisply/db/migrate/20101103164328_add_calendar_url_to_user.rb",
+		"/Users/mortoc/Projects/crisply/app/controllers/account_controller.rb",
+		"/Users/mortoc/Projects/crisply/test/features/orientation_test.rb",
+		"/Users/mortoc/Projects/crisply/lib/override_rake_task.rb",
+		"/Users/mortoc/Projects/crisply/app/controllers/v3/timesheets_controller.rb",
+		"/Users/mortoc/Projects/crisply/lib/timesheet_constants.rb",
+		"/Users/mortoc/Projects/crisply/config/initializers/timeout.rb",
+		"/Users/mortoc/Projects/crisply/app/mailers/v3/timesheet_mailer.rb",
+		"/Users/mortoc/Projects/crisply/vendor/assets/javascripts/tag-it.js",
+		"/Users/mortoc/Projects/crisply/log/test.log",
+		"/Users/mortoc/Projects/crisply/app/assets/javascripts/v3/activity/stylesheets/edit-time-popover.less",
+		"/Users/mortoc/Projects/crisply/db/migrate/20120801190458_ensure_demo_data_account.rb",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Camera/LookAtCamera.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/CompoundObjects/Loft.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Standard Assets/Image Effects (Pro Only)/GlowEffect.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Glow11.meta",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/Primitives/Splines/Bezier.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/Editor/Bezier_Test.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/CompoundObjects/Loft.cs.meta",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/CompoundObjects/LoftComponent.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/ObjectLibrary/GeneratedMeshObject.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/ObjectLibrary/Plateau.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Levels/LevelGenerator.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/MeshUtils/MeshExt.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/Primitives/Splines/BezierComponent.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/Primitives/Splines/ISpline.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/GUI/LevelGui.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Levels.meta",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Misc/LODManager.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/MeshUtils.meta",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Math/MathExt.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Math.meta",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Art/Shaders/Madfinger/Environment/MADFINGER-animtexture.shader",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/UnityTestTools/UnitTesting/Editor/NUnitUnityExtensions.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/UnityTestTools/NUnitUnityExtensions.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Standard Assets/Image Effects (Pro Only)/BlurEffect.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Art/Skymap/Background.mat"
+	],
+	"find":
+	{
+		"height": 27.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"red",
+			"pla",
+			"span",
+			"row-name",
+			"onMouseHover",
+			"hover",
+			"addHoverState",
+			"</div>",
+			"dayLength",
+			"graphTotalRecip",
+			"setupGraphDataElements",
+			"addPlusButton",
+			"addThinkingIndicator",
+			"all_text",
+			"\n    binding.pry\n    page.save_screenshot \"/Users/mortoc/desktop/ilovethis#{Time.now.to_f}.png\"",
+			"trigger('click')",
+			"text",
+			"require",
+			"= ",
+			"plateaulayer",
+			"plateauLayer",
+			"plateaulayer",
+			"layer",
+			"Layer",
+			"layer",
+			"_rand",
+			"lastVertIdx - ",
+			"normals",
+			"v",
+			"0",
+			"continuous",
+			"Points",
+			"points",
+			"Points",
+			"points",
+			"Points",
+			"points",
+			"1.0f",
+			"ParametricSample",
+			"tube",
+			"pnt2",
+			"pnt1",
+			"Vector3",
+			"vertices",
+			"mesh",
+			"triStartIdx",
+			"points",
+			"nextIdx",
+			"Slerp"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "FriskyOrb.sublime-project",
+	"replace":
+	{
+		"height": 50.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"all.less",
+				"app/assets/stylesheets/v3/all.less"
+			],
+			[
+				"elementsless",
+				"app/assets/stylesheets/v3/elements.less"
+			],
+			[
+				"stackedless",
+				"app/assets/javascripts/v3/activity/stylesheets/stacked-bargraph.less"
+			],
+			[
+				"bubblepreviewctrl",
+				"app/assets/javascripts/v3/activity/controllers/bubblePreviewCtrl.js"
+			],
+			[
+				"bubblepreviewhtml",
+				"app/assets/javascripts/v3/activity/pages/_bubble_preview.html"
+			],
+			[
+				"javascriptsv3activityhtml",
+				"app/assets/javascripts/v3/activity/pages/_activity_item_groups_table.html"
+			],
+			[
+				"orien",
+				"test/features/orientation_test.rb"
+			],
+			[
+				"timesheetcontrollertest",
+				"test/functional/v3/timesheets_controller_test.rb"
+			],
+			[
+				"edittime",
+				"app/assets/javascripts/v3/activity/pages/_edit_time_popover.html"
+			],
+			[
+				"layered",
+				"Procedural/ObjectLibrary/LayeredPlateau.cs"
+			],
+			[
+				"loft_te",
+				"Procedural/Editor/Loft_Test.cs"
+			],
+			[
+				"loft",
+				"Procedural/CompoundObjects/Loft.cs"
+			],
+			[
+				"generate",
+				"Procedural/ObjectLibrary/GeneratedMeshObject.cs"
+			],
+			[
+				"bezier",
+				"Procedural/Primitives/Splines/Bezier.cs"
+			],
+			[
+				"loftte",
+				"Procedural/Editor/Loft_Test.cs"
+			],
+			[
+				"loftcom",
+				"Procedural/CompoundObjects/LoftComponent.cs"
+			],
+			[
+				"levelgener",
+				"Levels/LevelGenerator.cs"
+			],
+			[
+				"beztest",
+				"Procedural/Editor/Bezier_Test.cs"
+			],
+			[
+				"meshext",
+				"Procedural/MeshUtils/MeshExt.cs"
+			],
+			[
+				"mathex",
+				"Math/MathExt.cs"
+			],
+			[
+				"bezier_test",
+				"Procedural/Editor/Bezier_Test.cs"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+		],
+		"width": 755.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 243.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

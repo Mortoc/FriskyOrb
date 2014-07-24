@@ -14,6 +14,40 @@ namespace Procedural
 		public int radiusSegments = 24;
 		public int heightSegments = 2;
 
+		public float baseRadiusMin = 10.0f;
+		public float baseRadiusMax = 12.0f;
+
+		public float scaleDownMin = 0.8f;
+		public float scaleDownMax = 0.8f;
+
+		public float layerHeightMin = 2.0f;
+		public float layerHeightMax = 5.0f;
+
+		public float centerJitterAmount = 0.1f;
+		public float waviness = 0.25f;
+
+		private Bezier GenerateBaseBezier(float size, MersenneTwister rand)
+		{
+			var centerJitterX = Mathf.Lerp(-1.0f, 1.0f, size * centerJitterAmount * rand.NextSinglePositive());
+			var centerJitterZ = Mathf.Lerp(-1.0f, 1.0f, size * centerJitterAmount * rand.NextSinglePositive());
+			var centerJitter = new Vector3(centerJitterX, 0.0f, centerJitterZ);
+			var cpCount = 32;
+			var step = Mathf.PI * -2.0f / (float)cpCount;
+			var cps = new Vector3[cpCount];
+
+			for(int i = 0; i < cpCount; ++i)
+			{
+				var t = (float)i * step;
+				var x = Mathf.Sin(t) * size;
+				var z = Mathf.Cos(t) * size;
+				cps[i].x = Mathf.Lerp(0.0f, x, 1.0f - (waviness * rand.NextSinglePositive()));
+				cps[i].z = Mathf.Lerp(0.0f, z, 1.0f - (waviness * rand.NextSinglePositive()));
+				cps[i] += centerJitter;
+			}
+
+			return Bezier.ConstructSmoothSpline(cps, true);
+		}
+
 		protected override void GenerateMesh()
 		{
 			foreach(Transform child in transform)
@@ -26,11 +60,11 @@ namespace Procedural
 		    var combineMeshInstances = new List<CombineInstance>();
 	        for(int i = 0; i < layerCount; ++i)
 	        {
-	        	var baseRadius = Mathf.Lerp(8.0f, 10.0f, rand.NextSinglePositive()) * scaleDown;
-		        var baseBezier = Bezier.Circle(baseRadius * scaleDown);
+	        	var baseRadius = Mathf.Lerp(baseRadiusMin, baseRadiusMax, rand.NextSinglePositive()) * scaleDown;
+		        var baseBezier = GenerateBaseBezier(baseRadius * scaleDown, rand);
 
 		        var previousTotalHeight = totalHeight;
-		        totalHeight += Mathf.Lerp(0.9f, 1.1f, rand.NextSinglePositive()) * scaleDown;
+		        totalHeight += Mathf.Lerp(layerHeightMin, layerHeightMax, rand.NextSinglePositive()) * scaleDown;
 		        var heightBezier = Bezier.ConstructSmoothSpline(
 		        	new Vector3[]{
 		        		Vector3.up * previousTotalHeight, 
@@ -53,7 +87,7 @@ namespace Procedural
 			        combineMeshInstances.Add(combineMeshInstance);
 			    }
 
-		        scaleDown *= Mathf.Lerp(0.75f, 0.9f, rand.NextSinglePositive());
+		        scaleDown *= Mathf.Lerp(scaleDownMin, scaleDownMax, rand.NextSinglePositive());
 	        }
 
 	        var meshFilter = GetComponent<MeshFilter>();
@@ -69,7 +103,16 @@ namespace Procedural
 
 		public override int GetHashCode()
 		{
-			return layerCount + randomSeed + radiusSegments + heightSegments;
+			var hash = layerCount + randomSeed + radiusSegments + heightSegments;
+			hash ^= BitConverter.ToInt32(BitConverter.GetBytes(centerJitterAmount), 0);
+			hash ^= BitConverter.ToInt32(BitConverter.GetBytes(waviness), 0);
+			hash ^= BitConverter.ToInt32(BitConverter.GetBytes(scaleDownMin), 0);
+			hash ^= BitConverter.ToInt32(BitConverter.GetBytes(scaleDownMax), 0);
+			hash ^= BitConverter.ToInt32(BitConverter.GetBytes(baseRadiusMin), 0);
+			hash ^= BitConverter.ToInt32(BitConverter.GetBytes(baseRadiusMax), 0);
+			hash ^= BitConverter.ToInt32(BitConverter.GetBytes(layerHeightMin), 0);
+			hash ^= BitConverter.ToInt32(BitConverter.GetBytes(layerHeightMax), 0);
+			return hash;
 		}
 	}
 }
