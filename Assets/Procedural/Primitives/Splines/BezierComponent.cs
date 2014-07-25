@@ -45,7 +45,7 @@ namespace Procedural
             }
         }
 
-		private void UpdateBezier()
+		public void UpdateBezier()
 		{
 			var pointsHash = PointsHash();
 			if( pointsHash != _pointsHash )
@@ -63,7 +63,7 @@ namespace Procedural
 					if( !renderer )
 						gameObject.AddComponent<MeshRenderer>();
 
-					meshFilter.sharedMesh = _bezier.Triangulate(_triangulateSegments);
+					meshFilter.sharedMesh = _bezier.Triangulate((uint)_triangulateSegments);
 				}
 
 				_pointsHash = pointsHash;

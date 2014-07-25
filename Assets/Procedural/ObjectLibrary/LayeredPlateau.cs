@@ -85,6 +85,10 @@ namespace Procedural
 			        	pathSegs
 			        );
 			        combineMeshInstances.Add(combineMeshInstance);
+
+			        var topCap = new CombineInstance();
+			        topCap.mesh = baseBezier.Triangulate(pathSegs, Vector3.up * totalHeight);
+			        combineMeshInstances.Add(topCap);
 			    }
 
 		        scaleDown *= Mathf.Lerp(scaleDownMin, scaleDownMax, rand.NextSinglePositive());

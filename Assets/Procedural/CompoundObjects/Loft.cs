@@ -44,11 +44,6 @@ namespace Procedural
 
             var vertCount = (pathSegments+1) * (shapeSegments+1);
 
-            if( EndCap )
-                vertCount += 2 + shapeSegments;
-            if( StartCap )
-                vertCount += 2 + shapeSegments;
-
             Vector3[] verts = new Vector3[vertCount];
             Vector3[] norms = new Vector3[vertCount];
             Vector2[] uvs = new Vector2[vertCount];
@@ -58,11 +53,6 @@ namespace Procedural
             };
 
             var triangleCount = pathSegments * shapeSegments * 6;
-            if( EndCap )
-                triangleCount += shapeSegments * 3;
-            if( StartCap )
-                triangleCount += shapeSegments * 3;
-
             int[] tris = new int[triangleCount];
 
             float pathStep = 1.0f / (float)pathSegments;
@@ -160,13 +150,6 @@ namespace Procedural
             for(int n = 0; n < norms.Length; ++n)
             {
                 norms[n] = norms[n].normalized;
-            }
-
-            if( EndCap )
-            {
-                var endCenter = Path.PositionSample(1.0f);
-                var endNormal = Path.ForwardSample(1.0f);
-
             }
 
             mesh.vertices = verts;

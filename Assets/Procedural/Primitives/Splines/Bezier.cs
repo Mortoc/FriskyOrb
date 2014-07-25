@@ -190,10 +190,15 @@ namespace Procedural
             return (afterSample - beforeSample).normalized;
         }
 
-        public Mesh Triangulate(int samples)
+        public Mesh Triangulate(uint samples)
+        {
+            return Triangulate(samples, Vector3.zero);
+        }
+        
+        public Mesh Triangulate(uint samples, Vector3 offset)
         {
             if( !Closed )
-                throw new InvalidOperationException("Can only triangulate a closed bezier");
+                throw new InvalidOperationException("Only Closed Beziers can be Triangulated");
 
             var center = Vector3.zero;
             var cpCount = 0.0f;
@@ -215,9 +220,9 @@ namespace Procedural
 
             float step = 1.0f / (float)samples;
             float t = 0.0f;
-            for(int i = 0; i < samples; ++i)
+            for(uint i = 0; i < samples; ++i)
             {
-                verts[i] = PositionSample(t);
+                verts[i] = PositionSample(t) + offset;
                 t += step;
                 norms[i] = up;
             }
