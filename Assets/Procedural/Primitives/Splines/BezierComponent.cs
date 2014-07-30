@@ -23,6 +23,13 @@ namespace Procedural
 
 		private uint _pointsHash = 0;
 		private Bezier _bezier = null;
+		private bool _overridden = false;
+
+		public void OverrideBezier(Bezier b)
+		{
+			_bezier = b;
+			_overridden = true;
+		}
 
 		public Vector3 PositionSample(float t)
 		{
@@ -47,13 +54,18 @@ namespace Procedural
 
 		public void UpdateBezier()
 		{
+			if( _overridden )
+				return;
+				
 			var pointsHash = PointsHash();
 			if( pointsHash != _pointsHash )
 			{
 				_bezier = Bezier.ConstructSmoothSpline(points, _continuous);
 
-				if( _triangulate ) {
-					var meshFilter = GetComponent<MeshFilter>();
+				var meshFilter = GetComponent<MeshFilter>();
+
+				if( _triangulate ) 
+				{
 					if( !meshFilter )
 						meshFilter = gameObject.AddComponent<MeshFilter>();
 
@@ -65,6 +77,17 @@ namespace Procedural
 
 					meshFilter.sharedMesh = _bezier.Triangulate((uint)_triangulateSegments);
 				}
+				else if( meshFilter )
+				{
+					if( meshFilter.sharedMesh )
+						DestroyImmediate(meshFilter.sharedMesh);
+
+					if( renderer )
+						DestroyImmediate(renderer);
+
+					DestroyImmediate(meshFilter);
+				}
+
 
 				_pointsHash = pointsHash;
 			}

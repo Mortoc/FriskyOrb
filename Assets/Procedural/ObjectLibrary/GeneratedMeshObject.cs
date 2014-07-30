@@ -9,7 +9,7 @@ namespace Procedural
 	{
 		private int _lastHash = 0;
 
-        protected virtual void Start()
+        protected virtual void Awake()
         {
             _lastHash = 0;
 
@@ -33,6 +33,7 @@ namespace Procedural
         	if( hash != _lastHash )
         	{
 		    	_lastHash = hash;
+                DestroyImmediate(gameObject.GetComponent<MeshFilter>().sharedMesh);
 		        GenerateMesh();
 		    }
         }

@@ -381,6 +381,18 @@ public static class MathExt
         return retval;
     }
 
+    public static int Max(params int[] vals)
+    {
+    	int result = Int32.MinValue;
+    	foreach(var val in vals)
+    	{
+    		if( val > result )
+    			result = val;
+    	}
+
+    	return result;
+    }
+
 
 	public static Vector4 Average(IEnumerable<Vector4> vectors)
 	{

@@ -8,19 +8,26 @@ namespace Procedural
 {
     public class Loft
     {
-        public ISpline Path { get; private set; }
-        public ISpline Shape { get; private set; }
+        public ISpline Path { get; set; }
+        public ISpline Shape { get; set; }
+
+        public ISpline Scale { get; set; }
 
         public bool StartCap { get; set; }
         public bool EndCap { get; set; }
 
         public float Banking { get; set; }
 
+        // A spline that evaluates to y=1, z=1 for all values of x
+        private static ISpline _identitySpline = Bezier.ConstructSmoothSpline(new Vector3[]{
+            new Vector3(0.0f, 1.0f, 1.0f),
+            new Vector3(1.0f, 1.0f, 1.0f)
+        });
+
         public static Mesh GenerateMesh(ISpline path, ISpline shape, uint pathSegments, uint shapeSegments)
         {
             return new Loft(path, shape).GenerateMesh(pathSegments, shapeSegments);
         }
-
 
         public Loft(ISpline path, ISpline shape)
         {
@@ -31,6 +38,7 @@ namespace Procedural
             
             Path = path;
             Shape = shape;
+            Scale = _identitySpline;
         }
 
         public Mesh GenerateMesh(uint pathSegments, uint shapeSegments)
@@ -45,6 +53,7 @@ namespace Procedural
             var vertCount = (pathSegments+1) * (shapeSegments+1);
 
             Vector3[] verts = new Vector3[vertCount];
+            Vector4[] tangents = new Vector4[vertCount];
             Vector3[] norms = new Vector3[vertCount];
             Vector2[] uvs = new Vector2[vertCount];
 
@@ -75,15 +84,24 @@ namespace Procedural
                 for(uint shapeSeg = 0; shapeSeg < shapeSegments+1; ++shapeSeg)
                 {
                     var shapeT = shapeStep * (float)shapeSeg;
-                    var shapePnt = Shape.PositionSample(shapeT);
+                    var shapePnt = Shape.PositionSample(shapeT) * Scale.PositionSample(pathT).y;
+                    var shapeForward = Shape.ForwardSample(shapeT);
                     var vertIdx = uvToVertIdx(shapeSeg, pathSeg);
                     var shapePntRotated = pathRot * shapePnt;
+                    
                     verts[vertIdx] = pathPnt + shapePntRotated;
+                    
+                    tangents[vertIdx].x = shapeForward.x;
+                    tangents[vertIdx].y = shapeForward.y;
+                    tangents[vertIdx].z = shapeForward.z;
+                    tangents[vertIdx].w = 1.0f;
+
                     uvs[vertIdx].x = shapeT;
                     uvs[vertIdx].y = pathT;
                 }
             }
 
+            var highestVertIdx = -1;
             var triIdx = 0;
             for(uint pathSeg = 0; pathSeg < pathSegments; ++pathSeg)
             {
@@ -96,6 +114,10 @@ namespace Procedural
                     var vert4 = vert3;
                     var vert5 = vert2;
                     var vert6 = uvToVertIdx(nextShapeSeg, pathSeg + 1);
+
+                    var highestVert = MathExt.Max(vert1, vert2, vert3, vert4, vert5, vert6);
+                    if( highestVert > highestVertIdx )
+                        highestVertIdx = highestVert;
 
                     tris[triIdx++] = vert1;
                     tris[triIdx++] = vert2;
@@ -116,6 +138,8 @@ namespace Procedural
                 }
             }
 
+            //Debug.Log("Highest Vert in a Tri: " + highestVertIdx);
+            //Debug.Log("Total Verts: " + vertCount);
 
             // If the path is closed, make sure there is no normal crease at the loop
             if (Path.Closed)
@@ -155,9 +179,89 @@ namespace Procedural
             mesh.vertices = verts;
             mesh.uv = uvs;
             mesh.normals = norms;
+            mesh.tangents = tangents;
             mesh.triangles = tris;
+
+            if( StartCap || EndCap )
+            {
+                var combineMeshes = new List<CombineInstance>();
+
+                combineMeshes.Add(new CombineInstance(){mesh = mesh});
+
+                var capVertCount = (int)shapeSegments - 1;
+
+                if( StartCap )
+                {
+                    var startCapInstance = AddCrossSection(mesh, capVertCount, 0, Path.ForwardSample(0.0f) * -1.0f);
+                    combineMeshes.Add(startCapInstance);
+                }
+
+                if( EndCap )
+                {
+                    var endCapInstance = AddCrossSection(mesh, capVertCount, highestVertIdx - capVertCount, Path.ForwardSample(1.0f));
+                    combineMeshes.Add(endCapInstance);
+                }
+
+                mesh = new Mesh();
+                mesh.CombineMeshes(combineMeshes.ToArray(), true, false);
+                combineMeshes.ForEach(ci => Mesh.DestroyImmediate(ci.mesh));
+            }
 
             return mesh;
         }
+
+        private int[] FlipTris(int[] tris)
+        {
+            for(int t = 0; t < tris.Length; t += 3)
+            {
+                var swap = tris[t];
+                tris[t] = tris[t + 2];
+                tris[t + 2] = swap;
+            }
+
+            return tris;
+        }
+
+
+        private CombineInstance AddCrossSection(Mesh mesh, int vertCount, int startVert, Vector3 norm)
+        {
+            var verts = new Vector3[vertCount];
+            var norms = new Vector3[vertCount];
+            var uvs = new Vector2[vertCount];
+            var tangents = new Vector4[vertCount];
+
+            Array.Copy(mesh.vertices, startVert, verts, 0, vertCount);
+            Array.Copy(mesh.uv, startVert, uvs, 0, vertCount);
+            Array.Copy(mesh.tangents, startVert, tangents, 0, vertCount);
+
+            for(var i = 0; i < vertCount; ++i)
+                norms[i] = norm;
+
+            var sliceMesh = new Mesh();
+            sliceMesh.vertices = verts;
+            sliceMesh.normals = norms;
+            sliceMesh.uv = uvs;
+            sliceMesh.tangents = tangents;
+
+            int[] tris;
+            if( vertCount == 4 ) // 3 shape segments
+            {
+                tris = new int[]{0, 1, 2};
+            }
+            else
+            {
+                tris = Triangulator.Triangulate(verts, norm);
+
+                var v1 = verts[tris[0]];
+                var v2 = verts[tris[1]];
+                var v3 = verts[tris[2]];
+                if( Vector3.Dot(Vector3.Cross(v2 - v3, v2 - v1).normalized, norm) < 0.0f )
+                    tris = FlipTris(tris);
+            }
+
+            sliceMesh.triangles = tris;
+
+            return new CombineInstance(){mesh = sliceMesh};
+        }   
     }
 }

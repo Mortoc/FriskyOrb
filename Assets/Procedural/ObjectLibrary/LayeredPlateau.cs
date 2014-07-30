@@ -26,20 +26,29 @@ namespace Procedural
 		public float centerJitterAmount = 0.1f;
 		public float waviness = 0.25f;
 
+		private static Bezier _layerProfile = new Bezier(new Bezier.ControlPoint[]{
+			new Bezier.ControlPoint(new Vector3(0.0f, 1.0f, 0.0f)),
+			new Bezier.ControlPoint(new Vector3(1.0f, 0.8f, 0.0f), new Vector3(1.0f, 1.0f, 0.0f))
+		});
+
 		private Bezier GenerateBaseBezier(float size, MersenneTwister rand)
 		{
-			var centerJitterX = Mathf.Lerp(-1.0f, 1.0f, size * centerJitterAmount * rand.NextSinglePositive());
-			var centerJitterZ = Mathf.Lerp(-1.0f, 1.0f, size * centerJitterAmount * rand.NextSinglePositive());
-			var centerJitter = new Vector3(centerJitterX, 0.0f, centerJitterZ);
+			var centerJitterX = Mathf.Lerp(-1.0f, 1.0f, rand.NextSinglePositive());
+			var centerJitterZ = Mathf.Lerp(-1.0f, 1.0f, rand.NextSinglePositive());
+			var centerJitter = new Vector3(centerJitterX, 0.0f, centerJitterZ) * size * centerJitterAmount;
 			var cpCount = 32;
 			var step = Mathf.PI * -2.0f / (float)cpCount;
 			var cps = new Vector3[cpCount];
 
+			var recip2Pi = 1.0f / (Mathf.PI * 2.0f);
+
+			var lastSample = Mathf.Atan(0.0f / 1.0f) * recip2Pi;
 			for(int i = 0; i < cpCount; ++i)
 			{
 				var t = (float)i * step;
 				var x = Mathf.Sin(t) * size;
 				var z = Mathf.Cos(t) * size;
+
 				cps[i].x = Mathf.Lerp(0.0f, x, 1.0f - (waviness * rand.NextSinglePositive()));
 				cps[i].z = Mathf.Lerp(0.0f, z, 1.0f - (waviness * rand.NextSinglePositive()));
 				cps[i] += centerJitter;
@@ -50,9 +59,6 @@ namespace Procedural
 
 		protected override void GenerateMesh()
 		{
-			foreach(Transform child in transform)
-				DestroyImmediate(child.gameObject);
-
 	        var rand = new MersenneTwister(randomSeed);
 
 	        var totalHeight = 0.0f;
@@ -64,31 +70,31 @@ namespace Procedural
 		        var baseBezier = GenerateBaseBezier(baseRadius * scaleDown, rand);
 
 		        var previousTotalHeight = totalHeight;
-		        totalHeight += Mathf.Lerp(layerHeightMin, layerHeightMax, rand.NextSinglePositive()) * scaleDown;
+		        var thisHeightPercent = Mathf.Lerp(layerHeightMin, layerHeightMax, rand.NextSinglePositive()) * scaleDown;
+		        totalHeight += thisHeightPercent;
 		        var heightBezier = Bezier.ConstructSmoothSpline(
 		        	new Vector3[]{
 		        		Vector3.up * previousTotalHeight, 
 		        		Vector3.up * totalHeight
 		        	}
-		        );	
+		        );
 
-		        var heightSegs = (uint)heightSegments;
-		        var pathSegs = (uint)(radiusSegments * scaleDown);
+		        var heightSegs = (uint)(heightSegments * (thisHeightPercent / layerHeightMax));
+		        var shapeSegs = (uint)(radiusSegments * (scaleDown * scaleDown));
 
-		        if( heightSegs > 0 && pathSegs > 2 )
+		        if( heightSegs > 0 && shapeSegs > 2 )
 		        {
 		        	var combineMeshInstance = new CombineInstance();
-		        	combineMeshInstance.mesh = Loft.GenerateMesh(
-			        	heightBezier, 
-			        	baseBezier, 
-			        	heightSegs,
-			        	pathSegs
-			        );
+		        	var loft = new Loft(heightBezier, baseBezier);
+		        	loft.EndCap = true;
+		        	loft.Scale = _layerProfile;
+
+		        	combineMeshInstance.mesh = loft.GenerateMesh( heightSegs, shapeSegs );
 			        combineMeshInstances.Add(combineMeshInstance);
 
-			        var topCap = new CombineInstance();
-			        topCap.mesh = baseBezier.Triangulate(pathSegs, Vector3.up * totalHeight);
-			        combineMeshInstances.Add(topCap);
+			        // var topCap = new CombineInstance();
+			        // topCap.mesh = baseBezier.Triangulate((uint)radiusSegments, Vector3.up * totalHeight);
+			        // combineMeshInstances.Add(topCap);
 			    }
 
 		        scaleDown *= Mathf.Lerp(scaleDownMin, scaleDownMax, rand.NextSinglePositive());

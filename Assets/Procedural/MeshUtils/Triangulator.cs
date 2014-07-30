@@ -5,9 +5,35 @@ namespace Procedural
 {
     public static class Triangulator
     { 
+        private static Vector3[] ProjectPointsToXZ(Vector3[] points, Vector3 pointsNormHint)
+        {
+            var rotationToXZ = Quaternion.FromToRotation(pointsNormHint, Vector3.up);
+            var result = new Vector3[points.Length];
+
+            for(int i = 0; i < points.Length; ++i)
+            {
+                result[i] = MathExt.ProjectPointOnPlane(pointsNormHint, Vector3.zero, points[i]);
+                result[i] = rotationToXZ * result[i];
+            }
+
+            return result;
+        }
+
         // Projects the points to an xz aligned plane and
         // triangulates in 2D
-        public static int[] Triangulate(Vector3[] points) {
+        public static int[] Triangulate(Vector3[] points)
+        {
+            return Triangulate(points, Vector3.up);
+        }
+
+        public static int[] Triangulate(Vector3[] points, Vector3 pointsNormHint)
+        {
+            points = ProjectPointsToXZ(points, pointsNormHint);
+
+            // Debug.Log(points.Length + " points with an area of " + Mathf.Abs(Area(points)));
+            // foreach(var pnt in points)
+            //     Debug.Log("> " + pnt.x.ToString("f5") + ", " + pnt.z.ToString("f5"));
+
             List<int> indices = new List<int>();
      
             int n = points.Length;
@@ -15,11 +41,13 @@ namespace Procedural
                 return indices.ToArray();
      
             int[] V = new int[n];
-            if (Area(points) > 0) {
+            if (Area(points) > 0) 
+            {
                 for (int v = 0; v < n; v++)
                     V[v] = v;
             }
-            else {
+            else 
+            {
                 for (int v = 0; v < n; v++)
                     V[v] = (n - 1) - v;
             }
@@ -33,9 +61,11 @@ namespace Procedural
                 int u = v;
                 if (nv <= u)
                     u = 0;
+
                 v = u + 1;
                 if (nv <= v)
                     v = 0;
+
                 int w = v + 1;
                 if (nv <= w)
                     w = 0;
@@ -55,7 +85,7 @@ namespace Procedural
                     count = 2 * nv;
                 }
             }
-     
+        
             indices.Reverse();
             return indices.ToArray();
         }

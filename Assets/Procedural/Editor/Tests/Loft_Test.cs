@@ -175,8 +175,124 @@ namespace Procedural.Test
                     UAssert.Near(Vector2.zero, uv, maxDist);
                 }
             }
+            
+            Mesh.DestroyImmediate(loftMesh);
+        }
+
+        [Test]
+        public void LoftsGenerateTangentss()
+        {
+            var torus = BuildTorus(10.0f, 1.0f);
+            var shapeSamples = 10u;
+            var pathSamples = 5u;
+            Mesh loftMesh = torus.GenerateMesh(shapeSamples, pathSamples);
+
+            var maxDist = Mathf.Sqrt(2.001f);
+            for (int p = 0; p < pathSamples; ++p)
+            {
+                for (int s = 0; s < shapeSamples - 1; ++s)
+                {
+                    var tangent = loftMesh.tangents[(pathSamples * p) + s];
+                    var tangent3 = new Vector3(tangent.x, tangent.y, tangent.z);
+                    UAssert.Near(tangent3.normalized, tangent, 0.001f);
+                    UAssert.Near(tangent3.magnitude, 1.0f, 0.001f);
+                    Assert.AreEqual(Mathf.Abs(tangent.w), 1.0f);
+                }
+            }
 
             Mesh.DestroyImmediate(loftMesh);
+        }
+
+        [Test]
+        public void LoftsCanScaleAlongPath()
+        {
+            var tube = BuildTube(1.0f, 1.0f);
+            var shapeSamples = 24u;
+            var pathSamples = 24u;
+            tube.Scale = new Bezier(new Bezier.ControlPoint[]{
+                new Bezier.ControlPoint(
+                    new Vector3(0.0f, 0.0f, 0.0f),
+                    new Vector3(0.0f, -0.25f, 0.0f),
+                    new Vector3(0.0f, 0.25f, 0.0f)
+                ),
+                new Bezier.ControlPoint(
+                    new Vector3(0.5f, 0.5f, 0.0f),
+                    new Vector3(0.25f, 0.5f, 0.0f),
+                    new Vector3(0.75f, 0.5f, 0.0f)
+                ),
+                new Bezier.ControlPoint(
+                    new Vector3(1.0f, 0.0f, 0.0f),
+                    new Vector3(1.0f, 0.25f, 0.0f),
+                    new Vector3(1.0f, -0.25f, 0.0f)
+                )
+            });
+            Mesh loftMesh = tube.GenerateMesh(shapeSamples, pathSamples);
+
+            var centerPoint = new Vector3(0.0f, 0.5f, 0.0f);
+            for (int p = 0; p < pathSamples; ++p)
+            {
+                for (int s = 0; s < shapeSamples - 1; ++s)
+                {
+                    var vert = loftMesh.vertices[(pathSamples * p) + s];
+                    UAssert.Near((vert - centerPoint).magnitude, 0.5f, 0.0001f);
+                }
+            }
+
+            Mesh.DestroyImmediate(loftMesh);
+        }
+
+        [Test]
+        public void StartCapVerification()
+        {
+            var cyclinder = BuildTube(1.0f, 1.0f);
+
+            var caplessMesh = cyclinder.GenerateMesh(1, 6);
+            cyclinder.StartCap = true;
+            var mesh = cyclinder.GenerateMesh(1, 6);
+
+            Assert.Greater(mesh.triangles.Length, caplessMesh.triangles.Length);
+            Assert.Greater(mesh.vertexCount, caplessMesh.vertexCount);
+
+            int downFacingTris = 0;
+            for(int t = 0; t < mesh.triangles.Length; t += 3)
+            {
+                var v1 = mesh.vertices[mesh.triangles[t]];
+                var v2 = mesh.vertices[mesh.triangles[t + 1]];
+                var v3 = mesh.vertices[mesh.triangles[t + 2]];
+
+                // StartCap should have some tris facing down
+                if( (Vector3.down - Vector3.Cross(v2 - v3, v2 - v1).normalized).magnitude < 0.001f)
+                    downFacingTris++;
+            }
+
+            Assert.Greater(downFacingTris, 1);
+        }
+        
+        [Test]
+        public void EndCapVerification()
+        {
+            var cyclinder = BuildTube(1.0f, 1.0f);
+
+            var caplessMesh = cyclinder.GenerateMesh(1, 6);
+            cyclinder.EndCap = true;
+            var mesh = cyclinder.GenerateMesh(1, 6);
+
+            Assert.Greater(mesh.triangles.Length, caplessMesh.triangles.Length);
+            Assert.Greater(mesh.vertexCount, caplessMesh.vertexCount);
+
+            int upFacingTris = 0;
+            for(int t = 0; t < mesh.triangles.Length; t += 3)
+            {
+                var v1 = mesh.vertices[mesh.triangles[t]];
+                var v2 = mesh.vertices[mesh.triangles[t + 1]];
+                var v3 = mesh.vertices[mesh.triangles[t + 2]];
+
+                // EndCap should have some tris facing up
+                if( (Vector3.up - Vector3.Cross(v2 - v3, v2 - v1).normalized).magnitude < 0.001f)
+                    upFacingTris++;
+            }
+
+            Assert.Greater(upFacingTris, 1);
         }
     }
 }

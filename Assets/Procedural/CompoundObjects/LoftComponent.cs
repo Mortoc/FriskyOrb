@@ -10,11 +10,15 @@ namespace Procedural
         public BezierComponent Path;
         public BezierComponent Shape;
 
+        public BezierComponent Scale;
+
         public int pathSegments = 10;
         public int shapeSegments = 16;
 
-        private Loft _loft;
+        public bool startCap = false;
+        public bool endCap = false;
 
+        private Loft _loft;
 
         public override int GetHashCode()
         {
@@ -24,13 +28,30 @@ namespace Procedural
             var pathHash = Path.PointsHash() + pathSegments;
             var shapeHash = Shape.PointsHash() + shapeSegments;
 
-            return (int)(pathHash ^ shapeHash);
+            var result = pathHash ^ shapeHash;
+
+            if(Scale) 
+                result ^= Scale.PointsHash();
+
+            if(startCap)
+                result += 1;
+
+            if(endCap)
+                result += 2;
+
+            return (int)result;
         }
         
         protected override void GenerateMesh()
         {
             if( _loft == null )
-                _loft = new Loft(Path, Shape);            
+                _loft = new Loft(Path, Shape);
+
+            if( Scale != null )
+                _loft.Scale = Scale;       
+
+            _loft.StartCap = startCap;
+            _loft.EndCap = endCap;
                 
             var meshFilter = GetComponent<MeshFilter>();
             
