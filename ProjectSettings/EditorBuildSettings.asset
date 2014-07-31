@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Unity-Splashscreen.unity
+    path: Assets/Levels/SplashScreens/Unity-Splashscreen.unity
   - enabled: 1
-    path: Assets/Dive-Splashscreen.unity
+    path: Assets/Levels/SplashScreens/Dive-Splashscreen.unity
   - enabled: 1
-    path: Assets/MainMenu.unity
+    path: Assets/Levels/MainMenu.unity
   - enabled: 1
-    path: Assets/FriskyOrb.unity
+    path: Assets/Levels/Desertocalypse.unity

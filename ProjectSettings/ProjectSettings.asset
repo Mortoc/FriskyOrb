@@ -7,7 +7,7 @@ PlayerSettings:
   AndroidProfiler: 0
   defaultScreenOrientation: 4
   targetDevice: 2
-  targetGlesGraphics: -1
+  targetGlesGraphics: 2
   targetResolution: 0
   accelerometerFrequency: 60
   companyName: Deep Sea Studios
@@ -19,10 +19,10 @@ PlayerSettings:
   defaultScreenWidthWeb: 960
   defaultScreenHeightWeb: 600
   m_RenderingPath: 1
-  m_MobileRenderingPath: 1
+  m_MobileRenderingPath: 2
   m_ActiveColorSpace: 0
   m_MTRendering: 1
-  m_MobileMTRendering: 0
+  m_MobileMTRendering: 1
   m_UseDX11: 0
   m_Stereoscopic3D: 0
   iosShowActivityIndicatorOnLoading: -1
@@ -64,13 +64,13 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  iPhoneBundleIdentifier: com.mortoc.starbomb
+  iPhoneBundleIdentifier: com.deepseastudios.routeinfinity
   metroEnableIndependentInputSource: 0
   metroEnableLowLatencyPresentationAPI: 0
   productGUID: ecce1250aac8ba14bbfc136bc9e85a6c
   iPhoneBundleVersion: 1.1.0
   AndroidBundleVersionCode: 10
-  AndroidMinSdkVersion: 9
+  AndroidMinSdkVersion: 14
   AndroidPreferredInstallLocation: 0
   aotOptions: 
   apiCompatibilityLevel: 2

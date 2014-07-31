@@ -71,15 +71,14 @@ namespace Procedural
                     w = 0;
      
                 if (Snip(points, u, v, w, nv, V)) {
-                    int a, b, c, s, t;
-                    a = V[u];
-                    b = V[v];
-                    c = V[w];
+                    var a = V[u];
+                    var b = V[v];
+                    var c = V[w];
                     indices.Add(a);
                     indices.Add(b);
                     indices.Add(c);
                     m++;
-                    for (s = v, t = v + 1; t < nv; s++, t++)
+                    for( int s = v, t = v + 1; t < nv; s++, t++)
                         V[s] = V[t];
                     nv--;
                     count = 2 * nv;

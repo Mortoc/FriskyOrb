@@ -91,10 +91,6 @@ namespace Procedural
 
 		        	combineMeshInstance.mesh = loft.GenerateMesh( heightSegs, shapeSegs );
 			        combineMeshInstances.Add(combineMeshInstance);
-
-			        // var topCap = new CombineInstance();
-			        // topCap.mesh = baseBezier.Triangulate((uint)radiusSegments, Vector3.up * totalHeight);
-			        // combineMeshInstances.Add(topCap);
 			    }
 
 		        scaleDown *= Mathf.Lerp(scaleDownMin, scaleDownMax, rand.NextSinglePositive());
