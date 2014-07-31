@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: 'Material #105'
+  m_Name: Plateau
   m_Shader: {fileID: 10703, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
@@ -18,14 +18,14 @@ Material:
           name: _MainTex
         second:
           m_Texture: {fileID: 2800000, guid: aab581a8076e95f4ca7282d178713b5b, type: 3}
-          m_Scale: {x: 125, y: 125}
+          m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
           name: _BumpMap
         second:
           m_Texture: {fileID: 2800000, guid: ccd700c89f5e9d04cb6e2fd60bb6f21b, type: 3}
-          m_Scale: {x: 100, y: 100}
+          m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
@@ -39,17 +39,45 @@ Material:
           name: _ParallaxMap
         second:
           m_Texture: {fileID: 2800000, guid: a330042443557194f9ac3d8aaaa98307, type: 3}
-          m_Scale: {x: 100, y: 100}
+          m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
     m_Floats:
       data:
         first:
           name: _Shininess
-        second: .0989126936
+        second: .00999999978
       data:
         first:
           name: _rim_power
         second: .714285731
+      data:
+        first:
+          name: _Normal_influence
+        second: 1
+      data:
+        first:
+          name: _base_height
+        second: .200000003
+      data:
+        first:
+          name: _height_blur
+        second: .699999988
+      data:
+        first:
+          name: _RimPower
+        second: 3.91285706
+      data:
+        first:
+          name: _top_rim_offset
+        second: 1
+      data:
+        first:
+          name: _top_rim_blur
+        second: 0
+      data:
+        first:
+          name: _Rimpower
+        second: 1
       data:
         first:
           name: _GlowStrength
@@ -65,12 +93,12 @@ Material:
       data:
         first:
           name: _Parallax
-        second: .0237499978
+        second: .0371428542
     m_Colors:
       data:
         first:
           name: _Color
-        second: {r: .272058845, g: .138898998, b: .0180038959, a: 1}
+        second: {r: .125, g: .0147058815, b: .0147058815, a: 1}
       data:
         first:
           name: _SpecColor
@@ -83,6 +111,18 @@ Material:
         first:
           name: _rim_color
         second: {r: 1, g: .501960814, b: 0, a: 1}
+      data:
+        first:
+          name: _top_color
+        second: {r: .720588207, g: .345390588, b: .196042389, a: 1}
+      data:
+        first:
+          name: _bottom_color
+        second: {r: .0955882072, g: .0257099345, b: 0, a: 1}
+      data:
+        first:
+          name: _Rim_Color
+        second: {r: 1, g: 0, b: 0, a: 1}
       data:
         first:
           name: _GlowColor

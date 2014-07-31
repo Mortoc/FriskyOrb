@@ -57,7 +57,7 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .501960814, g: .250980407, b: 0, a: 1}
+        second: {r: .132352948, g: .0661764741, b: 0, a: 1}
       data:
         first:
           name: _Vertex_color
@@ -81,7 +81,7 @@ Material:
       data:
         first:
           name: _RimColor
-        second: {r: 1, g: .501960814, b: 0, a: 1}
+        second: {r: .485294104, g: .258930176, b: .181985289, a: 1}
 --- !u!1002 &2100001
 EditorExtensionImpl:
   serializedVersion: 6
