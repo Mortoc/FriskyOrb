@@ -30,7 +30,8 @@ public class TestGraphicsController : MonoBehaviour
 
         _cameraOffsetGoal.AddSample(_cameraMotion * Random.onUnitSphere * Time.deltaTime);
 
-        transform.position += _cameraOffsetGoal.GetSmoothedVector();
+        if (Time.time > 2.0f )
+            transform.position += _cameraOffsetGoal.GetSmoothedVector();
     }
 
     void OnGUI()
