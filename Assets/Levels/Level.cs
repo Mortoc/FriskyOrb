@@ -65,6 +65,11 @@ public class Level : MonoBehaviour
         public string Name = "";
         public GameObject Prefab = null;
         public float Difficulty = 1.0f;
+
+        public override string ToString()
+        {
+            return "Doodad[" + Prefab.name + "]";
+        }
     }
 
     [SerializeField]
@@ -339,12 +344,16 @@ public class Level : MonoBehaviour
             return;
 
         // Get all tweakables that can be used in this segment
-        int startIdx = 0;
-        int endIdx = 0;
-        for (; endIdx < _doodads.Length && _doodads[endIdx].Difficulty <= tweakables.MaxDoodadDifficulty; ++endIdx);
+        var availableDoodads = new List<Doodad>(_doodads);
+        for(int i = 0; i < _doodads.Length; ++i) {
+            var doodad = _doodads[i];
 
-        // There are no doodads usable on this segment, we're done
-        if (endIdx == 0)
+            if( doodad.Difficulty > tweakables.MaxDoodadDifficulty )
+                availableDoodads.Remove(doodad);
+        }
+
+        // If there are no doodads usable on this segment, we're done
+        if (availableDoodads.Count == 0)
             return;
 
         // How many doodads are we using?
@@ -358,7 +367,7 @@ public class Level : MonoBehaviour
         float recpDoodadCount = 1.0f / (float)doodadCount;
         for(int i = 0; i < doodadCount; ++i)
         {
-            Doodad doodad = _doodads[_rand.Next(startIdx, endIdx)];
+            Doodad doodad = availableDoodads[_rand.Next(0, availableDoodads.Count)];
             float doodadT = ((float)i + 1.0f) * recpDoodadCount * _rand.NextSingle();
 
             LevelSegment.PathSample pathSample = segment.GetPathSample(doodadT);

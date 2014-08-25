@@ -9,15 +9,15 @@ TagManager:
   Builtin Layer 2: Ignore Raycast
   Builtin Layer 3: 
   Builtin Layer 4: Water
-  Builtin Layer 5: 
+  Builtin Layer 5: UI
   Builtin Layer 6: 
   Builtin Layer 7: 
   User Layer 8: Level
   User Layer 9: Player
   User Layer 10: FX
   User Layer 11: Doodad
-  User Layer 12: 
-  User Layer 13: 
+  User Layer 12: Shootable-Doodad
+  User Layer 13: Bullet
   User Layer 14: 
   User Layer 15: 
   User Layer 16: 

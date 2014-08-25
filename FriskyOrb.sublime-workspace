@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"shapeSe",
+				"shapeSegments"
+			],
+			[
+				"down",
+				"downFacingTris"
+			],
+			[
+				"highest",
+				"highestVertIdx"
+			],
+			[
+				"ep",
+				"epsilonSqr"
+			],
+			[
+				"_val",
+				"_val1_3f"
+			],
+			[
 				"jus",
 				"justify-content"
 			],
@@ -60,10 +80,6 @@
 				"baseBezier"
 			],
 			[
-				"shapeSe",
-				"shapeSeg"
-			],
-			[
 				"face",
 				"faceNormal1"
 			],
@@ -79,6 +95,46 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "Assets/Procedural/Editor/Tests/Loft_Test.cs",
+			"settings":
+			{
+				"buffer_size": 10052,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/Procedural/ObjectLibrary/LayeredPlateau.cs",
+			"settings":
+			{
+				"buffer_size": 4427,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/Levels/Desertocalypse/DesertLevelGenerator.cs",
+			"settings":
+			{
+				"buffer_size": 102,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/Procedural/CompoundObjects/Loft.cs",
+			"settings":
+			{
+				"buffer_size": 9975,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/Math/MathExt.cs",
+			"settings":
+			{
+				"buffer_size": 15320,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -116,6 +172,22 @@
 	},
 	"file_history":
 	[
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Levels/Desertocalypse/Desertocalypse.unity",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Editor/Image Effects/DepthOfField34Editor.js",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Art/Disc.FBX",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/MeshUtils/Triangulator.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/ObjectLibrary/GeneratedMeshObject.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/UnityTestTools/Common/TestResultState.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/Primitives/TempLoftTest.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/UnityTestTools/UnitTesting/Editor/NUnitUnityExtensions.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Art/Materials/No Name.mat",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/CompoundObjects/Loft.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/Primitives/Splines/Bezier.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/Primitives/Splines/BezierComponent.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/Editor/Tests/Bezier_Test.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/Editor/BezierComponentEditor.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/CompoundObjects/LoftComponent.cs",
+		"/Users/mortoc/Projects/FriskyOrb/Assets/Standard Assets/Image Effects (Pro Only)/TwirlEffect.cs",
 		"/Users/mortoc/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/Editor/Loft_Test.cs",
 		"/Users/mortoc/Projects/crisply/app/assets/javascripts/v3/activity/stylesheets/bubble-preview.less",
@@ -162,18 +234,13 @@
 		"/Users/mortoc/Projects/crisply/app/assets/javascripts/v3/activity/stylesheets/edit-time-popover.less",
 		"/Users/mortoc/Projects/crisply/db/migrate/20120801190458_ensure_demo_data_account.rb",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Camera/LookAtCamera.cs",
-		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/CompoundObjects/Loft.cs",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Standard Assets/Image Effects (Pro Only)/GlowEffect.cs",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Glow11.meta",
-		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/Primitives/Splines/Bezier.cs",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/Editor/Bezier_Test.cs",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/CompoundObjects/Loft.cs.meta",
-		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/CompoundObjects/LoftComponent.cs",
-		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/ObjectLibrary/GeneratedMeshObject.cs",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/ObjectLibrary/Plateau.cs",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Levels/LevelGenerator.cs",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/MeshUtils/MeshExt.cs",
-		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/Primitives/Splines/BezierComponent.cs",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Procedural/Primitives/Splines/ISpline.cs",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/GUI/LevelGui.cs",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Levels.meta",
@@ -182,14 +249,13 @@
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Math/MathExt.cs",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Math.meta",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Art/Shaders/Madfinger/Environment/MADFINGER-animtexture.shader",
-		"/Users/mortoc/Projects/FriskyOrb/Assets/UnityTestTools/UnitTesting/Editor/NUnitUnityExtensions.cs",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/UnityTestTools/NUnitUnityExtensions.cs",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Standard Assets/Image Effects (Pro Only)/BlurEffect.cs",
 		"/Users/mortoc/Projects/FriskyOrb/Assets/Art/Skymap/Background.mat"
 	],
 	"find":
 	{
-		"height": 27.0
+		"height": 35.0
 	},
 	"find_in_files":
 	{
@@ -203,6 +269,29 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"startCapInstance",
+			"vertCount",
+			"downFacingTris",
+			"capTris",
+			"capNorm",
+			"capMesh",
+			"highestTriIdx",
+			"indices",
+			"pointsUpHint",
+			"up",
+			"V",
+			"n",
+			"v",
+			"V",
+			"val2_3f",
+			"val1_3f",
+			"val2_f",
+			"val1_f",
+			"verts",
+			"caps",
+			"submeshCount",
+			"Vector3",
+			"torus",
 			"red",
 			"pla",
 			"span",
@@ -269,8 +358,154 @@
 	"groups":
 	[
 		{
+			"selected": 2,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "Assets/Procedural/Editor/Tests/Loft_Test.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10052,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8882,
+								8924
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C#/C#.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4612.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Assets/Procedural/ObjectLibrary/LayeredPlateau.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4427,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1203,
+								1204
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C#/C#.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 444.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Assets/Levels/Desertocalypse/DesertLevelGenerator.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 102,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								99,
+								99
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C#/C#.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "Assets/Procedural/CompoundObjects/Loft.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9975,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6984,
+								6984
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C#/C#.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2742.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "Assets/Math/MathExt.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 15320,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								14422,
+								14422
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C#/C#.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 6768.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -321,6 +556,54 @@
 		"selected_items":
 		[
 			[
+				"desertlevel",
+				"Levels/Desertocalypse/DesertLevelGenerator.cs"
+			],
+			[
+				"generated",
+				"Procedural/ObjectLibrary/GeneratedMeshObject.cs"
+			],
+			[
+				"layred",
+				"Procedural/ObjectLibrary/LayeredPlateau.cs"
+			],
+			[
+				"mathe",
+				"Math/MathExt.cs"
+			],
+			[
+				"triangulator",
+				"Procedural/MeshUtils/Triangulator.cs"
+			],
+			[
+				"nunit",
+				"UnityTestTools/UnitTesting/Editor/NUnitUnityExtensions.cs"
+			],
+			[
+				"generate",
+				"Procedural/ObjectLibrary/GeneratedMeshObject.cs"
+			],
+			[
+				"bezier",
+				"Procedural/Primitives/Splines/BezierComponent.cs"
+			],
+			[
+				"temp",
+				"Procedural/Primitives/TempLoftTest.cs"
+			],
+			[
+				"loftcom",
+				"Procedural/CompoundObjects/LoftComponent.cs"
+			],
+			[
+				"loft",
+				"Procedural/CompoundObjects/Loft.cs"
+			],
+			[
+				"loft_test",
+				"Procedural/Editor/Tests/Loft_Test.cs"
+			],
+			[
 				"all.less",
 				"app/assets/stylesheets/v3/all.less"
 			],
@@ -365,24 +648,8 @@
 				"Procedural/Editor/Loft_Test.cs"
 			],
 			[
-				"loft",
-				"Procedural/CompoundObjects/Loft.cs"
-			],
-			[
-				"generate",
-				"Procedural/ObjectLibrary/GeneratedMeshObject.cs"
-			],
-			[
-				"bezier",
-				"Procedural/Primitives/Splines/Bezier.cs"
-			],
-			[
 				"loftte",
 				"Procedural/Editor/Loft_Test.cs"
-			],
-			[
-				"loftcom",
-				"Procedural/CompoundObjects/LoftComponent.cs"
 			],
 			[
 				"levelgener",
