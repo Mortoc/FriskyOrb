@@ -151,14 +151,14 @@ public class Player : MonoBehaviour
 
     
 
-    public void AnimateColor(Color toColor, float time)
+    public void AnimateColor(Color toColor, float time, bool thenReturnColor)
     {
         foreach(Renderer r in PlayerRenderers())
             foreach(Material mat in r.materials)
-                StartCoroutine(AnimateColorCoroutine(toColor, time, mat));
+                StartCoroutine(AnimateColorCoroutine(toColor, time, mat, thenReturnColor));
     }
 
-    private System.Collections.IEnumerator AnimateColorCoroutine(Color toColor, float time, Material mat)
+    private System.Collections.IEnumerator AnimateColorCoroutine(Color toColor, float time, Material mat, bool thenReturnColor)
     {
         float recipTime = 1.0f / time;
         Color startColor;
@@ -173,31 +173,33 @@ public class Player : MonoBehaviour
         for (float t = 0; t < time; t += Time.deltaTime)
         {
             yield return 0;
-            mat.SetColor("_rimColor", Color.Lerp(startColor, toColor, t * recipTime));
+            var color = Color.Lerp(startColor, toColor, t * recipTime);
+            if( mat.HasProperty("_rimColor"))
+                mat.SetColor("_rimColor", color);
+            else if(mat.HasProperty("_Color"))
+                mat.color = color;
+        }
+        if( mat.HasProperty("_rimColor"))
+            mat.SetColor("_rimColor", toColor);
+        else if(mat.HasProperty("_Color"))
+            mat.color = toColor;
+        
+
+        if( thenReturnColor ) 
+        {
+            StartCoroutine(AnimateColorCoroutine(startColor, time, mat, false));
         }
     }
 
-
-
-    private void PlayerDied()
+    public void PlayerDied()
     {
-        var powerupBar = FindObjectOfType<PowerupBar>();
-        if (powerupBar && powerupBar.PowerupReady)
-        {
-            powerupBar.ExecutePowerup(this);
-            return;
-        }
-
-        if (OnDeath != null)
+       if (OnDeath != null)
             OnDeath();
 
         DeathFX.transform.parent = null;
         DeathFX.PerformFX();
         Destroy(gameObject);
-
-        if( powerupBar )
-            Destroy(powerupBar.gameObject);
-
+        
 		try
 		{
 	        if (!PlayerPrefs.HasKey("best_score") || PlayerPrefs.GetInt("best_score") < Score.Instance.ActualScore)

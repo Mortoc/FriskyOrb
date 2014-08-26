@@ -5971,7 +5971,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxRange: 25
-  _fireRate: .100000001
+  _fireRate: .150000006
   _fireForce: 750
   _bulletPrefab: {fileID: 100000, guid: d5408940df6fe400eb9b7f53e51c023f, type: 2}
   _bulletEmitJitter: .200000003

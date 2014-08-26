@@ -26,16 +26,21 @@ public class ShootableDoodad : Doodad
 		_currentHitpoints = _hitpoints;
 	}
 
+	public void DestroyDoodad()
+	{
+		if( _destroyEffect )
+			_destroyEffect.PerformFX();
+
+		Destroy(gameObject);
+	}
+
 	public virtual void TakeDamage(float damage)
 	{
 		_currentHitpoints -= damage;
 
 		if( _currentHitpoints <= 0.0f )
 		{
-			if( _destroyEffect )
-				_destroyEffect.PerformFX();
-
-			Destroy(gameObject);
+			DestroyDoodad();
 		}
 	}
 }

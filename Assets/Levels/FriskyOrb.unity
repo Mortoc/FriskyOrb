@@ -354,7 +354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f211e5378e6ae4c4ea6e90814a398f2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _powerupsUntilFull: 50
+  _powerupsUntilFull: 100
   _activateSound: {fileID: 8300000, guid: 80afba955476023409d05063249f9c41, type: 3}
   _deactivateSound: {fileID: 8300000, guid: aaa2f334eb781984eaa93a9de950c280, type: 3}
   _powerupBarHeight: .5
@@ -402,6 +402,10 @@ Prefab:
     - target: {fileID: 400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
       propertyPath: m_RootMapOrder
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
+      propertyPath: _powerupsUntilFull
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 701f6c29d6bd975458f9682a5e454e58, type: 2}
@@ -548,11 +552,11 @@ MonoBehaviour:
     PowerupStringLengthJitter: 0
   - Name: You Probably Won't Pass
     StartSegment: 21
-    ApproxSegmentLength: 45
+    ApproxSegmentLength: 20
     SegmentLengthJitter: 3
-    Curviness: 5
-    MinHeightDifference: 2
-    MaxHeightDifference: 8
+    Curviness: 1
+    MinHeightDifference: 1
+    MaxHeightDifference: 3
     AscendOnly: 0
     ChanceOfDoodad: 0
     MaxDoodadDifficulty: 0
@@ -562,11 +566,11 @@ MonoBehaviour:
     PowerupStringLengthJitter: 2
   - Name: Really?
     StartSegment: 40
-    ApproxSegmentLength: 45
-    SegmentLengthJitter: 5
-    Curviness: 5
-    MinHeightDifference: 1
-    MaxHeightDifference: 5
+    ApproxSegmentLength: 40
+    SegmentLengthJitter: 10
+    Curviness: 2
+    MinHeightDifference: 0
+    MaxHeightDifference: 2
     AscendOnly: 0
     ChanceOfDoodad: 1
     MaxDoodadDifficulty: 3
@@ -576,11 +580,11 @@ MonoBehaviour:
     PowerupStringLengthJitter: 2
   - Name: Gettin Harder
     StartSegment: 50
-    ApproxSegmentLength: 40
-    SegmentLengthJitter: 5
-    Curviness: 10
+    ApproxSegmentLength: 30
+    SegmentLengthJitter: 10
+    Curviness: 3
     MinHeightDifference: 0
-    MaxHeightDifference: 15
+    MaxHeightDifference: 5
     AscendOnly: 0
     ChanceOfDoodad: .5
     MaxDoodadDifficulty: 100
@@ -591,10 +595,10 @@ MonoBehaviour:
   - Name: End Game
     StartSegment: 60
     ApproxSegmentLength: 45
-    SegmentLengthJitter: 6
-    Curviness: 12
-    MinHeightDifference: 2
-    MaxHeightDifference: 20
+    SegmentLengthJitter: 10
+    Curviness: 10
+    MinHeightDifference: 0
+    MaxHeightDifference: 11
     AscendOnly: 0
     ChanceOfDoodad: 1.5
     MaxDoodadDifficulty: 100
@@ -1020,6 +1024,74 @@ Prefab:
     - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
       propertyPath: _tweakables.Array.data[1].MaxDifficulty
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[6].ApproxSegmentLength
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[6].Curviness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[6].MinHeightDifference
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[6].MaxHeightDifference
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[7].ApproxSegmentLength
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[7].SegmentLengthJitter
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[7].Curviness
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[7].MinHeightDifference
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[7].MaxHeightDifference
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[8].Curviness
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[8].ApproxSegmentLength
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[8].SegmentLengthJitter
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[8].MaxHeightDifference
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[9].Curviness
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[9].SegmentLengthJitter
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[9].MinHeightDifference
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
+      propertyPath: _tweakables.Array.data[9].MaxHeightDifference
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 85aa34ac0e7b7804390c9ab5d365f071, type: 2}
