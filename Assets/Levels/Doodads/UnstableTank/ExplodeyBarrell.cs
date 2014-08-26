@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class ExplodeyBarrell : Doodad
+public class ExplodeyBarrell : ShootableDoodad
 {
     [SerializeField]
     private float _playerForce = 100.0f;

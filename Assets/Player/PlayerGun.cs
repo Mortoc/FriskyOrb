@@ -15,6 +15,9 @@ public class PlayerGun : MonoBehaviour
 	[SerializeField]
 	private GameObject _bulletPrefab;
 
+	[SerializeField]
+	private float _bulletEmitJitter = 1.0f;
+
 	private float _nextShotTime = 0.0f;
 
 	private int _layerMask;
@@ -33,7 +36,7 @@ public class PlayerGun : MonoBehaviour
 			if( Physics.SphereCast(rigidbody.position, 1.0f, dir, out rh, _maxRange, _layerMask) )
 			{	
 				var bullet = (GameObject)Instantiate(_bulletPrefab);
-				bullet.rigidbody.position = rigidbody.position;
+				bullet.rigidbody.position = rigidbody.position + (UnityEngine.Random.onUnitSphere * _bulletEmitJitter);
 				bullet.rigidbody.AddForce(dir * _fireForce + rigidbody.velocity, ForceMode.Impulse);
 				_nextShotTime = Time.time + _fireRate;
 			}

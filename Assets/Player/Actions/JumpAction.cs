@@ -26,13 +26,13 @@ public class JumpAction : MonoBehaviour
     {
 		if ( !JumpEnded )
 	    {
-			ApplyEndJump();
+            JumpEnded = true;
 	    }
     }
 
     public void Jump()
     {
-        if (JumpEnded && _player.IsGrounded)
+        if (JumpEnded)
 		{
 			JumpEnded = false;
 			_jumpEffect.SendMessage("FirstJump", true);
@@ -50,16 +50,6 @@ public class JumpAction : MonoBehaviour
 			return;
 
 		_player.rigidbody.AddForce(Physics.gravity.normalized * 2.0f * _jumpStrength, ForceMode.Impulse);
-        
-		ApplyEndJump();
-	}
-
-	private void ApplyEndJump()
-	{
-		if (!JumpEnded)
-		{
-			JumpEnded = true;
-		}
 	}
 
     private void ApplyJump()
@@ -77,8 +67,4 @@ public class JumpAction : MonoBehaviour
         _player.rigidbody.AddForce(Physics.gravity.normalized * -1.0f * _jumpStrength, ForceMode.Impulse);
         _jumpEffect.PerformFX();
     }
-
-
-
-
 }
