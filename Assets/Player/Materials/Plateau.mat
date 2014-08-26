@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Plateau
-  m_Shader: {fileID: 10703, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 9, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
@@ -17,7 +17,7 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 2800000, guid: aab581a8076e95f4ca7282d178713b5b, type: 3}
+          m_Texture: {fileID: 2800000, guid: beb2a03f00e48b943b207f8c81cd83f2, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -48,11 +48,15 @@ Material:
         second: .00999999978
       data:
         first:
+          name: _Parallax
+        second: .0371428542
+      data:
+        first:
           name: _rim_power
         second: .714285731
       data:
         first:
-          name: _Normal_influence
+          name: _GlowStrength
         second: 1
       data:
         first:
@@ -80,20 +84,16 @@ Material:
         second: 1
       data:
         first:
-          name: _GlowStrength
-        second: 1
+          name: _stretch
+        second: -.0714285746
       data:
         first:
           name: _rimPower
         second: .5
       data:
         first:
-          name: _stretch
-        second: -.0714285746
-      data:
-        first:
-          name: _Parallax
-        second: .0371428542
+          name: _Normal_influence
+        second: 1
     m_Colors:
       data:
         first:
@@ -113,6 +113,10 @@ Material:
         second: {r: 1, g: .501960814, b: 0, a: 1}
       data:
         first:
+          name: _GlowColor
+        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
+      data:
+        first:
           name: _top_color
         second: {r: .720588207, g: .345390588, b: .196042389, a: 1}
       data:
@@ -125,12 +129,12 @@ Material:
         second: {r: 1, g: 0, b: 0, a: 1}
       data:
         first:
-          name: _GlowColor
-        second: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
-      data:
-        first:
           name: _DiffuseColor
         second: {r: 1, g: 0, b: 0, a: 1}
+      data:
+        first:
+          name: _stretchEnd
+        second: {r: 0, g: 1, b: 0, a: 1}
       data:
         first:
           name: _vertexColor
@@ -143,7 +147,3 @@ Material:
         first:
           name: _stretchStart
         second: {r: 0, g: 0, b: 0, a: 1}
-      data:
-        first:
-          name: _stretchEnd
-        second: {r: 0, g: 1, b: 0, a: 1}
