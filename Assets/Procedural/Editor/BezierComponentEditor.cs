@@ -8,7 +8,7 @@ using Procedural;
 [CustomEditor(typeof(BezierComponent), true)]
 public class BezierComponentEditor : Editor 
 {
-	void OnInspectorGUI() 
+	public override void OnInspectorGUI() 
 	{
 		//DrawDefaultInspector();
 
@@ -16,5 +16,7 @@ public class BezierComponentEditor : Editor
 		{
 			((BezierComponent)target).UpdateBezier();
 		}
+
+		base.OnInspectorGUI();
 	}
 }

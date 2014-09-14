@@ -40,9 +40,6 @@ namespace Procedural
 			var step = Mathf.PI * -2.0f / (float)cpCount;
 			var cps = new Vector3[cpCount];
 
-			var recip2Pi = 1.0f / (Mathf.PI * 2.0f);
-
-			var lastSample = Mathf.Atan(0.0f / 1.0f) * recip2Pi;
 			for(int i = 0; i < cpCount; ++i)
 			{
 				var t = (float)i * step;
