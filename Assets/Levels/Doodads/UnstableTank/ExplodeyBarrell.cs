@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class ExplodeyBarrell : Doodad
+public class ExplodeyBarrell : ShootableDoodad
 {
+    [SerializeField]
+    private float _damage = 75.0f;
+
     [SerializeField]
     private float _playerForce = 100.0f;
     [SerializeField]
@@ -21,6 +24,9 @@ public class ExplodeyBarrell : Doodad
 
             Vector3 forceDir = (collision.rigidbody.position - rigidbody.position + (Vector3.up * 0.25f)).normalized;
             collision.rigidbody.AddForce(forceDir * _playerForce, ForceMode.Impulse);
+
+            var powerupBar = FindObjectOfType<PowerupBar>();
+            powerupBar.TakeDamage(_damage);
         }
     }
     

@@ -14,6 +14,7 @@ GameObject:
   - 82: {fileID: 8200002}
   - 114: {fileID: 11400006}
   - 114: {fileID: 11400012}
+  - 114: {fileID: 11400014}
   m_Layer: 9
   m_Name: Orb
   m_TagString: Untagged
@@ -1182,7 +1183,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400124}
   - 114: {fileID: 11400008}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PowerupFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1199,7 +1200,7 @@ GameObject:
   - 4: {fileID: 400126}
   - 119: {fileID: 11900000}
   - 114: {fileID: 11400010}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5958,6 +5959,22 @@ MonoBehaviour:
     m_PostInfinity: 2
   _impulseAnimTime: .5
   _negativeImpulseTime: .25
+--- !u!114 &11400014
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b776b4cd841b4f5297ee64e502a7798, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxRange: 25
+  _fireRate: .150000006
+  _fireForce: 750
+  _bulletPrefab: {fileID: 100000, guid: d5408940df6fe400eb9b7f53e51c023f, type: 2}
+  _bulletEmitJitter: .200000003
 --- !u!119 &11900000
 Projector:
   m_ObjectHideFlags: 1

@@ -3,13 +3,13 @@
 --- !u!55 &1
 PhysicsManager:
   m_ObjectHideFlags: 0
-  m_Gravity: {x: 0, y: -15, z: 0}
+  m_Gravity: {x: 0, y: -16, z: 0}
   m_DefaultMaterial: {fileID: 13400000, guid: c697e530add64d144953f5d27f8c6b78, type: 2}
   m_BounceThreshold: 2
-  m_SleepVelocity: .150000006
-  m_SleepAngularVelocity: .140000001
+  m_SleepVelocity: .100000001
+  m_SleepAngularVelocity: .0900000036
   m_MaxAngularVelocity: 7
   m_MinPenetrationForPenalty: .00999999978
   m_SolverIterationCount: 6
   m_RaycastsHitTriggers: 1
-  m_LayerCollisionMatrix: fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffbfffffff9ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  m_LayerCollisionMatrix: ffdfffffffdfffffffdfffffffffffffffdfffffffdfffffffffffffffffffffffdfffffffdbffffffd9ffffffffffffffffffffc8d8ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff

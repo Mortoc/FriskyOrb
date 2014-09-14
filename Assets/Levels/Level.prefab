@@ -64,6 +64,9 @@ MonoBehaviour:
   - Name: Explodey Barrell
     Prefab: {fileID: 100004, guid: d6ccf97073699374893ef96af0822074, type: 2}
     Difficulty: 1.10000002
+  - Name: Wall
+    Prefab: {fileID: 100034, guid: 8dcef766dcf73435bb014d79c16ba227, type: 2}
+    Difficulty: .100000001
   _tweakables:
   - Name: Hello World
     StartSegment: 0

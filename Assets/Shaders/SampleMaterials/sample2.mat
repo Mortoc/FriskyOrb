@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: sample2
-  m_Shader: {fileID: 4800000, guid: 32e5b237318dd4b43b0ab671d9b9a02e, type: 3}
+  m_Shader: {fileID: 10708, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
@@ -17,14 +17,14 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 2800000, guid: 080591fda7eb7d24cbe458aafca0b041, type: 3}
+          m_Texture: {fileID: 2800000, guid: cfdd054d023291a45b81788b2e18581e, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
           name: _Cube
         second:
-          m_Texture: {fileID: 8900000, guid: c001290d9de48f04287126be7a1a9d99, type: 2}
+          m_Texture: {fileID: 8900000, guid: 81f8c3590fe0fb04dbbfb6448f9a827d, type: 2}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:

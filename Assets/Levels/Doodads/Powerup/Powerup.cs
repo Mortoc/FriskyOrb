@@ -41,7 +41,7 @@ public class Powerup : Doodad
 
 
             transform.parent = null;
-            if (!bar.PowerupReady)
+            if (!bar.HealthFull())
             {
                 StartCoroutine(AnimateCollection(player, bar));
                 audio.pitch = Mathf.Lerp(0.75f, 1.25f, UnityEngine.Random.value);

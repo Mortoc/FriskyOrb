@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 400000}
   - 33: {fileID: 3300000}
   - 23: {fileID: 2300000}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: UnstableCenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ GameObject:
   - 4: {fileID: 400002}
   - 33: {fileID: 3300002}
   - 23: {fileID: 2300002}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: Structure
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ GameObject:
   - 114: {fileID: 11400000}
   - 65: {fileID: 6500000}
   - 54: {fileID: 5400000}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: UnstableTank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62,7 +62,7 @@ GameObject:
   - 4: {fileID: 400008}
   - 198: {fileID: 19800000}
   - 199: {fileID: 19900000}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -79,7 +79,7 @@ GameObject:
   - 4: {fileID: 400010}
   - 33: {fileID: 3300004}
   - 23: {fileID: 2300004}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: StructureFragment11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - 23: {fileID: 2300006}
   - 54: {fileID: 5400020}
   - 65: {fileID: 6500020}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: StructureFragment10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - 23: {fileID: 2300008}
   - 54: {fileID: 5400048}
   - 65: {fileID: 6500048}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: StructureFragment09
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ GameObject:
   - 23: {fileID: 2300010}
   - 54: {fileID: 5400022}
   - 65: {fileID: 6500022}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: StructureFragment08
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155,7 +155,7 @@ GameObject:
   - 23: {fileID: 2300012}
   - 54: {fileID: 5400024}
   - 65: {fileID: 6500024}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: StructureFragment07
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,7 +174,7 @@ GameObject:
   - 23: {fileID: 2300014}
   - 54: {fileID: 5400012}
   - 65: {fileID: 6500012}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: StructureFragment06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -193,7 +193,7 @@ GameObject:
   - 23: {fileID: 2300016}
   - 54: {fileID: 5400006}
   - 65: {fileID: 6500006}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: StructureFragment05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -212,7 +212,7 @@ GameObject:
   - 23: {fileID: 2300018}
   - 54: {fileID: 5400034}
   - 65: {fileID: 6500034}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: StructureFragment04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -231,7 +231,7 @@ GameObject:
   - 23: {fileID: 2300020}
   - 54: {fileID: 5400044}
   - 65: {fileID: 6500044}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: StructureFragment03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -250,7 +250,7 @@ GameObject:
   - 23: {fileID: 2300022}
   - 54: {fileID: 5400026}
   - 65: {fileID: 6500026}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: StructureFragment02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -269,7 +269,7 @@ GameObject:
   - 23: {fileID: 2300024}
   - 54: {fileID: 5400010}
   - 65: {fileID: 6500010}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: StructureFragment01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -288,7 +288,7 @@ GameObject:
   - 23: {fileID: 2300026}
   - 54: {fileID: 5400016}
   - 65: {fileID: 6500016}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -307,7 +307,7 @@ GameObject:
   - 23: {fileID: 2300028}
   - 54: {fileID: 5400030}
   - 65: {fileID: 6500030}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -326,7 +326,7 @@ GameObject:
   - 23: {fileID: 2300030}
   - 54: {fileID: 5400018}
   - 65: {fileID: 6500018}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -345,7 +345,7 @@ GameObject:
   - 23: {fileID: 2300032}
   - 54: {fileID: 5400046}
   - 65: {fileID: 6500046}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -364,7 +364,7 @@ GameObject:
   - 23: {fileID: 2300034}
   - 54: {fileID: 5400008}
   - 65: {fileID: 6500008}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -383,7 +383,7 @@ GameObject:
   - 23: {fileID: 2300036}
   - 54: {fileID: 5400042}
   - 65: {fileID: 6500042}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -402,7 +402,7 @@ GameObject:
   - 23: {fileID: 2300038}
   - 54: {fileID: 5400004}
   - 65: {fileID: 6500004}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -421,7 +421,7 @@ GameObject:
   - 23: {fileID: 2300040}
   - 54: {fileID: 5400052}
   - 65: {fileID: 6500052}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment09
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -440,7 +440,7 @@ GameObject:
   - 23: {fileID: 2300042}
   - 54: {fileID: 5400014}
   - 65: {fileID: 6500014}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment08
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -459,7 +459,7 @@ GameObject:
   - 23: {fileID: 2300044}
   - 54: {fileID: 5400050}
   - 65: {fileID: 6500050}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment07
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -478,7 +478,7 @@ GameObject:
   - 23: {fileID: 2300046}
   - 54: {fileID: 5400002}
   - 65: {fileID: 6500002}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -497,7 +497,7 @@ GameObject:
   - 23: {fileID: 2300048}
   - 54: {fileID: 5400036}
   - 65: {fileID: 6500036}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -516,7 +516,7 @@ GameObject:
   - 23: {fileID: 2300050}
   - 54: {fileID: 5400038}
   - 65: {fileID: 6500038}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -535,7 +535,7 @@ GameObject:
   - 23: {fileID: 2300052}
   - 54: {fileID: 5400028}
   - 65: {fileID: 6500028}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -554,7 +554,7 @@ GameObject:
   - 23: {fileID: 2300054}
   - 54: {fileID: 5400040}
   - 65: {fileID: 6500040}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -573,7 +573,7 @@ GameObject:
   - 23: {fileID: 2300056}
   - 54: {fileID: 5400032}
   - 65: {fileID: 6500032}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: CenterFragment01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -589,7 +589,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400064}
   - 114: {fileID: 11400002}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: UnstableTankFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2551,7 +2551,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be700855cfc9a2d4cb8116e28c88ffb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerForce: 250
+  _hitpoints: 100
+  _destroyEffect: {fileID: 0}
+  _damage: 50
+  _playerForce: 100
   _explodeFX: {fileID: 100064}
 --- !u!114 &11400002
 MonoBehaviour:
