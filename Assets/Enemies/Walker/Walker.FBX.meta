@@ -1,0 +1,299 @@
+fileFormatVersion: 2
+guid: 7906367135e3d274394c921ae55eca32
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: Box001
+    100002: Box002
+    100004: Box003
+    100006: GeoSphere001
+    100008: GeoSphere002
+    100010: GeoSphere003
+    100012: GeoSphere004
+    100014: //RootNode
+    100016: Leg-1
+    100018: Leg-2
+    100020: Leg-3
+    100022: Leg-Connector-1
+    100024: Leg-Connector-2
+    100026: Leg-Connector-3
+    100028: Nucleus
+    100030: Object001
+    100032: Object002
+    100034: Leg-003
+    100036: Leg-004
+    100038: Object003
+    100040: Object004
+    100042: Foot-1
+    100044: Foot-1-Handle
+    100046: Foot-2
+    100048: Foot-2-Handle
+    100050: Foot-3
+    100052: Foot-3-Handle
+    100054: IK Chain001
+    100056: IK Chain002
+    100058: IK Chain003
+    100060: Lower-Leg-1
+    100062: Lower-Leg-2
+    100064: Lower-Leg-3
+    100066: Master-Handle
+    100068: Mid-Leg-1
+    100070: Mid-Leg-2
+    100072: Mid-Leg-3
+    100074: Root
+    100076: Upper-Leg-1
+    100078: Upper-Leg-2
+    100080: Upper-Leg-3
+    100082: Nucleus-Handle
+    400000: Box001
+    400002: Box002
+    400004: Box003
+    400006: GeoSphere001
+    400008: GeoSphere002
+    400010: GeoSphere003
+    400012: GeoSphere004
+    400014: //RootNode
+    400016: Leg-1
+    400018: Leg-2
+    400020: Leg-3
+    400022: Leg-Connector-1
+    400024: Leg-Connector-2
+    400026: Leg-Connector-3
+    400028: Nucleus
+    400030: Object001
+    400032: Object002
+    400034: Leg-003
+    400036: Leg-004
+    400038: Object003
+    400040: Object004
+    400042: Foot-1
+    400044: Foot-1-Handle
+    400046: Foot-2
+    400048: Foot-2-Handle
+    400050: Foot-3
+    400052: Foot-3-Handle
+    400054: IK Chain001
+    400056: IK Chain002
+    400058: IK Chain003
+    400060: Lower-Leg-1
+    400062: Lower-Leg-2
+    400064: Lower-Leg-3
+    400066: Master-Handle
+    400068: Mid-Leg-1
+    400070: Mid-Leg-2
+    400072: Mid-Leg-3
+    400074: Root
+    400076: Upper-Leg-1
+    400078: Upper-Leg-2
+    400080: Upper-Leg-3
+    400082: Nucleus-Handle
+    2300000: Box001
+    2300002: Box002
+    2300004: Box003
+    2300006: GeoSphere001
+    2300008: GeoSphere002
+    2300010: GeoSphere003
+    2300012: GeoSphere004
+    2300014: Leg-1
+    2300016: Leg-2
+    2300018: Leg-3
+    2300020: Leg-Connector-1
+    2300022: Leg-Connector-2
+    2300024: Leg-Connector-3
+    2300026: Nucleus
+    2300028: Object001
+    2300030: Object002
+    2300032: Leg-003
+    2300034: Leg-004
+    2300036: Object003
+    2300038: Object004
+    3300000: Box001
+    3300002: Box002
+    3300004: Box003
+    3300006: GeoSphere001
+    3300008: GeoSphere002
+    3300010: GeoSphere003
+    3300012: GeoSphere004
+    3300014: Leg-1
+    3300016: Leg-2
+    3300018: Leg-3
+    3300020: Leg-Connector-1
+    3300022: Leg-Connector-2
+    3300024: Leg-Connector-3
+    3300026: Nucleus
+    3300028: Object001
+    3300030: Object002
+    3300032: Leg-003
+    3300034: Leg-004
+    3300036: Object003
+    3300038: Object004
+    4300000: GeoSphere001
+    4300002: GeoSphere002
+    4300004: Box001
+    4300006: Box002
+    4300008: GeoSphere003
+    4300010: Box003
+    4300012: GeoSphere004
+    4300014: Nucleus
+    4300016: Leg-1
+    4300018: Leg-Connector-1
+    4300020: Leg-Connector-2
+    4300022: Leg-2
+    4300024: Leg-Connector-3
+    4300026: Leg-3
+    4300028: Object001
+    4300030: Object002
+    4300032: Leg-003
+    4300034: Leg-004
+    4300036: Object003
+    4300038: Object004
+    7400000: Walk
+    9500000: //RootNode
+    13700000: Nucleus
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 3
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Walk
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 60
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: .34117648
+        functionName: Step
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 2
+        messageOptions: 0
+      - time: .670588255
+        functionName: Step
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 3
+        messageOptions: 0
+      - time: 0
+        functionName: Step
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Master-Handle
+        weight: 1
+      - path: Master-Handle/Foot-1-Handle
+        weight: 1
+      - path: Master-Handle/Foot-1-Handle/IK Chain001
+        weight: 1
+      - path: Master-Handle/Foot-2-Handle
+        weight: 1
+      - path: Master-Handle/Foot-2-Handle/IK Chain003
+        weight: 1
+      - path: Master-Handle/Foot-3-Handle
+        weight: 1
+      - path: Master-Handle/Foot-3-Handle/IK Chain002
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-1
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-1/Mid-Leg-1
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-1/Mid-Leg-1/Lower-Leg-1
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-1/Mid-Leg-1/Lower-Leg-1/Foot-1
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-2
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-2/Mid-Leg-2
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-2/Mid-Leg-2/Lower-Leg-2
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-2/Mid-Leg-2/Lower-Leg-2/Foot-2
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-3
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-3/Mid-Leg-3
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-3/Mid-Leg-3/Lower-Leg-3
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-3/Mid-Leg-3/Lower-Leg-3/Foot-3
+        weight: 1
+      - path: Nucleus
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: Master-Handle
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

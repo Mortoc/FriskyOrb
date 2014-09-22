@@ -1,0 +1,202 @@
+fileFormatVersion: 2
+guid: d22198c95d986fa47b2b5f30a0b4fe42
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: Foot-1
+    100002: Foot-1-Handle
+    100004: Foot-2
+    100006: Foot-2-Handle
+    100008: Foot-3
+    100010: Foot-3-Handle
+    100012: IK Chain001
+    100014: IK Chain002
+    100016: IK Chain003
+    100018: Lower-Leg-1
+    100020: Lower-Leg-2
+    100022: Lower-Leg-3
+    100024: Master-Handle
+    100026: Mid-Leg-1
+    100028: Mid-Leg-2
+    100030: Mid-Leg-3
+    100032: Nucleus
+    100034: Nucleus-Handle
+    100036: Root
+    100038: Upper-Leg-1
+    100040: Upper-Leg-2
+    100042: Upper-Leg-3
+    100044: //RootNode
+    400000: Foot-1
+    400002: Foot-1-Handle
+    400004: Foot-2
+    400006: Foot-2-Handle
+    400008: Foot-3
+    400010: Foot-3-Handle
+    400012: IK Chain001
+    400014: IK Chain002
+    400016: IK Chain003
+    400018: Lower-Leg-1
+    400020: Lower-Leg-2
+    400022: Lower-Leg-3
+    400024: Master-Handle
+    400026: Mid-Leg-1
+    400028: Mid-Leg-2
+    400030: Mid-Leg-3
+    400032: Nucleus
+    400034: Nucleus-Handle
+    400036: Root
+    400038: Upper-Leg-1
+    400040: Upper-Leg-2
+    400042: Upper-Leg-3
+    400044: //RootNode
+    4300000: Nucleus
+    7400000: Walk
+    9500000: //RootNode
+    13700000: Nucleus
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Walk
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 60
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 0
+        functionName: Step
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: .336470574
+        functionName: Step
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: .675294101
+        functionName: Step
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 2
+        messageOptions: 0
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Master-Handle
+        weight: 1
+      - path: Master-Handle/Foot-1-Handle
+        weight: 1
+      - path: Master-Handle/Foot-1-Handle/IK Chain001
+        weight: 1
+      - path: Master-Handle/Foot-2-Handle
+        weight: 1
+      - path: Master-Handle/Foot-2-Handle/IK Chain003
+        weight: 1
+      - path: Master-Handle/Foot-3-Handle
+        weight: 1
+      - path: Master-Handle/Foot-3-Handle/IK Chain002
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-1
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-1/Mid-Leg-1
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-1/Mid-Leg-1/Lower-Leg-1
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-1/Mid-Leg-1/Lower-Leg-1/Foot-1
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-2
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-2/Mid-Leg-2
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-2/Mid-Leg-2/Lower-Leg-2
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-2/Mid-Leg-2/Lower-Leg-2/Foot-2
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-3
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-3/Mid-Leg-3
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-3/Mid-Leg-3/Lower-Leg-3
+        weight: 1
+      - path: Master-Handle/Nucleus-Handle/Root/Upper-Leg-3/Mid-Leg-3/Lower-Leg-3/Foot-3
+        weight: 1
+      - path: Nucleus
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

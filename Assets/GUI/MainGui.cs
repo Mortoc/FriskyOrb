@@ -106,7 +106,7 @@ public class MainGui : MonoBehaviour
             if (GUILayout.Button("", GUI.skin.FindStyle("ReplayButton"), GUILayout.Width(replayButtonWidth), GUILayout.Height(replayButtonHeight)))
             {
                 Analytics.gua.sendEventHit("MainManu", "ReplayedBestLevel", "LevelSeed", PlayerPrefs.GetInt("best_score_level_seed"));
-                Level.Start(PlayerPrefs.GetInt("best_score_level_seed"));
+                Level.Begin(PlayerPrefs.GetInt("best_score_level_seed"));
             }
 			
 			GUILayout.FlexibleSpace();

@@ -29,8 +29,7 @@ public class Player : MonoBehaviour
     public FX PowerupFX;
 
     public Level Level { get; private set; }
-    public LevelSegment CurrentSegment { get; set; }
-
+    
     private IPlayerController _controller;
     public IPlayerController Controller
     {

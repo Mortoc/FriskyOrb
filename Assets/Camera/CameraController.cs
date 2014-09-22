@@ -6,11 +6,11 @@ public class CameraController : MonoBehaviour
 {
     private Player _player = null;
 
-    public Player Player 
+    public Player Player
     {
         get { return _player; }
-        set 
-        { 
+        set
+        {
             _player = value;
             _player.OnDeath += PlayerDied;
         }
@@ -40,25 +40,9 @@ public class CameraController : MonoBehaviour
             );
             transform.position = playerRB.position + (viewRotation * _followDistance);
 
-			Vector3 lookAtPath;
+            Vector3 lookAtPath;
 
-			if( _player.CurrentSegment )
-			{
-				float t = _player.NearestPathT + 0.8f;
-				Spline.Segment path = _player.CurrentSegment.Path;
-
-				if( t > 1.0f ) 
-				{
-					t -= 1.0f;
-					path = _player.CurrentSegment.Next.Path;
-				}
-				lookAtPath = path.GetPoint(t);
-			}
-			else
-            {
-                lookAtPath = lookAtPos;
-			}
-
+            lookAtPath = lookAtPos;
             transform.LookAt(Vector3.Lerp(lookAtPos, lookAtPath, 0.1f));
         }
     }
