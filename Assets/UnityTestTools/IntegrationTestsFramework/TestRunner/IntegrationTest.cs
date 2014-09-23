@@ -8,10 +8,20 @@ public static class IntegrationTest
 	public const string passMessage = "IntegrationTest Pass";
 	public const string failMessage = "IntegrationTest Fail";
 
+	public static void Pass ()
+	{
+		LogResult (passMessage);
+	}
+
 	public static void Pass (GameObject go)
 	{
-		go = FindTopGameObject (go);
 		LogResult (go, passMessage);
+	}
+
+	public static void Fail ( string reason )
+	{
+		Fail ();
+		if (!string.IsNullOrEmpty (reason)) Debug.Log (reason);
 	}
 
 	public static void Fail (GameObject go, string reason)
@@ -20,10 +30,19 @@ public static class IntegrationTest
 		if(!string.IsNullOrEmpty (reason)) Debug.Log (reason);
 	}
 
+	public static void Fail ()
+	{
+		LogResult (failMessage);
+	}
+
 	public static void Fail (GameObject go)
 	{
-		go = FindTopGameObject (go);
 		LogResult (go, failMessage);
+	}
+
+	public static void Assert ( bool condition )
+	{
+		Assert (condition, "");
 	}
 
 	public static void Assert ( GameObject go, bool condition )
@@ -31,22 +50,37 @@ public static class IntegrationTest
 		Assert (go, condition, "");
 	}
 
+	public static void Assert ( bool condition, string message )
+	{
+		if (condition) Pass ();
+		else Fail (message);
+	}
+
 	public static void Assert ( GameObject go, bool condition, string message )
 	{
-		if(condition) Pass (go);
+		if (condition) Pass (go);
 		else Fail (go, message);
+	}
+
+	private static void LogResult ( string message )
+	{
+		Debug.Log (message);
 	}
 
 	private static void LogResult (GameObject go, string message)
 	{
-		Debug.Log (message + " (" + FindTopGameObject (go).name + ")",
-					go);
+		Debug.Log (message + " (" + FindTestObject (go).name + ")", go);
 	}
 
-	private static GameObject FindTopGameObject (GameObject go)
+	private static GameObject FindTestObject (GameObject go)
 	{
-		while (go.transform.parent != null)
-			go = go.transform.parent.gameObject;
+		var temp = go;
+		while (temp.transform.parent != null)
+		{
+			if (temp.GetComponent ("TestComponent") != null)
+				return temp;
+			temp = temp.transform.parent.gameObject;
+		}
 		return go;
 	}
 

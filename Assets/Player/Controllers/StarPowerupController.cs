@@ -27,7 +27,7 @@ public class StarPowerupController : IPlayerController
 
         Score.Instance.RegisterEvent(Score.Event.ActivatePowerup);
         _player.PowerupFX.PerformFX();
-        _player.StartCoroutine(ExecutePowerup());
+        //_player.StartCoroutine(ExecutePowerup());
     }
 
     public void Disable()
@@ -36,72 +36,4 @@ public class StarPowerupController : IPlayerController
             OnDisable();
     }
 
-    private System.Collections.IEnumerator ExecutePowerup()
-    {
-        Vector3 floatOffset = Vector3.up;
-        YieldInstruction untilNextFixedUpdate = new WaitForFixedUpdate();
-        Rigidbody playerRB = _player.rigidbody;
-        playerRB.isKinematic = true;
-
-        LevelSegment segment = _player.CurrentSegment;
-        float startT = segment.Path.GetApproxT(playerRB.position);
-
-        // Move back to track center
-        Vector3 targetPosition = segment.Path.GetPoint(startT) + floatOffset;
-        SmoothedVector headingDuringMoveBackToTrack = new SmoothedVector(1.0f);
-        headingDuringMoveBackToTrack.AddSample(_player.Heading);
-
-        float playerSpeed = 20.0f;
-        float dist = 1.0f;
-        do {
-            Vector3 diff = targetPosition - playerRB.position;
-            dist = diff.magnitude;
-            Vector3 dir = diff / dist;
-
-			playerRB.position = playerRB.position + (dir * playerSpeed * Time.fixedDeltaTime);
-            headingDuringMoveBackToTrack.AddSample(dir);
-            _player.Heading = headingDuringMoveBackToTrack.GetSmoothedVector();
-            
-            yield return untilNextFixedUpdate;
-        } while( dist > 0.2f );
-
-        // Return the player to rigidbody control and give her a kick
-		float kick = 150.0f;
-        playerRB.isKinematic = false;
-
-        float lookAhead = startT + (kick * 0.001f);
-        if( lookAhead > 1.0f )
-        {
-            segment = segment.Next;
-            lookAhead -= 1.0f;
-        }
-        Vector3 lookAheadPoint = segment.Path.GetPoint(lookAhead) + floatOffset;
-        _player.Heading = (lookAheadPoint - playerRB.position).normalized;
-        playerRB.AddForce(_player.Heading * kick, ForceMode.Impulse);
-
-        // Fire off an explosion to clear any barrells the player might be dropped near
-        float forceBubbleRadius = 12.5f;
-        float forceStr = 50.0f;
-        int doodadLayer = LayerMask.NameToLayer("Doodad");
-        foreach(Collider collider in Physics.OverlapSphere(playerRB.position, forceBubbleRadius))
-        {
-            if (collider.gameObject.layer == doodadLayer)
-            {
-                var colliderDist = (collider.transform.position - playerRB.position).magnitude;
-                var forceWithFalloff = Mathf.Lerp(forceStr, 0.0f, colliderDist / forceBubbleRadius);
-                var explodeyBarrell = collider.GetComponent<ExplodeyBarrell>();
-                if( explodeyBarrell ) 
-                {
-                    explodeyBarrell.ForcePush(_player, forceWithFalloff);
-                }
-                else if( collider.rigidbody )
-                {
-                    collider.rigidbody.AddForce((playerRB.position - collider.rigidbody.position).normalized * forceWithFalloff);
-                }
-            }
-        }
-
-        if (PowerupEnded != null)
-            PowerupEnded();
-    }
 }

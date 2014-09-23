@@ -13,7 +13,7 @@ namespace UnityTest
 	{
 		static UnitTestView ()
 		{
-			if (Instance != null && Instance.runOnRecompilation)
+			if (Instance != null && Instance.settings.runOnRecompilation)
 				EnableBackgroundRunner (true);
 		}
 
@@ -36,7 +36,7 @@ namespace UnityTest
 		private static void BackgroudRunner ()
 		{
 			if (EditorApplication.isPlayingOrWillChangePlaymode) return;
-			if (!Instance.runOnRecompilation) EnableBackgroundRunner (false);
+			if (!Instance.settings.runOnRecompilation) EnableBackgroundRunner (false);
 			if (EditorApplication.isCompiling)
 			{
 				EditorPrefs.SetString (uttRecompile, Application.dataPath);

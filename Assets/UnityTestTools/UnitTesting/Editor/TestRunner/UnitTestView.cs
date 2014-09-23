@@ -23,25 +23,8 @@ namespace UnityTest
 		private float horizontalSplitBarPosition = 200;
 		private float verticalSplitBarPosition = 300;
 		#endregion
-		
-		#region runner options vars
-		private bool optionsFoldout;
-		private bool filtersFoldout;
-		private bool runOnRecompilation;
-		private bool horizontalSplit = true;
-		private bool autoSaveSceneBeforeRun;
-		private bool runTestOnANewScene;
-		#endregion
 
-		#region test filter vars
-		[SerializeField] private int categoriesMask;
-		private string testFilter = "";
-		private bool showFailed = true;
-		private bool showIgnored = true;
-		private bool showNotRun = true;
-		private bool showSucceeded = true;
-		private Rect toolbarRect;
-		#endregion
+		private UnitTestsRunnerSettings settings;
 
 		#region GUI Contents
 		private readonly GUIContent guiRunSelectedTestsIcon = new GUIContent (Icons.runImg, "Run selected tests");
@@ -63,36 +46,14 @@ namespace UnityTest
 		{
 			title = "Unit Tests Runner";
 			resultList.Clear ();
-			if (EditorPrefs.HasKey ("UTR-runOnRecompilation"))
-			{
-				runOnRecompilation = EditorPrefs.GetBool ("UTR-runOnRecompilation");
-				runTestOnANewScene = EditorPrefs.GetBool ("UTR-runTestOnANewScene");
-				autoSaveSceneBeforeRun = EditorPrefs.GetBool ("UTR-autoSaveSceneBeforeRun");
-				horizontalSplit = EditorPrefs.GetBool ("UTR-horizontalSplit");
-				showFailed = EditorPrefs.GetBool ("UTR-showFailed");
-				showIgnored = EditorPrefs.GetBool ("UTR-showIgnored");
-				showNotRun = EditorPrefs.GetBool ("UTR-showNotRun");
-				showSucceeded = EditorPrefs.GetBool ("UTR-showSucceeded");
-			}
-		}
-
-		public void SaveOptions()
-		{
-			EditorPrefs.SetBool("UTR-runOnRecompilation", runOnRecompilation);
-			EditorPrefs.SetBool("UTR-runTestOnANewScene", runTestOnANewScene);
-			EditorPrefs.SetBool("UTR-autoSaveSceneBeforeRun", autoSaveSceneBeforeRun);
-			EditorPrefs.SetBool("UTR-horizontalSplit", horizontalSplit);
-			EditorPrefs.SetBool("UTR-showFailed", showFailed);
-			EditorPrefs.SetBool("UTR-showIgnored", showIgnored);
-			EditorPrefs.SetBool("UTR-showNotRun", showNotRun);
-			EditorPrefs.SetBool("UTR-showSucceeded", showSucceeded);
 		}
 
 		public void OnEnable ()
 		{
 			Instance = this;
+			settings = ProjectSettingsBase.Load<UnitTestsRunnerSettings> ();
 			RefreshTests ();
-			EnableBackgroundRunner (runOnRecompilation);
+			EnableBackgroundRunner (settings.runOnRecompilation);
 		}
 
 		public void OnDestroy ()
@@ -113,10 +74,7 @@ namespace UnityTest
 
 			EditorGUILayout.BeginHorizontal ();
 
-			var layoutOptions = new[] {
-								GUILayout.Width(32),
-								GUILayout.Height(24)
-								};
+			var layoutOptions = new[] { GUILayout.Width(32), GUILayout.Height(24) };
 			if (GUILayout.Button (guiRunAllTestsIcon, Styles.buttonLeft, layoutOptions))
 			{
 				RunTests();
@@ -133,29 +91,29 @@ namespace UnityTest
 
 			GUILayout.FlexibleSpace ();
 
-			if (GUILayout.Button (optionsFoldout ? guiHideButton : guiOptionButton, GUILayout.Height (24), GUILayout.Width (80)))
+			if (GUILayout.Button (settings.optionsFoldout ? guiHideButton : guiOptionButton, GUILayout.Height (24), GUILayout.Width (80)))
 			{
-				optionsFoldout = !optionsFoldout;
+				settings.optionsFoldout = !settings.optionsFoldout;
 			}
 			EditorGUILayout.EndHorizontal ();
-			
-			if (optionsFoldout) DrawOptions();
+
+			if (settings.optionsFoldout) DrawOptions ();
 
 			EditorGUILayout.BeginHorizontal ();
 			EditorGUILayout.LabelField("Filter:", GUILayout.Width(35));
-			testFilter = EditorGUILayout.TextField(testFilter, EditorStyles.textField);
+			settings.testFilter = EditorGUILayout.TextField (settings.testFilter, EditorStyles.textField);
 
 			if (availableCategories != null && availableCategories.Length > 1)
-				categoriesMask = EditorGUILayout.MaskField (categoriesMask, availableCategories, GUILayout.MaxWidth (90));
+				settings.categoriesMask = EditorGUILayout.MaskField (settings.categoriesMask, availableCategories, GUILayout.MaxWidth (90));
 
-			if (GUILayout.Button (filtersFoldout ? "Hide" : "Advanced", GUILayout.Width (80), GUILayout.Height (15)))
-				filtersFoldout = !filtersFoldout;
+			if (GUILayout.Button (settings.filtersFoldout ? "Hide" : "Advanced", GUILayout.Width (80), GUILayout.Height (15)))
+				settings.filtersFoldout = !settings.filtersFoldout;
 			EditorGUILayout.EndHorizontal ();
-			
-			if (filtersFoldout)
+
+			if (settings.filtersFoldout)
 				DrawFilters ();
-			
-			if (horizontalSplit)
+
+			if (settings.horizontalSplit)
 				EditorGUILayout.BeginVertical ();
 			else
 				EditorGUILayout.BeginHorizontal (GUILayout.ExpandWidth (true));
@@ -163,7 +121,7 @@ namespace UnityTest
 			RenderTestList ();
 			RenderTestInfo ();
 
-			if (horizontalSplit)
+			if (settings.horizontalSplit)
 				EditorGUILayout.EndVertical ();
 			else
 				EditorGUILayout.EndHorizontal ();
@@ -178,7 +136,7 @@ namespace UnityTest
 			{
 				var idx = Array.FindIndex (availableCategories, ( a ) => a == availableCategory);
 				var mask = 1 << idx;
-				if ((categoriesMask & mask) != 0) selectedCategories.Add (availableCategory);
+				if ((settings.categoriesMask & mask) != 0) selectedCategories.Add (availableCategory);
 			}
 			return selectedCategories.ToArray ();
 		}
@@ -192,11 +150,11 @@ namespace UnityTest
 			if (testLines != null)
 			{
 				var options = new RenderingOptions ();
-				options.showSucceeded = showSucceeded;
-				options.showFailed = showFailed;
-				options.showIgnored = showIgnored;
-				options.showNotRunned = showNotRun;
-				options.nameFilter = testFilter;
+				options.showSucceeded = settings.showSucceeded;
+				options.showFailed = settings.showFailed;
+				options.showIgnored = settings.showIgnored;
+				options.showNotRunned = settings.showNotRun;
+				options.nameFilter = settings.testFilter;
 				options.categories = GetSelectedCategories ();
 
 				if (testLines.Render (options)) Repaint ();
@@ -209,7 +167,7 @@ namespace UnityTest
 		{
 			var ctrlId = EditorGUIUtility.GetControlID (FocusType.Passive);
 			var rect = GUILayoutUtility.GetLastRect ();
-			if (horizontalSplit)
+			if (settings.horizontalSplit)
 			{
 				rect.y = rect.height + rect.y - 1;
 				rect.height = 3;
@@ -220,7 +178,7 @@ namespace UnityTest
 				rect.width = 3;
 			}
 
-			EditorGUIUtility.AddCursorRect (rect, horizontalSplit ? MouseCursor.ResizeVertical : MouseCursor.ResizeHorizontal);
+			EditorGUIUtility.AddCursorRect (rect, settings.horizontalSplit ? MouseCursor.ResizeVertical : MouseCursor.ResizeHorizontal);
 			var e = Event.current;
 			switch (e.type)
 			{
@@ -244,7 +202,7 @@ namespace UnityTest
 						EditorGUIUtility.hotControl = 0;
 					break;
 			}
-			testInfoScroll = EditorGUILayout.BeginScrollView (testInfoScroll, horizontalSplit 
+			testInfoScroll = EditorGUILayout.BeginScrollView (testInfoScroll, settings.horizontalSplit 
 																			? GUILayout.MinHeight (horizontalSplitBarPosition) 
 																			: GUILayout.Width (verticalSplitBarPosition));
 
@@ -262,38 +220,34 @@ namespace UnityTest
 		{
 			EditorGUI.BeginChangeCheck();
 			EditorGUILayout.BeginHorizontal ();
-			showSucceeded = GUILayout.Toggle (showSucceeded, guiShowSucceededTests, GUI.skin.FindStyle (GUI.skin.button.name + "left"), GUILayout.ExpandWidth (true));
-			showFailed = GUILayout.Toggle (showFailed, guiShowFailedTests, GUI.skin.FindStyle (GUI.skin.button.name + "mid"));
-			showIgnored = GUILayout.Toggle (showIgnored, guiShowIgnoredTests, GUI.skin.FindStyle (GUI.skin.button.name + "mid"));
-			showNotRun = GUILayout.Toggle (showNotRun, guiShowNotRunTests, GUI.skin.FindStyle (GUI.skin.button.name + "right"), GUILayout.ExpandWidth (true));
+			settings.showSucceeded = GUILayout.Toggle (settings.showSucceeded, guiShowSucceededTests, GUI.skin.FindStyle (GUI.skin.button.name + "left"), GUILayout.ExpandWidth (true));
+			settings.showFailed = GUILayout.Toggle (settings.showFailed, guiShowFailedTests, GUI.skin.FindStyle (GUI.skin.button.name + "mid"));
+			settings.showIgnored = GUILayout.Toggle (settings.showIgnored, guiShowIgnoredTests, GUI.skin.FindStyle (GUI.skin.button.name + "mid"));
+			settings.showNotRun = GUILayout.Toggle (settings.showNotRun, guiShowNotRunTests, GUI.skin.FindStyle (GUI.skin.button.name + "right"), GUILayout.ExpandWidth (true));
 			EditorGUILayout.EndHorizontal ();
-			if (EditorGUI.EndChangeCheck()) SaveOptions();
+			if (EditorGUI.EndChangeCheck()) settings.Save ();
 		}
-
-		
 
 		private void DrawOptions ()
 		{
 			EditorGUI.BeginChangeCheck ();
 
 			EditorGUI.BeginChangeCheck ();
-			runOnRecompilation = EditorGUILayout.Toggle (guiRunOnRecompile, runOnRecompilation);
-			if (EditorGUI.EndChangeCheck ()) EnableBackgroundRunner (runOnRecompilation);
+			settings.runOnRecompilation = EditorGUILayout.Toggle (guiRunOnRecompile, settings.runOnRecompilation);
+			if (EditorGUI.EndChangeCheck ()) EnableBackgroundRunner (settings.runOnRecompilation);
 
-			runTestOnANewScene = EditorGUILayout.Toggle (guiRunTestsOnNewScene, runTestOnANewScene);
-			EditorGUI.BeginDisabledGroup (!runTestOnANewScene);
-			autoSaveSceneBeforeRun = EditorGUILayout.Toggle (guiAutoSaveSceneBeforeRun, autoSaveSceneBeforeRun);
+			settings.runTestOnANewScene = EditorGUILayout.Toggle (guiRunTestsOnNewScene, settings.runTestOnANewScene);
+			EditorGUI.BeginDisabledGroup (!settings.runTestOnANewScene);
+			settings.autoSaveSceneBeforeRun = EditorGUILayout.Toggle (guiAutoSaveSceneBeforeRun, settings.autoSaveSceneBeforeRun);
 			EditorGUI.EndDisabledGroup ();
-			horizontalSplit = EditorGUILayout.Toggle (guiShowDetailsBelowTests, horizontalSplit);
+			settings.horizontalSplit = EditorGUILayout.Toggle (guiShowDetailsBelowTests, settings.horizontalSplit);
 
 			if (EditorGUI.EndChangeCheck ())
 			{
-				SaveOptions();
+				settings.Save ();
 			}
 			EditorGUILayout.Space ();
 		}
-
-		
 
 		private void RefreshTests ()
 		{

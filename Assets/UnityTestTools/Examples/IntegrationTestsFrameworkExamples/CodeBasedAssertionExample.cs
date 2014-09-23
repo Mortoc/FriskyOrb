@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityTest;
 
-[IntegrationTest.DynamicTest ("IntegrationTestsExample")]
+[IntegrationTest.DynamicTest("ExampleIntegrationTests")]
 [IntegrationTest.SucceedWithAssertions]
 public class CodeBasedAssertionExample : MonoBehaviour {
 
@@ -27,8 +27,9 @@ public class CodeBasedAssertionExample : MonoBehaviour {
 		transform.position = new Vector3 (0, 3, 0);
 		AssertionComponent.Create<FloatComparer> (CheckMethod.Update, gameObject, "CodeBasedAssertionExample.FloatField", gameObject, "transform.position.y");
 
-		//Check with the goReference field from this component is set to null
+		//Check with the goReference field from this component is not set to null
+		goReference = gameObject;
 		var gc = AssertionComponent.Create<GeneralComparer> (CheckMethod.Update, gameObject, "CodeBasedAssertionExample.goReference", null);
-		gc.compareType = GeneralComparer.CompareType.AEqualsB;
+		gc.compareType = GeneralComparer.CompareType.ANotEqualsB;
 	}
 }

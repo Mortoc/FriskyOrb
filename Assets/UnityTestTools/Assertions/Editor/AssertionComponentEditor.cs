@@ -14,8 +14,6 @@ namespace UnityTest
 		private readonly PropertyPathSelector thisPathSelector = new PropertyPathSelector ("Compare");
 		private readonly PropertyPathSelector otherPathSelector = new PropertyPathSelector("Compare to");
 
-		private bool focusBackToEdit;
-
 		#region GUI Contents
 		private readonly GUIContent guiCheckAfterTimeGuiContent = new GUIContent ("Check after (seconds)", "After how many seconds the assertion should be checked");
 		private readonly GUIContent guiRepeatCheckTimeGuiContent = new GUIContent ("Repeat check", "Should the check be repeated.");
@@ -201,14 +199,11 @@ namespace UnityTest
 		{
 			foreach (var prop in script.Action.GetType ().GetFields (BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
 			{
-				var type = prop.FieldType;
-				if (!type.IsSerializable)
-					continue;
 				var so = new SerializedObject(script.Action);
 				var sp = so.FindProperty(prop.Name);
 				if (sp != null)
  				{
-					EditorGUILayout.PropertyField (sp);
+					EditorGUILayout.PropertyField (sp, true);
 					so.ApplyModifiedProperties ();
  				}
 			}

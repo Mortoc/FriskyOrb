@@ -62,12 +62,11 @@ namespace UnityTest
 			OnComponentCopy ();
 		}
 
-#if UNITY_EDITOR
 		public void OnValidate ()
 		{
-			OnComponentCopy ();
+			if(Application.isEditor)
+				OnComponentCopy ();
 		}
-#endif
 
 		private void OnComponentCopy ()
 		{
@@ -310,6 +309,7 @@ namespace UnityTest
 			ac.Action.thisPropertyPath = propertyPath;
 			configurator = ac;
 
+#if !UNITY_METRO
 			var stackTrace = new System.Diagnostics.StackTrace (true);
 			var thisFileName = stackTrace.GetFrame (0).GetFileName ();
 			for (int i = 1; i < stackTrace.FrameCount; i++)
@@ -323,6 +323,7 @@ namespace UnityTest
 					break;
 				}
 			}
+#endif
 			return comparer;
 		}
 

@@ -7,7 +7,6 @@ namespace UnityTest
 	public class TestResult : ITestResult, IComparable<TestResult>
 	{
 		private GameObject go;
-		private TestComponent testComponent;
 		private string name;
 		public ResultType resultType = ResultType.NotRun;
 		public double duration;
@@ -15,7 +14,7 @@ namespace UnityTest
 		public string stacktrace;
 		public string id;
 		public bool dynamicTest;
-		
+
 		public TestComponent TestComponent;
 
 		public GameObject GameObject
@@ -113,7 +112,6 @@ namespace UnityTest
 			}
 		}
 		#endregion
-
 
 		#region IComparable, GetHashCode and Equals implementation
 		public override int GetHashCode ()

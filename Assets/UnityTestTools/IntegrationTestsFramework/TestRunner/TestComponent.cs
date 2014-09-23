@@ -220,6 +220,7 @@ namespace UnityTest
 			tc.dynamic = true;
 			tc.dynamicTypeName = type.AssemblyQualifiedName;
 
+#if !UNITY_METRO
 			foreach (var typeAttribute in type.GetCustomAttributes (false))
 			{
 				if (typeAttribute is IntegrationTest.TimeoutAttribute)
@@ -238,9 +239,8 @@ namespace UnityTest
 					tc.succeedWhenExceptionIsThrown = attribute.succeedOnException;
 				}
 			}
-
-			go.AddComponent (type);
-
+			go.AddComponent(type);
+#endif
 			return tc;
 		}
 
@@ -353,6 +353,7 @@ namespace UnityTest
 
 		public static IEnumerable<Type> GetTypesWithHelpAttribute (string sceneName)
 		{
+#if !UNITY_METRO
 			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies ())
 			{
 				foreach (Type type in assembly.GetTypes ())
@@ -365,6 +366,9 @@ namespace UnityTest
 					}
 				}
 			}
+#else
+			yield break;
+#endif
 		}
 	}
 }

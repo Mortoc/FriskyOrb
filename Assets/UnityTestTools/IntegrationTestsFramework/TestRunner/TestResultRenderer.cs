@@ -29,7 +29,8 @@ public class TestResultRenderer
 		
 	private bool showResults;
 	Vector2 scrollPosition;
-		
+	private int failureCount;
+
 	public void ShowResults ()
 	{
 		showResults = true;
@@ -41,6 +42,8 @@ public class TestResultRenderer
 		if(!testCollection.ContainsKey (sceneName))
 			testCollection.Add (sceneName, new List<ITestResult> ());
 		testCollection[sceneName].Add (result);
+		if (result.Executed && !result.IsSuccess)
+			failureCount++;
 	}
 
 	public void Draw ()
@@ -71,5 +74,10 @@ public class TestResultRenderer
 		}
 		if (GUILayout.Button ("Close"))
 			Application.Quit ();
+	}
+
+	public int FailureCount ()
+	{
+		return failureCount;
 	}
 }

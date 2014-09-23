@@ -69,7 +69,11 @@ namespace UnityTest
 
 		public ActionBase CreateCopy (GameObject oldGameObject, GameObject newGameObject)
 		{
+#if !UNITY_METRO
 			var newObj = CreateInstance (GetType ()) as ActionBase;
+#else
+			var newObj = (ActionBase)this.MemberwiseClone();
+#endif
 			var fields = GetFields (GetType ());
 			foreach (var field in fields)
 			{
@@ -93,8 +97,6 @@ namespace UnityTest
 		{
 			return GetType ().Name + " assertion failed.\n(" + go + ")." + thisPropertyPath + " failed. Value: " + objVal;
 		}
-
-		
 	}
 
 	public abstract class ActionBaseGeneric<T> : ActionBase

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityTest.IntegrationTestRunner;
 
@@ -11,9 +12,6 @@ namespace UnityTest
 	[Serializable]
 	public class TestRunner : MonoBehaviour
 	{
-		static public string integrationTestsConfigFileName = "integrationtestsconfig.txt";
-		static public string batchRunFileMarker = "batchrun.txt";
-		static public string defaultResulFilePostfix = "TestResults.xml";
 		static private TestResultRenderer resultRenderer = new TestResultRenderer ();
 
 		public TestComponent currentTest;
@@ -24,8 +22,10 @@ namespace UnityTest
 		{
 			get
 			{
-#if UNITY_EDITOR && !IMITATE_BATCH_MODE
-				if (!UnityEditorInternal.InternalEditorUtility.inBatchMode) return true;
+
+#if !IMITATE_BATCH_MODE				
+				if (Application.isEditor && !isBatchMode ()) 
+					return true;
 #endif
 				return false;
 			}
@@ -39,33 +39,39 @@ namespace UnityTest
 		private string stacktrace;
 		private TestState testState = TestState.Running;
 
+		private TestRunnerConfigurator configurator;
+
 		public TestRunnerCallbackList TestRunnerCallback = new TestRunnerCallbackList();
 		private IntegrationTestsProvider testsProvider;
 
-		private const string startedMessage = "IntegrationTest started";
-		private const string finishedMessage = "IntegrationTest finished";
-		private const string timeoutMessage = "IntegrationTest timeout";
-		private const string failedMessage = "IntegrationTest failed";
-		private const string failedExceptionMessage = "IntegrationTest failed with exception";
-		private const string ignoredMessage = "IntegrationTest ignored";
-		private const string interruptedMessage = "IntegrationTest Run interrupted";
+		private const string prefix = "IntegrationTest";
+		private const string startedMessage = prefix + " Started";
+		private const string finishedMessage = prefix + " Finished";
+		private const string timeoutMessage = prefix + " Timeout";
+		private const string failedMessage = prefix + " Failed";
+		private const string failedExceptionMessage = prefix + " Failed with exception";
+		private const string ignoredMessage = prefix + " Ignored";
+		private const string interruptedMessage = prefix + " Run interrupted";
 
 
 		public void Awake ()
 		{
-#if UNITY_EDITOR && !IMITATE_BATCH_MODE
-			if (!UnityEditorInternal.InternalEditorUtility.inBatchMode) return;
-#endif
+			configurator = new TestRunnerConfigurator ();
+			if (isInitializedByRunner) return;
 			TestComponent.DisableAllTests ();
 		}
 
-		
-
-		public void Start()
+		public void Start ()
 		{
-#if UNITY_EDITOR && !IMITATE_BATCH_MODE
-			if (!UnityEditorInternal.InternalEditorUtility.inBatchMode) return;
-#endif
+			if (isInitializedByRunner) return;
+
+			if (configurator.sendResultsOverNetwork)
+			{
+				var nrs = configurator.ResolveNetworkConnection ();
+				if(nrs!=null)
+					TestRunnerCallback.Add (nrs);
+			}
+
 			TestComponent.DestroyAllDynamicTests ();
 			var dynamicTestTypes = TestComponent.GetTypesWithHelpAttribute (Application.loadedLevelName);
 			foreach (var dynamicTestType in dynamicTestTypes)
@@ -78,7 +84,9 @@ namespace UnityTest
 
 		public void InitRunner(List<TestComponent> tests, List<string> dynamicTestsToRun)
 		{
-			Application.RegisterLogCallback(LogHandler);
+			currentlyRegisteredLogCallback = GetLogCallbackField ();
+			logCallback = LogHandler;
+			Application.RegisterLogCallback (logCallback);
 			
 			//Init dynamic tests
 			foreach (var typeName in dynamicTestsToRun)
@@ -133,6 +141,8 @@ namespace UnityTest
 				readyToRun = false;
 				StartCoroutine ("StateMachine");
 			}
+			LogCallbackStillRegistered ();
+
 		}
 
 		public void OnDestroy()
@@ -154,7 +164,13 @@ namespace UnityTest
 
 		private void LogHandler (string condition, string stacktrace, LogType type)
 		{
-			testMessages += condition + "\n";
+			if (!condition.StartsWith (startedMessage) && !condition.StartsWith (finishedMessage))
+			{
+				var msg = condition;
+				if (msg.StartsWith(prefix)) msg = msg.Substring(prefix.Length+1);
+				if (currentTest != null && msg.EndsWith ("(" + currentTest.name + ')')) msg = msg.Substring (0, msg.LastIndexOf ('('));
+				testMessages += msg + "\n";
+			}
 			if (type == LogType.Exception)
 			{
 				var exceptionType = condition.Substring (0, condition.IndexOf(':'));
@@ -171,6 +187,11 @@ namespace UnityTest
 					testState = TestState.Exception;
 					this.stacktrace = stacktrace;
 				}
+			}
+			else if (type == LogType.Error || type == LogType.Assert)
+			{
+				testState = TestState.Failure;
+				this.stacktrace = stacktrace;
 			}
 			else if (type == LogType.Log)
 			{
@@ -252,8 +273,6 @@ namespace UnityTest
 
 		private void FinishTestRun ()
 		{
-			if (IsBatchRun ())
-				SaveResults ();
 			PrintResultToLog ();
 			TestRunnerCallback.RunFinished (resultList);
 			LoadNextLevelOrQuit ();
@@ -285,77 +304,15 @@ namespace UnityTest
 				Application.LoadLevel (Application.loadedLevel + 1);
 			else
 			{
-#if UNITY_EDITOR && !IMITATE_BATCH_MODE
-				UnityEditor.EditorApplication.Exit (0);
-#else
-				resultRenderer.ShowResults ();
-				if(IsBatchRun())
+				resultRenderer.ShowResults();
+				if (configurator.isBatchRun && configurator.sendResultsOverNetwork)
 					Application.Quit ();
-#endif
 			}
 		}
 
 		public void OnGUI ()
 		{
 			resultRenderer.Draw ();
-		}
-
-		private void SaveResults ()
-		{
-			if (!IsFileSavingSupported ()) return;
-			var resultDestiantion = GetResultDestiantion ();
-			var resultFileName = Application.loadedLevelName;
-			if (resultFileName != "")
-				resultFileName += "-";
-			resultFileName += defaultResulFilePostfix;
-
-			var resultWriter = new XmlResultWriter (Application.loadedLevelName, resultList.ToArray ());
-
-#if !UNITY_METRO 
-			Uri uri;
-			if ( Uri.TryCreate (resultDestiantion, UriKind.Absolute, out uri) && uri.Scheme == Uri.UriSchemeFile)
-			{
-				resultWriter.WriteToFile (resultDestiantion, resultFileName);
-			}
-			else
-			{
-				Debug.LogError ("Provided path is invalid");
-			}
-#endif
-		}
-
-		private bool IsFileSavingSupported ()
-		{
-#if UNITY_EDITOR || UNITY_STANDALONE
-			return true;
-#else
-			return false;
-#endif
-		}
-
-		private string GetResultDestiantion ()
-		{
-			var nameWithoutExtension = integrationTestsConfigFileName.Substring (0, integrationTestsConfigFileName.LastIndexOf ('.'));
-			var resultpathFile = Resources.Load (nameWithoutExtension) as TextAsset;
-			var resultDestiantion = Application.dataPath;
-			if (resultpathFile != null)
-				resultDestiantion = resultpathFile.text;
-#if UNITY_EDITOR
-			var resultsFileDirectory = "-resultsFileDirectory=";
-			if (UnityEditorInternal.InternalEditorUtility.inBatchMode && Environment.GetCommandLineArgs ().Any (s => s.StartsWith (resultsFileDirectory)))
-				resultDestiantion = Environment.GetCommandLineArgs ().First (s => s.StartsWith (resultsFileDirectory)).Substring (resultsFileDirectory.Length);
-#endif
-			return resultDestiantion;
-		}
-
-		private bool IsBatchRun ()
-		{
-#if UNITY_EDITOR && !IMITATE_BATCH_MODE
-			if (UnityEditorInternal.InternalEditorUtility.inBatchMode) return true;
-#endif
-			var nameWithoutExtension = batchRunFileMarker.Substring (0, batchRunFileMarker.LastIndexOf ('.'));
-			var resultpathFile = Resources.Load (nameWithoutExtension) as TextAsset;
-			return resultpathFile != null;
 		}
 
 		private void StartNewTest ()
@@ -400,7 +357,6 @@ namespace UnityTest
 			testResult.stacktrace = stacktrace;
 			TestRunnerCallback.TestFinished (testResult);
 			currentTest = null;
-			//currentTest2 = null;
 			if (!testResult.IsSuccess 
 				&& testResult.Executed
 				&& !testResult.IsIgnored) resultRenderer.AddResults (Application.loadedLevelName, testResult);
@@ -430,6 +386,52 @@ namespace UnityTest
 			component.hideFlags = HideFlags.NotEditable;
 			Debug.Log ("Created Test Runner");
 			return runner;
+		}
+
+		private static bool isBatchMode ()
+		{
+#if !UNITY_METRO
+			var InternalEditorUtilityClassName = "UnityEditorInternal.InternalEditorUtility, UnityEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null";
+
+			var t = Type.GetType(InternalEditorUtilityClassName, false);
+			if (t == null) return false;
+
+			var inBatchModeProperty = "inBatchMode";
+			var prop = t.GetProperty (inBatchModeProperty);
+			return (bool) prop.GetValue (null, null);
+#else
+			return false;
+#endif
+		}
+
+		#endregion
+
+		#region LogCallback check
+		private Application.LogCallback logCallback;
+		private FieldInfo currentlyRegisteredLogCallback;
+
+		public void LogCallbackStillRegistered()
+		{
+			if (Application.platform == RuntimePlatform.OSXWebPlayer
+				|| Application.platform == RuntimePlatform.WindowsWebPlayer)
+				return;
+			if (currentlyRegisteredLogCallback == null) return;
+			var v = (Application.LogCallback)currentlyRegisteredLogCallback.GetValue(null);
+			if (v == logCallback) return;
+			Debug.LogError("Log callback got changed. This may be caused by other tools using RegisterLogCallback.");
+			Application.RegisterLogCallback(logCallback);
+		}
+
+		private FieldInfo GetLogCallbackField()
+		{
+#if !UNITY_METRO
+			var type = typeof(Application);
+			var f = type.GetFields(BindingFlags.Static | BindingFlags.NonPublic).Where(p => p.Name == "s_LogCallback");
+			if (f.Count() != 1) return null;
+			return f.Single();
+#else
+			return null;
+#endif
 		}
 		#endregion
 

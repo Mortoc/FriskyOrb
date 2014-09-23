@@ -11,11 +11,17 @@ namespace UnityTest
 	public static partial class Batch
 	{
 		private static string resultFilePathParam = "-resultFilePath=";
+		private static string testFilterParam = "-filter=";
+		private static string categoryParam = "-categories=";
 		private static string defaultResultFileName = "UnitTestResults.xml";
+
+		public static int RETURN_CODE_TESTS_OK = 0;
+		public static int RETURN_CODE_TESTS_FAILED = 2;
+		public static int RETURN_CODE_RUN_ERROR = 3;
 
 		public static void RunUnitTests ()
 		{
-			
+			var filter = GetTestFilter ();
 			var resultFilePath = GetParameterArgument (resultFilePathParam) ?? Directory.GetCurrentDirectory ();
 			if (Directory.Exists (resultFilePath))
 				resultFilePath = Path.Combine (resultFilePath, defaultResultFileName);
@@ -24,7 +30,26 @@ namespace UnityTest
 			UnitTestResult[] results;
 			string[] categories;
 			engine.GetTests (out results, out categories);
-			engine.RunTests (new TestRunnerEventListener (resultFilePath,results.ToList()));
+			engine.RunTests (filter, new TestRunnerEventListener (resultFilePath,results.ToList()));
+		}
+
+		private static TestFilter GetTestFilter ()
+		{
+			var testFilterArg = GetParameterArgumentArray (testFilterParam);
+			var testCategoryArg = GetParameterArgumentArray (categoryParam);
+			var filter = new TestFilter ()
+			{
+				names = testFilterArg,
+				categories = testCategoryArg
+			};
+			return filter;
+		}
+
+		private static string[] GetParameterArgumentArray (string parameterName)
+		{
+			var arg = GetParameterArgument(parameterName);
+			if (string.IsNullOrEmpty(arg)) return null;
+			return arg.Split(',').Select(s => s.Trim()).ToArray();
 		}
 
 		private static string GetParameterArgument ( string parameterName )
@@ -69,6 +94,14 @@ namespace UnityTest
 				var resultWriter = new XmlResultWriter ("Unit Tests", results.ToArray ());
 				resultWriter.WriteToFile (resultDestiantion, fileName);
 #endif
+				var executed = results.Where( result => result.Executed );
+				if (!executed.Any ())
+				{
+					EditorApplication.Exit(RETURN_CODE_RUN_ERROR);
+					return;
+				}
+				var failed = executed.Where (result => !result.IsSuccess);
+				EditorApplication.Exit(failed.Any() ? RETURN_CODE_TESTS_FAILED : RETURN_CODE_TESTS_OK);
 			}
 
 			public void TestStarted (string fullName)
@@ -81,6 +114,7 @@ namespace UnityTest
 
 			public void RunFinishedException (Exception exception)
 			{
+				EditorApplication.Exit(RETURN_CODE_RUN_ERROR);
 				throw exception;
 			}
 		}

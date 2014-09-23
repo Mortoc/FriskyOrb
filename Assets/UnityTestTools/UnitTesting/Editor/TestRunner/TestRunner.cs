@@ -36,22 +36,22 @@ namespace UnityTest
 
 		private void RunTests ( TestFilter filter )
 		{
-			if (runTestOnANewScene)
+			if (settings.runTestOnANewScene)
 			{
-				if (autoSaveSceneBeforeRun) EditorApplication.SaveScene ();
+				if (settings.autoSaveSceneBeforeRun) EditorApplication.SaveScene ();
 				if (!EditorApplication.SaveCurrentSceneIfUserWantsTo ()) return;
 			}
 
 			string currentScene = null;
 			int undoGroup = -1;
-			if(runTestOnANewScene)
+			if (settings.runTestOnANewScene)
 				currentScene = OpenNewScene ();
 			else
 				undoGroup = RegisterUndo ();
 
 			StartTestRun (filter, new TestRunnerEventListener (UpdateTestInfo));
 
-			if (runTestOnANewScene)
+			if (settings.runTestOnANewScene)
 				LoadPreviousScene (currentScene);
 			else
 				PerformUndo (undoGroup);
@@ -60,7 +60,7 @@ namespace UnityTest
 		private string OpenNewScene ()
 		{
 			var currentScene = EditorApplication.currentScene;
-			if (runTestOnANewScene)
+			if (settings.runTestOnANewScene)
 				EditorApplication.NewScene ();
 			return currentScene;
 		}

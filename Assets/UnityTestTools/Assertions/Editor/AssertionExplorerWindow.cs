@@ -4,6 +4,10 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_METRO
+#warning Assertion component is not supported on Windows Store apps
+#endif
+
 namespace UnityTest
 {
 	[Serializable]

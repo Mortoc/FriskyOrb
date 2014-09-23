@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,7 +8,9 @@ namespace UnityTest
 {
 	public static class Icons
 	{
-		private const string iconsAssetsPathPattern = "Common/Editor/icons/";
+		private static string iconsFolderName = "icons";
+		private static string iconsFolderPath = String.Format ("UnityTestTools{0}Common{0}Editor{0}{1}", Path.DirectorySeparatorChar, iconsFolderName);
+		
 		private static string iconsAssetsPath = "";
 
 		public static readonly Texture2D failImg;
@@ -29,12 +33,12 @@ namespace UnityTest
 		
 		static Icons ()
 		{
-			var dirs = Directory.GetDirectories ("Assets", "UnityTestTools", SearchOption.AllDirectories);
-			if (dirs.Length>0)
-				iconsAssetsPath = Path.Combine (dirs[0], iconsAssetsPathPattern);
+			var dirs = Directory.GetDirectories ("Assets", iconsFolderName, SearchOption.AllDirectories).Where (s => s.EndsWith (iconsFolderPath));
+			if (dirs.Any())
+				iconsAssetsPath = dirs.First();
 			else
 				Debug.LogWarning ("The UnityTestTools asset folder path is incorrect. If you relocated the tools please change the path accordingly (Icons.cs).");
-
+			
 			failImg = LoadTexture ("failed.png");
 			ignoreImg = LoadTexture("ignored.png");
 			successImg = LoadTexture("passed.png");
@@ -68,7 +72,7 @@ namespace UnityTest
 
 		private static Texture2D LoadTexture (string fileName)
 		{
-			return (Texture2D)Resources.LoadAssetAtPath (iconsAssetsPath + fileName, typeof (Texture2D));
+			return (Texture2D)Resources.LoadAssetAtPath (iconsAssetsPath + Path.DirectorySeparatorChar + fileName, typeof (Texture2D));
 		}
 	}
 }

@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityTest.IntegrationTests;
 
@@ -18,7 +20,20 @@ namespace UnityTest
 		{
 			var targetPlatform = GetTargetPlatform ();
 			var sceneList = GetTestScenesList ();
+			if (sceneList.Count == 0)
+				sceneList = FindTestScenesInProject ();
+			RunIntegrationTests (targetPlatform, sceneList);
+		}
 
+		public static void RunIntegrationTests ( BuildTarget? targetPlatform )
+		{
+			var sceneList = FindTestScenesInProject ();
+			RunIntegrationTests (targetPlatform, sceneList);
+		}
+
+
+		public static void RunIntegrationTests ( BuildTarget? targetPlatform, List<string> sceneList )
+		{
 			if (targetPlatform.HasValue)
 				BuildAndRun (targetPlatform.Value, sceneList);
 			else
@@ -28,21 +43,56 @@ namespace UnityTest
 		private static void BuildAndRun (BuildTarget target, List<string> sceneList)
 		{
 			var resultFilePath = GetParameterArgument (resultFileDirParam);
-			PlatformRunner.BuildAndRunInPlayer (target, sceneList.ToArray (), "IntegrationTests", resultFilePath);
-			EditorApplication.Exit (0);
+
+			int port = 0;
+			List<string> ipList = TestRunnerConfigurator.GetAvailableNetworkIPs ();
+
+			var config = new PlatformRunnerConfiguration ()
+			{
+				buildTarget = target,
+				scenes = sceneList.ToArray (),
+				projectName = "IntegrationTests",
+				resultsDir = resultFilePath,
+				sendResultsOverNetwork = InternalEditorUtility.inBatchMode,
+				ipList = ipList,
+				port = port
+			};
+
+			if (Application.isWebPlayer)
+			{
+				config.sendResultsOverNetwork = false;
+				Debug.Log ("You can't use WebPlayer as active platform for running integraiton tests. Switching to Standalone");
+				EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneWindows);
+			}
+
+			PlatformRunner.BuildAndRunInPlayer (config);
 		}
 
 		private static void RunInEditor (List<string> sceneList)
 		{
+			NetworkResultsReceiver.StopReceiver ();
 			if (sceneList == null || sceneList.Count == 0)
 			{
 				Debug.Log ("No scenes on the list");
-				EditorApplication.Exit (0);
+				EditorApplication.Exit(RETURN_CODE_RUN_ERROR);
 				return;
 			}
 			EditorBuildSettings.scenes = sceneList.Select (s => new EditorBuildSettingsScene (s, true)).ToArray ();
 			EditorApplication.OpenScene (sceneList.First ());
 			GuiHelper.SetConsoleErrorPause (false);
+
+			var config = new PlatformRunnerConfiguration()
+			{
+				resultsDir = GetParameterArgument(resultFileDirParam),
+				ipList = TestRunnerConfigurator.GetAvailableNetworkIPs(),
+				port = PlatformRunnerConfiguration.TryToGetFreePort (),
+			};
+
+			var settings = new PlayerSettingConfigurator(true);
+			settings.AddConfigurationFile(TestRunnerConfigurator.integrationTestsNetwork, string.Join("\n", config.GetConnectionIPs()));
+
+			NetworkResultsReceiver.StartReceiver(config);
+
 			EditorApplication.isPlaying = true;
 		}
 
@@ -67,6 +117,12 @@ namespace UnityTest
 				return null;
 			}
 			return buildTarget;
+		}
+
+		private static List<string> FindTestScenesInProject ()
+		{
+			var integrationTestScenePattern = "*Test?.unity";
+			return Directory.GetFiles ("Assets", integrationTestScenePattern, SearchOption.AllDirectories).ToList ();
 		}
 
 		private static List<string> GetTestScenesList ()

@@ -30,7 +30,6 @@ namespace UnityTest
 		[SerializeField] private List<TestComponent> testsToRun;
 		[SerializeField] private List<string> dynamicTestsToRun;
 		[SerializeField] private bool readyToRun;
-		private bool isCompiling;
 		private bool isBuilding;
 		public static bool selectedInHierarchy;
 		private float horizontalSplitBarPosition = 200;
@@ -42,16 +41,8 @@ namespace UnityTest
 		[SerializeField] private List<TestResult> resultList = new List<TestResult> ();
 		[SerializeField] private List<GameObject> foldMarkers = new List<GameObject> ();
 
-		private bool showOptions;
-		private string filterString;
-		private bool showAdvancedFilter;
+		private IntegrationTestsRunnerSettings settings;
 
-		private bool showSucceededTest = true;
-		private bool showFailedTest = true;
-		private bool showNotRunnedTest = true;
-		private bool showIgnoredTest = true;
-		private bool addNewGameObjectUnderSelectedTest;
-		private bool blockUIWhenRunning = true;
 		#endregion
 
 		
@@ -103,15 +94,7 @@ namespace UnityTest
 			title = "Integration Tests Runner";
 			Instance = this;
 
-			if (EditorPrefs.HasKey ("ITR-addNewGameObjectUnderSelectedTest"))
-			{
-				addNewGameObjectUnderSelectedTest = EditorPrefs.GetBool ("ITR-addNewGameObjectUnderSelectedTest");
-				blockUIWhenRunning = EditorPrefs.GetBool ("ITR-blockUIWhenRunning");
-				showSucceededTest = EditorPrefs.GetBool ("ITR-showSucceededTest");
-				showFailedTest = EditorPrefs.GetBool ("ITR-showFailedTest");
-				showIgnoredTest = EditorPrefs.GetBool ("ITR-showIgnoredTest");
-				showNotRunnedTest = EditorPrefs.GetBool ("ITR-showNotRunnedTest");
-			}
+			settings = ProjectSettingsBase.Load<IntegrationTestsRunnerSettings> ();
 
 			InitBackgroundRunners ();
 			if (!EditorApplication.isPlayingOrWillChangePlaymode && !readyToRun) RebuildTestList ();
@@ -150,7 +133,7 @@ namespace UnityTest
 			//create a test runner if it doesn't exist
 			TestRunner.GetTestRunner ();
 
-			if (Instance.addNewGameObjectUnderSelectedTest
+			if (Instance.settings.addNewGameObjectUnderSelectedTest
 				&& Instance.selectedLine != null
 			    && Selection.activeGameObject != null)
 			{
@@ -253,7 +236,7 @@ namespace UnityTest
 			TestComponent.DisableAllTests ();
 			EditorApplication.isPlaying = true;
 
-			if (blockUIWhenRunning)
+			if (settings.blockUIWhenRunning)
 				EditorUtility.DisplayProgressBar ("Integration Test Runner", "Initializing", 0);
 		}
 
@@ -283,6 +266,13 @@ namespace UnityTest
 					var existingTests = dynamicTestsOnScene.Where (component => component.dynamicTypeName == dynamicTestType.AssemblyQualifiedName);
 					if (existingTests.Any ())
 					{
+						var testComponent = existingTests.Single ();
+						foreach (var c in testComponent.gameObject.GetComponents<Component> ())
+						{
+							var type = Type.GetType (testComponent.dynamicTypeName);
+							if (c is TestComponent || c is Transform || type.IsInstanceOfType(c)) continue;
+							DestroyImmediate (c);
+						}
 						dynamicTestsOnScene.Remove (existingTests.Single ());
 						continue;
 					}
@@ -400,21 +390,21 @@ namespace UnityTest
 				RebuildTestList ();
 			}
 			GUILayout.FlexibleSpace ();
-			if (GUILayout.Button (showOptions ? guiOptionsHideLabel : guiOptionsShowLabel, GUILayout.Height (24), GUILayout.Width (80)))
-				showOptions = !showOptions;
+			if (GUILayout.Button (settings.showOptions ? guiOptionsHideLabel : guiOptionsShowLabel, GUILayout.Height (24), GUILayout.Width (80)))
+				settings.showOptions = !settings.showOptions;
 			EditorGUILayout.EndHorizontal ();
 
-			if (showOptions)
+			if (settings.showOptions)
 				PrintOptions ();
 
 			EditorGUILayout.BeginHorizontal ();
 			EditorGUILayout.LabelField ("Filter:", GUILayout.Width (35));
-			filterString = EditorGUILayout.TextField (filterString);
-			if (GUILayout.Button (showAdvancedFilter ? guiAdvancedFilterHide : guiAdvancedFilterShow, GUILayout.Width (80), GUILayout.Height (16)))
-				showAdvancedFilter = !showAdvancedFilter;
+			settings.filterString = EditorGUILayout.TextField (settings.filterString);
+			if (GUILayout.Button (settings.showAdvancedFilter ? guiAdvancedFilterHide : guiAdvancedFilterShow, GUILayout.Width (80), GUILayout.Height (16)))
+				settings.showAdvancedFilter = !settings.showAdvancedFilter;
 			EditorGUILayout.EndHorizontal ();
 
-			if (showAdvancedFilter)
+			if (settings.showAdvancedFilter)
 				PrintAdvancedFilter ();
 		}
 
@@ -423,13 +413,11 @@ namespace UnityTest
 			var style = EditorStyles.toggle;
 			EditorGUILayout.BeginVertical ();
 			EditorGUI.BeginChangeCheck ();
-			addNewGameObjectUnderSelectedTest = EditorGUILayout.Toggle (guiAddGOUderTest, addNewGameObjectUnderSelectedTest, style);
-			blockUIWhenRunning = EditorGUILayout.Toggle (guiBlockUI, blockUIWhenRunning, style);
-			if (EditorGUI.EndChangeCheck ())
-			{
-				EditorPrefs.SetBool ("ITR-addNewGameObjectUnderSelectedTest", addNewGameObjectUnderSelectedTest);
-				EditorPrefs.SetBool ("ITR-blockUIWhenRunning", blockUIWhenRunning);
-			}
+
+			settings.addNewGameObjectUnderSelectedTest = EditorGUILayout.Toggle (guiAddGOUderTest, settings.addNewGameObjectUnderSelectedTest, style);
+			settings.blockUIWhenRunning = EditorGUILayout.Toggle (guiBlockUI, settings.blockUIWhenRunning, style);
+			if (EditorGUI.EndChangeCheck ()) settings.Save ();
+
 			EditorGUILayout.EndVertical ();
 		}
 
@@ -437,18 +425,12 @@ namespace UnityTest
 		{
 			EditorGUI.BeginChangeCheck ();
 			EditorGUILayout.BeginHorizontal ();
-			showSucceededTest = GUILayout.Toggle (showSucceededTest, guiShowSucceededTests, GUI.skin.FindStyle (GUI.skin.button.name + "left"), GUILayout.ExpandWidth (true));
-			showFailedTest = GUILayout.Toggle (showFailedTest, guiShowFailedTests, GUI.skin.FindStyle (GUI.skin.button.name + "mid"));
-			showIgnoredTest = GUILayout.Toggle (showIgnoredTest, guiShowIgnoredTests, GUI.skin.FindStyle (GUI.skin.button.name + "mid"));
-			showNotRunnedTest = GUILayout.Toggle (showNotRunnedTest, guiShowNotRunTests, GUI.skin.FindStyle (GUI.skin.button.name + "right"), GUILayout.ExpandWidth (true));
+			settings.showSucceededTest = GUILayout.Toggle (settings.showSucceededTest, guiShowSucceededTests, GUI.skin.FindStyle (GUI.skin.button.name + "left"), GUILayout.ExpandWidth (true));
+			settings.showFailedTest = GUILayout.Toggle (settings.showFailedTest, guiShowFailedTests, GUI.skin.FindStyle (GUI.skin.button.name + "mid"));
+			settings.showIgnoredTest = GUILayout.Toggle (settings.showIgnoredTest, guiShowIgnoredTests, GUI.skin.FindStyle (GUI.skin.button.name + "mid"));
+			settings.showNotRunnedTest = GUILayout.Toggle (settings.showNotRunnedTest, guiShowNotRunTests, GUI.skin.FindStyle (GUI.skin.button.name + "right"), GUILayout.ExpandWidth (true));
 			EditorGUILayout.EndHorizontal ();
-			if (EditorGUI.EndChangeCheck ())
-			{
-				EditorPrefs.SetBool ("ITR-showSucceededTest", showSucceededTest);
-				EditorPrefs.SetBool ("ITR-showFailedTest", showFailedTest);
-				EditorPrefs.SetBool ("ITR-showIgnoredTest", showIgnoredTest);
-				EditorPrefs.SetBool ("ITR-showNotRunnedTest", showNotRunnedTest);
-			}
+			if (EditorGUI.EndChangeCheck ()) settings.Save();
 		}
 
 		private bool PrintTestList ( IntegrationTestRendererBase[] renderedLines )
@@ -456,11 +438,11 @@ namespace UnityTest
 			if (renderedLines == null) return false;
 
 			var filter = new RenderingOptions ();
-			filter.showSucceeded = showSucceededTest;
-			filter.showFailed = showFailedTest;
-			filter.showNotRunned = showNotRunnedTest;
-			filter.showIgnored = showIgnoredTest;
-			filter.nameFilter = filterString;
+			filter.showSucceeded = settings.showSucceededTest;
+			filter.showFailed = settings.showFailedTest;
+			filter.showNotRunned = settings.showNotRunnedTest;
+			filter.showIgnored = settings.showIgnoredTest;
+			filter.nameFilter = settings.filterString;
 
 			bool repaint = false;
 			foreach (var renderedLine in renderedLines)
@@ -540,6 +522,7 @@ namespace UnityTest
 
 			private bool consoleErrorOnPauseValue;
 			private bool runInBackground;
+			private TestComponent currentTest;
 
 			public RunnerCallback(IntegrationTestsRunnerWindow window)
 			{
@@ -553,6 +536,7 @@ namespace UnityTest
 
 			public void RunStarted (string platform, List<TestComponent> testsToRun)
 			{
+				EditorApplication.update += OnEditorUpdate;
 				testNumber = testsToRun.Count;
 				foreach (var test in testsToRun)
 				{
@@ -564,6 +548,8 @@ namespace UnityTest
 			public void RunFinished (List<TestResult> testResults)
 			{
 				window.SetCurrentTest(null);
+				currentTest = null;
+				EditorApplication.update -= OnEditorUpdate;
 				EditorApplication.isPlaying = false;
 				EditorUtility.ClearProgressBar();
 				GuiHelper.SetConsoleErrorPause (consoleErrorOnPauseValue);
@@ -573,13 +559,7 @@ namespace UnityTest
 			public void TestStarted (TestResult test)
 			{
 				window.SetCurrentTest (test.TestComponent);
-				if (window.blockUIWhenRunning
-					&& EditorUtility.DisplayCancelableProgressBar("Integration Test Runner",
-																"Running " + test.Name,
-																(float) currentTestNumber / testNumber))
-				{
-					TestRunInterrupted (null);
-				}
+				currentTest = test.TestComponent;
 			}
 
 
@@ -598,6 +578,17 @@ namespace UnityTest
 			{
 				Debug.Log("Test run interrupted");
 				RunFinished(new List<TestResult>());
+			}
+
+			private void OnEditorUpdate ()
+			{
+				if (window.settings.blockUIWhenRunning && currentTest != null
+					&& EditorUtility.DisplayCancelableProgressBar ("Integration Test Runner",
+																"Running " + currentTest.Name,
+																(float)currentTestNumber / testNumber))
+				{
+					TestRunInterrupted (null);
+				}
 			}
 		}
 

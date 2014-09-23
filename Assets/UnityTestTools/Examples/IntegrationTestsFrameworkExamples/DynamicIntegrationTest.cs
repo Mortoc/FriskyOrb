@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[IntegrationTest.DynamicTest ("IntegrationTestsExample")]
+[IntegrationTest.DynamicTest("ExampleIntegrationTests")]
 //[IntegrationTest.Ignore]
 [IntegrationTest.ExpectExceptions (false, typeof (ArgumentException))]
 [IntegrationTest.SucceedWithAssertions]

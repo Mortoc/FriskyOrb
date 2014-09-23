@@ -15,12 +15,6 @@ public class Player : MonoBehaviour
 
     public float Stretch { get; set; }
 
-
-    [SerializeField]
-    private ParticleSystem _groundEffectParticles;
-
-    private Vector3 _initialGroundParticleOffset;
-
     [SerializeField]
     private float _fallToDeathThreshold = 30.0f;
 
@@ -83,8 +77,6 @@ public class Player : MonoBehaviour
 
         Level = GameObject.FindObjectOfType<Level>();
         _startingGravityMag = Physics.gravity.magnitude;
-         
-        _initialGroundParticleOffset = transform.position - _groundEffectParticles.transform.position;
      
         GameObject.FindObjectOfType<LevelGui>().Player = this;
 		GetComponentInChildren<PlayerExplodeFX> ().Player = this;
@@ -92,13 +84,11 @@ public class Player : MonoBehaviour
 
     private void BecameGrounded()
     {
-        _groundEffectParticles.enableEmission = true;
 		audio.Play();
     }
 
     private void BecameUngrounded()
     {
-        _groundEffectParticles.enableEmission = false;
 		audio.Stop();
     }
 
@@ -107,32 +97,6 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (CurrentSegment)
-        {
-			NearestPathT = CurrentSegment.Path.GetApproxT(rigidbody.position);
-
-			if (NearestPathT > 0.999f)
-            {
-				NearestPathT = CurrentSegment.Next.Path.GetApproxT(rigidbody.position);
-				NearestPathPoint = CurrentSegment.Next.Path.GetPoint(NearestPathT);
-
-                LevelSegment oldSegment = CurrentSegment;
-                CurrentSegment = CurrentSegment.Next;
-                oldSegment.IsNoLongerCurrent();
-            }
-            else
-            {
-				NearestPathPoint = CurrentSegment.Path.GetPoint(NearestPathT);
-            }
-
-			if (NearestPathPoint.y > rigidbody.position.y + _fallToDeathThreshold)
-            {
-                PlayerDied();
-            }
-        }
-
-        _groundEffectParticles.transform.position = rigidbody.position - _initialGroundParticleOffset;
-
         OnFixedUpdate();
     }
 

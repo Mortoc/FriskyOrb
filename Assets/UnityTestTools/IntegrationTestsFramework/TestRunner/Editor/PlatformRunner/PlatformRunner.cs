@@ -1,15 +1,14 @@
 using System;
-using System.IO;
-using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace UnityTest.IntegrationTests
 {
 	public class PlatformRunner
 	{
-		static string resourcesPath = Path.Combine ("Assets", "Resources");
-
 		public static BuildTarget defaultBuildTarget
 		{
 			get
@@ -33,7 +32,7 @@ namespace UnityTest.IntegrationTests
 		public static void BuildAndRunCurrentScene ()
 		{
 			Debug.Log ("Building and running current test for " + defaultBuildTarget);
-			BuildAndRunInPlayer (defaultBuildTarget, new string[0], null, null);
+			BuildAndRunInPlayer (new PlatformRunnerConfiguration (defaultBuildTarget));
 		}
 
 		[MenuItem ("Unity Test Tools/Platform Runner/Run on platform %#r")]
@@ -43,80 +42,60 @@ namespace UnityTest.IntegrationTests
 			w.Show ();
 		}
 
-		public static void BuildAndRunInPlayer (BuildTarget buildTarget, string[] scenes, string name, string resultFilePath)
+		public static void BuildAndRunInPlayer (PlatformRunnerConfiguration configuration)
 		{
-			var folderExisted = AddConfigurationFile (resultFilePath);
+			NetworkResultsReceiver.StopReceiver ();
 
-			var tempDisplayResolutionDialog = PlayerSettings.displayResolutionDialog;
-			PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Disabled;
-			var tempRunInBackground = PlayerSettings.runInBackground;
-			PlayerSettings.runInBackground = true;
-			var tempFullScreen = PlayerSettings.defaultIsFullScreen;
-			PlayerSettings.defaultIsFullScreen = false;
-			PlayerSettings.resizableWindow = true;
+			var settings = new PlayerSettingConfigurator (false);
 
-			BuildPipeline.BuildPlayer (scenes,
-										GetTempPath (buildTarget, name ?? Application.loadedLevelName),
-										buildTarget,
+			if (configuration.sendResultsOverNetwork)
+			{
+				try
+				{
+					var l = new TcpListener (IPAddress.Any, configuration.port);
+					l.Start();
+					configuration.port = ((IPEndPoint) l.Server.LocalEndPoint).Port;
+					l.Stop ();
+				}
+				catch (SocketException e)
+				{
+					Debug.LogException (e);
+					EditorApplication.Exit (Batch.RETURN_CODE_RUN_ERROR);
+				}
+			}
+
+			if (InternalEditorUtility.inBatchMode)
+				settings.AddConfigurationFile(TestRunnerConfigurator.batchRunFileMarker, "");
+
+			if (configuration.sendResultsOverNetwork)
+				settings.AddConfigurationFile (TestRunnerConfigurator.integrationTestsNetwork,
+					string.Join ("\n", configuration.GetConnectionIPs ()));
+
+			settings.ChangeSettingsForIntegrationTests ();
+
+			AssetDatabase.Refresh ();
+
+			var result = BuildPipeline.BuildPlayer (configuration.scenes,
+										configuration.GetTempPath ( ),
+										configuration.buildTarget,
 										BuildOptions.AutoRunPlayer | BuildOptions.Development);
 
+			settings.RevertSettingsChanges ();
+			settings.RemoveAllConfigurationFiles ();
 
-			PlayerSettings.defaultIsFullScreen = tempFullScreen;
-			PlayerSettings.runInBackground = tempRunInBackground;
-			PlayerSettings.displayResolutionDialog = tempDisplayResolutionDialog;
+			AssetDatabase.Refresh();
 
-			RemoveConfigurationFile (folderExisted);
-		}
-
-		private static void RemoveConfigurationFile (bool directoryExisted)
-		{
-			var batchRunFileMarkerPath = Path.Combine (resourcesPath, TestRunner.batchRunFileMarker);
-			AssetDatabase.DeleteAsset (batchRunFileMarkerPath);
-			var configFilePath = Path.Combine (resourcesPath, TestRunner.integrationTestsConfigFileName);
-			AssetDatabase.DeleteAsset (configFilePath);
-			if (!directoryExisted)
-				AssetDatabase.DeleteAsset (resourcesPath);
-		}
-
-		private static bool AddConfigurationFile (string resultFilePath)
-		{
-			var resDirExisted = Directory.Exists (resourcesPath);
-			if (!resDirExisted)
-				AssetDatabase.CreateFolder ("Assets", "Resources");
-			if (UnityEditorInternal.InternalEditorUtility.inBatchMode)
+			if (!string.IsNullOrEmpty (result))
 			{
-				var batchRunFileMarkerPath = Path.Combine (resourcesPath, TestRunner.batchRunFileMarker);
-				File.WriteAllText (batchRunFileMarkerPath, "");
+				if (InternalEditorUtility.inBatchMode)
+					EditorApplication.Exit (Batch.RETURN_CODE_RUN_ERROR);
+				return;
 			}
-			if (!string.IsNullOrEmpty (resultFilePath))
-			{
-				if (!Directory.Exists (resultFilePath))
-					Directory.CreateDirectory (resultFilePath);
-				var configFilePath = Path.Combine (resourcesPath, TestRunner.integrationTestsConfigFileName);
-				File.WriteAllText (configFilePath, resultFilePath);
-			}
-			AssetDatabase.Refresh ();
-			return resDirExisted;
-		}
 
-		private static string GetTempPath (BuildTarget buildTarget, string name)
-		{
-			if (string.IsNullOrEmpty (name))
-				name = Path.GetTempFileName ();
-
-			var path = Path.Combine ("Temp", name);
-			switch (buildTarget)
-			{
-				case BuildTarget.StandaloneWindows:
-				case BuildTarget.StandaloneWindows64:
-					return path + ".exe";
-				case BuildTarget.StandaloneOSXIntel:
-					return path + ".app";
-				case BuildTarget.Android:
-					return path + ".apk";
-				default:
-					return path;
-			}
+			if (configuration.sendResultsOverNetwork)
+				NetworkResultsReceiver.StartReceiver (configuration);
+			else
+				EditorApplication.Exit (Batch.RETURN_CODE_TESTS_OK);
 		}
 
 		private static BuildTarget GetDefaultBuildTarget ()
