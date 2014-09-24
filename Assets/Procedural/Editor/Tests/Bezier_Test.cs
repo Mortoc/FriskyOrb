@@ -222,5 +222,33 @@ namespace Procedural.Test
             Assert.IsTrue(closedBezier.Closed);
             Assert.IsFalse(openBezier.Closed);
         }
+
+			
+		[Test]
+		public void DistanceSampleTest()
+		{
+			var circle = Bezier.ConstructSmoothSpline(new Vector3[]{
+				new Vector3(1.0f, 0.0f, 0.0f),
+				new Vector3(0.0f, 1.0f, 0.0f),
+				new Vector3(-1.0f, 0.0f, 0.0f),
+				new Vector3(0.0f, -1.0f, 0.0f),
+			}, true);
+
+			var line = Bezier.ConstructSmoothSpline(new Vector3[]{
+				Vector3.zero,
+				Vector3.up
+			}, false);
+
+			UAssert.Near(line.DistanceSample(0.0f), 0.0f, 0.0001f);
+			UAssert.Near(line.DistanceSample(0.5f), 0.5f, 0.0001f);
+			UAssert.Near(line.DistanceSample(1.0f), 1.0f, 0.0001f);
+			UAssert.Near(line.DistanceSample(1.5f), 1.0f, 0.0001f);
+
+			UAssert.Near (circle.DistanceSample(0.0f), 0.0f, 0.01f);
+			UAssert.Near (circle.DistanceSample(0.25f), 2.0f * Mathf.PI * 0.25f, 0.01f);
+			UAssert.Near (circle.DistanceSample(0.5f), 2.0f * Mathf.PI * 0.5f, 0.01f);
+			UAssert.Near (circle.DistanceSample(0.75f), 2.0f * Mathf.PI * 0.75f, 0.01f);
+			UAssert.Near (circle.DistanceSample(1.0f), 2.0f * Mathf.PI, 0.01f);
+		}
     }
 }

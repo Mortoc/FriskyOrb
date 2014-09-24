@@ -13,20 +13,24 @@ namespace RtInfinity.Levels.Test
     internal class LevelTrack_Test : IDisposable
     {
 		private GameObject _fixtureGameObject = new GameObject("TestTrack");
-		private ITrackGenerator _generator = new RtInfinity.Levels.SpaceRace.SpaceRaceTrackGenerator();
+		private TrackGenerator _generator = new MockTrackGenerator();
 		
 		public void Dispose ()
 		{
-			GameObject.DestroyImmediate (_fixtureGameObject);
+			GameObject.DestroyImmediate(_fixtureGameObject);
 		}
+
 
         [Test]
         public void LevelTracksGenerateTrackSegments()
         {
-			var track = new LevelTrack(_generator);
+			var track =  _fixtureGameObject.GetOrAddComponent<LevelTrack>();
+			track.Init (_generator);
+
 			var segments = track.Generate();
 			Assert.IsNotNull(segments);
 			Assert.IsNotNull(segments.First());
         }
+
     }
 }

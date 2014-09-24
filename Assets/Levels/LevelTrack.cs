@@ -14,12 +14,14 @@ namespace RtInfinity.Levels
         void UpdatePlayerPosition(float travelDist);
     }
 
-	public class LevelTrack : ILevelTrack
+	public class LevelTrack : MonoBehaviour, ILevelTrack
 	{
-		private List<TrackSegment> _segments;
-		private ITrackGenerator _generator;
+		private const int ACTIVE_TRACK_SEGMENTS = 8;
 
-		public LevelTrack(ITrackGenerator generator)
+		private List<TrackSegment> _segments;
+		private TrackGenerator _generator;
+
+		public void Init(TrackGenerator generator)
 		{
 			_generator = generator;
 			_segments = new List<TrackSegment>();
@@ -27,6 +29,18 @@ namespace RtInfinity.Levels
 
 		public IEnumerable<TrackSegment> Generate()
 		{
+			TrackSegment lastSegment = null;
+			for(int i = 0; i < ACTIVE_TRACK_SEGMENTS; ++i)
+			{
+				var trackObj = new GameObject("TrackSegment");
+				trackObj.transform.parent = transform;
+
+				var trackSeg = trackObj.GetOrAddComponent<TrackSegment>();
+				trackSeg.Init(_generator, lastSegment);
+				_segments.Add(trackSeg);
+
+				lastSegment = trackSeg;
+			}
 			return _segments;
 		}
 

@@ -3,11 +3,9 @@
 using System;
 using System.Collections.Generic;
 
-using System.Linq;
-
 namespace Procedural
 {
-    public class Bezier : ISpline
+    public class Bezier : ISpline, IEnumerable<Bezier.ControlPoint>
     {
     	public struct ControlPoint
         {
@@ -27,6 +25,17 @@ namespace Procedural
     			this.InTangent = inTangent;
     			this.OutTangent = outTangent;
     		}
+
+			public ControlPoint ScaleTangents(float percent)
+			{
+				var inTanDiff = InTangent - Point;
+				InTangent = (inTanDiff * percent) + Point;
+				
+				var outTanDiff = OutTangent - Point;
+				OutTangent = (outTanDiff * percent) + Point;
+
+				return this;
+			}
         }
 
         private ControlPoint[] _controlPoints;
@@ -92,7 +101,7 @@ namespace Procedural
         	}
 
             if(closed)
-                ctrlPts.Add(ctrlPts.First());
+                ctrlPts.Add(ctrlPts[0]);
 
         	return new Bezier(ctrlPts);
         }
@@ -121,6 +130,12 @@ namespace Procedural
             }
         }
 
+		internal void PerformControlPointOperation(Func<ControlPoint, ControlPoint> op)
+		{
+			for(int i = 0; i < _controlPoints.Length; ++i)
+				_controlPoints[i] = op(_controlPoints[i]);
+		}
+
     	public Bezier(IEnumerable<ControlPoint> controlPoints)
     	{
     		UpdateControlPoints(controlPoints);
@@ -130,6 +145,30 @@ namespace Procedural
         {
         	get { return _controlPoints; }
         }
+
+		public ControlPoint this[int index]
+		{
+			get
+			{
+				return _controlPoints[index];
+			}
+		}
+
+		public int ControlPointCount
+		{
+			get { return _controlPoints.Length; }
+		}
+
+		public IEnumerator<ControlPoint> GetEnumerator ()
+		{
+			foreach(var cp in _controlPoints)
+				yield return cp;
+		}
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
+		{
+			return _controlPoints.GetEnumerator();
+		}
 
     	private void UpdateControlPoints(IEnumerable<ControlPoint> controlPoints)
     	{
@@ -189,6 +228,31 @@ namespace Procedural
 
             return (afterSample - beforeSample).normalized;
         }
+
+		public float DistanceSample(float t)
+		{
+			t = Mathf.Clamp01(t);
+			if( t == 0.0f )
+				return 0.0f;
+
+			// for now, do a dumb approximation until I get more time
+			// to math this properly
+			var sampleCount = 12;
+
+			var dist = 0.0f;
+			var step = 1.0f / (float)sampleCount;
+			var current = step;
+			var lastSample = PositionSample(0.0f);
+			for(var i = 0; i < sampleCount; ++i)
+			{
+				var sample = PositionSample(current);
+				dist += (sample - lastSample).magnitude;
+				lastSample = sample;
+				current += step;
+			}
+
+			return dist * t;
+		}
 
         public Mesh Triangulate(uint samples)
         {

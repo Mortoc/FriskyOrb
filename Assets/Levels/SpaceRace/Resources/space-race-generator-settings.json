@@ -1,0 +1,19 @@
+{
+	section: {
+		name: "start",
+		segment: {
+			scale: {
+				min: 4.0,
+				max: 5.0
+			},
+			length: {
+				min: 10.0,
+				max: 10.0
+			},
+			curviness: {
+				min: 1.0,
+				max: 2.0
+			}
+		}
+	}
+}

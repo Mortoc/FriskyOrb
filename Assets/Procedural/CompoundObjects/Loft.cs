@@ -6,7 +6,17 @@ using System.Linq;
 
 namespace Procedural
 {
-    public class Loft
+	public interface ILoft
+	{
+		ISpline Path { get; }
+		ISpline Shape { get; }
+		ISpline Scale { get; }
+		
+		bool StartCap { get; }
+		bool EndCap { get; }
+	}
+
+    public class Loft : ILoft
     {
         public ISpline Path { get; set; }
         public ISpline Shape { get; set; }
@@ -15,8 +25,6 @@ namespace Procedural
 
         public bool StartCap { get; set; }
         public bool EndCap { get; set; }
-
-        public float Banking { get; set; }
 
         // A spline that evaluates to y=1, z=1 for all values of x
         private static ISpline _identitySpline = Bezier.ConstructSmoothSpline(new Vector3[]{

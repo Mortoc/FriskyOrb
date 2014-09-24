@@ -1,27 +1,31 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Levels/Editor/Tests/LevelTrack_Test.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Levels/Editor/Tests/LevelGenerator_Test.cs">
     <Files>
-      <File FileName="Assets/Levels/LevelTrack.cs" Line="35" Column="1" />
-      <File FileName="Assets/Levels/Editor/Tests/LevelTrack_Test.cs" Line="29" Column="37" />
+      <File FileName="Assets/Levels/LevelTrack.cs" Line="1" Column="1" />
+      <File FileName="Assets/Misc/ComponentExt.cs" Line="1" Column="1" />
+      <File FileName="Assets/Levels/SpaceRace/Resources/space-race-generator-settings.json" Line="1" Column="1" />
+      <File FileName="Assets/Levels/Editor/Tests/LevelGenerator_Test.cs" Line="55" Column="8" />
+      <File FileName="Assets/Levels/Editor/Tests/TrackSegment_Test.cs" Line="14" Column="3" />
+      <File FileName="Assets/Levels/TrackSegment.cs" Line="73" Column="4" />
+      <File FileName="Assets/Procedural/CompoundObjects/Loft.cs" Line="1" Column="1" />
+      <File FileName="Assets/Procedural/Primitives/Splines/ISpline.cs" Line="1" Column="1" />
+      <File FileName="Assets/Levels/TrackGenerator.cs" Line="165" Column="45" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Assembly-CSharp" expanded="True">
-            <Node name="Levels" expanded="True">
-              <Node name="SpaceRace" expanded="True" />
+            <Node name="Glow11" expanded="True">
+              <Node name="Shaders" expanded="True">
+                <Node name="Unity" expanded="True" />
+              </Node>
             </Node>
-            <Node name="Player" expanded="True">
-              <Node name="Controllers" expanded="True" />
-            </Node>
-            <Node name="UnityTestTools" expanded="True">
-              <Node name="Examples" expanded="True">
-                <Node name="IntegrationTestsFrameworkExamples" expanded="True">
-                  <Node name="AngryBotsTests" expanded="True">
-                    <Node name="Scripts" expanded="True" />
-                  </Node>
-                </Node>
+            <Node name="Levels" expanded="True" />
+            <Node name="Procedural" expanded="True">
+              <Node name="CompoundObjects" expanded="True" />
+              <Node name="Primitives" expanded="True">
+                <Node name="Splines" expanded="True" />
               </Node>
             </Node>
           </Node>
@@ -29,8 +33,18 @@
             <Node name="Levels" expanded="True">
               <Node name="Editor" expanded="True">
                 <Node name="Tests" expanded="True">
-                  <Node name="LevelTrack_Test.cs" selected="True" />
+                  <Node name="LevelGenerator_Test.cs" selected="True" />
                 </Node>
+              </Node>
+            </Node>
+            <Node name="Procedural" expanded="True">
+              <Node name="Editor" expanded="True">
+                <Node name="Tests" expanded="True" />
+              </Node>
+            </Node>
+            <Node name="UnityTestTools" expanded="True">
+              <Node name="UnitTesting" expanded="True">
+                <Node name="Editor" expanded="True" />
               </Node>
             </Node>
           </Node>

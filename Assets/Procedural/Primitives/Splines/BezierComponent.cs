@@ -44,6 +44,12 @@ namespace Procedural
             return _bezier.ForwardSample(t);
         }
 
+		public float DistanceSample(float t)
+		{
+			UpdateBezier();
+			return _bezier.DistanceSample(t);
+		}
+
         public bool Closed
         {
             get
