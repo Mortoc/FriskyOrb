@@ -12,4 +12,11 @@ public static class Functional
 			yield return iter(elem);
 		}
 	}
+
+	public static T First<T>(this IEnumerable<T> sequence) // replacement for the LINQ First func
+	{
+		var enumerator = sequence.GetEnumerator();
+		enumerator.MoveNext();
+		return enumerator.Current;
+	}
 }

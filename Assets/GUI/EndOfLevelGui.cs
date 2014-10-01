@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 
+using RtInfinity.Levels;
 
 public class EndOfLevelGui : MonoBehaviour
 {

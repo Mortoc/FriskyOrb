@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+using RtInfinity.Levels;
+
 public class LevelGui : MonoBehaviour
 {
     public GUISkin _skin;

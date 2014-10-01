@@ -43,20 +43,21 @@ namespace RtInfinity.Levels
 
 		public int Section { get; private set; }
 
+		public TrackSegment Next { get; private set; }
+
 
 		public void Init(TrackGenerator generator, TrackSegment lastSegment)
 		{
 			_generator = generator;
+			gameObject.layer = LayerMask.NameToLayer("Level");
 			Section = 0;
+			if( lastSegment )
+				lastSegment.Next = this;
 
 			if( lastSegment == null )
-			{
 				StartDist = 0.0f;
-			}
 			else
-			{
 				StartDist = lastSegment.EndDist;
-			}
 
 			_loft = _generator.BuildSegmentLoft(lastSegment, Section);
 			EndDist = StartDist + _loft.Path.DistanceSample(1.0f);

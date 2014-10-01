@@ -35,24 +35,4 @@ namespace RtInfinity.Levels.Test
 		public MockTrackGenerator()
 			: base(_rand, MOCK_SETTINGS_JSON) {}
 	}
-
-	
-	[TestFixture]
-	[Category("Gameplay")]
-	internal class TrackGenerator_Test : IDisposable
-	{
-		private GameObject _fixtureGameObject = new GameObject("TestTrack");
-		private TrackGenerator _generator = new MockTrackGenerator();
-		
-		public void Dispose ()
-		{
-			GameObject.DestroyImmediate(_fixtureGameObject);
-		}
-
-		[Test]
-		public void TrackGeneratorsBuildMultipleSegments()
-		{
-			var 
-		}
-	}
 }

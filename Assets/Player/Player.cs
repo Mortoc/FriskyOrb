@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 
+using RtInfinity.Levels;
+
 public class Player : MonoBehaviour
 {
     public event Action OnFixedUpdate;

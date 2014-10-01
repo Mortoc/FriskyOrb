@@ -5,12 +5,12 @@ using System.Collections.Generic;
 namespace Procedural
 {
     [ExecuteInEditMode]
-    public class LoftComponent : GeneratedMeshObject
+    public class LoftComponent : GeneratedMeshObject, ILoft
     {
-        public BezierComponent Path;
-        public BezierComponent Shape;
+        public BezierComponent PathObj;
+        public BezierComponent ShapeObj;
 
-        public BezierComponent Scale;
+        public BezierComponent ScaleObj;
 
         public int pathSegments = 10;
         public int shapeSegments = 16;
@@ -20,18 +20,52 @@ namespace Procedural
 
         private Loft _loft;
 
+		#region ILoft implementation
+
+		public Vector3 SurfacePoint (float pathT, float shapeT)
+		{
+			return _loft.SurfacePoint(pathT, shapeT);
+		}
+
+		public ISpline Path 
+		{
+			get { return _loft.Path; }
+		}
+
+		public ISpline Shape 
+		{
+			get { return _loft.Shape; }
+		}
+
+		public ISpline Scale 
+		{
+			get { return _loft.Scale; }
+		}
+
+		public bool StartCap 
+		{
+			get { return _loft.StartCap; }
+		}
+
+		public bool EndCap 
+		{
+			get { return _loft.EndCap; }
+		}
+
+		#endregion
+
         public override int GetHashCode()
         {
-        	if( Path == null || Shape == null )
+        	if( PathObj || ShapeObj )
         		return 0;
         		
-            var pathHash = Path.PointsHash() + pathSegments;
-            var shapeHash = Shape.PointsHash() + shapeSegments;
+            var pathHash = PathObj.PointsHash() + pathSegments;
+            var shapeHash = ShapeObj.PointsHash() + shapeSegments;
 
             var result = pathHash ^ shapeHash;
 
-            if(Scale) 
-                result ^= Scale.PointsHash();
+            if(ScaleObj) 
+                result ^= ScaleObj.PointsHash();
 
             if(startCap)
                 result += 1;

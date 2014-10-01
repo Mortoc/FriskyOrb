@@ -293,5 +293,26 @@ namespace Procedural.Test
 
 			Assert.Greater(upFacingTris, 1);
 		}
+
+		[Test]
+		public void SurfacePositionTest()
+		{
+			var torus = BuildTorus(1.0f, 0.25f);
+
+			// Sample around the path
+			UAssert.Near(torus.SurfacePoint(0.0f, 0.0f), new Vector3(0.0f, 1.0f, 0.25f), 0.01f);
+			UAssert.Near(torus.SurfacePoint(0.25f, 0.0f), new Vector3(1.0f, 0.0f, 0.25f), 0.01f);
+			UAssert.Near(torus.SurfacePoint(0.5f, 0.0f), new Vector3(0.0f, -1.0f, 0.25f), 0.01f);
+			UAssert.Near(torus.SurfacePoint(0.75f, 0.0f), new Vector3(-1.0f, 0.0f, 0.25f), 0.01f);
+
+			// Sample around the shape
+			UAssert.Near(torus.SurfacePoint(0.0f, 0.0f), new Vector3(0.0f, 1.0f, 0.25f), 0.01f);
+			UAssert.Near(torus.SurfacePoint(0.0f, 0.25f), new Vector3(0.0f, 0.75f, 0.0f), 0.01f);
+			UAssert.Near(torus.SurfacePoint(0.0f, 0.5f), new Vector3(0.0f, 1.0f, -0.25f), 0.01f);
+			UAssert.Near(torus.SurfacePoint(0.0f, 0.75f), new Vector3(0.0f, 1.25f, 0.0f), 0.01f);
+
+			// Sample the loop point
+			UAssert.Near(torus.SurfacePoint(1.0f, 1.0f), new Vector3(0.0f, 1.0f, 0.25f), 0.01f);
+		}
 	}
 }

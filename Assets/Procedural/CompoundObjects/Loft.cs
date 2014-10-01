@@ -14,6 +14,8 @@ namespace Procedural
 		
 		bool StartCap { get; }
 		bool EndCap { get; }
+
+		Vector3 SurfacePoint(float pathT, float shapeT);
 	}
 
     public class Loft : ILoft
@@ -49,6 +51,32 @@ namespace Procedural
             Scale = _identitySpline;
         }
 
+		public Vector3 SurfacePoint(float pathT, float shapeT)
+		{
+			var pathPnt = Path.PositionSample(pathT);
+			var pathRot = GetPathRotation(pathT);
+
+			var shapePnt = Shape.PositionSample(shapeT);
+			var shapePntRotated = pathRot * shapePnt;
+			
+			return pathPnt + shapePntRotated;
+		}
+
+		private Quaternion GetPathRotation(float pathT)
+		{
+			var pathDir = Path.ForwardSample(pathT);
+			var pathRot = Quaternion.FromToRotation(Vector3.up, pathDir);
+			
+			if( pathDir == -Vector3.up )
+			{
+				// Compensate for the gimbal lock when 
+				// pathDir is polar opposite to up
+				pathRot *= Quaternion.AngleAxis(180.0f, Vector3.up);
+			}
+
+			return pathRot;
+		}
+
         public Mesh GenerateMesh(uint pathSegments, uint shapeSegments)
         {
             if( pathSegments < 1 )
@@ -79,15 +107,7 @@ namespace Procedural
             {
                 var pathT = pathStep * (float)pathSeg;
                 var pathPnt = Path.PositionSample(pathT);
-                var pathDir = Path.ForwardSample(pathT);
-                var pathRot = Quaternion.FromToRotation(Vector3.up, pathDir);
-
-                if( pathDir == -Vector3.up )
-                {
-                    // Compensate for the gimbal lock when 
-                    // pathDir is polar opposite to up
-                    pathRot *= Quaternion.AngleAxis(180.0f, Vector3.up);
-                }
+				var pathRot = GetPathRotation(pathT);
                 
                 for(uint shapeSeg = 0; shapeSeg < shapeSegments+1; ++shapeSeg)
                 {

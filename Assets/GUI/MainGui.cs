@@ -2,6 +2,8 @@
 using System;
 using System.Text;
 
+using RtInfinity.Levels;
+
 public class MainGui : MonoBehaviour
 {
 	[SerializeField]

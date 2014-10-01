@@ -55,5 +55,14 @@ namespace RtInfinity.Levels.Test
 			Assert.IsTrue(segment.GetComponent<MeshCollider>());
 		}
 
+		[Test]
+		public void TrackSegmentsAreOnLevelLayer()
+		{
+			var segment = _fixtureGameObject.AddComponent<TrackSegment>();
+			segment.Init (_generator, null);
+
+			Assert.AreEqual(segment.gameObject.layer, LayerMask.NameToLayer("Level"));
+		}
+
 	}
 }
