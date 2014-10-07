@@ -7,69 +7,69 @@ namespace Procedural
 {
     public class Bezier : ISpline, IEnumerable<Bezier.ControlPoint>
     {
-    	public struct ControlPoint
+        public struct ControlPoint
         {
-    		public Vector3 Point { get; set; }
-    		public Vector3 InTangent { get; set; }
-    		public Vector3 OutTangent { get; set; }
-			public Vector3 Up { get; set; }
+            public Vector3 Point { get; set; }
+            public Vector3 InTangent { get; set; }
+            public Vector3 OutTangent { get; set; }
+            public Vector3 Up { get; set; }
 
-    		public ControlPoint(Vector3 point)
-    			: this(point, point, point) {}
+            public ControlPoint(Vector3 point)
+                : this(point, point, point) { }
 
-    		public ControlPoint(Vector3 point, Vector3 tangent)
-    			: this(point, tangent, point + (point - tangent)) {}
-			
-			public ControlPoint(Vector3 point, Vector3 inTangent, Vector3 outTangent)
-				: this(point, inTangent, outTangent, Vector3.zero) 
-			{
-				var inTanRelative = inTangent - point;
-				var outTanRelative = outTangent - point;
-				var possibleUp = Vector3.Cross(inTanRelative, outTanRelative);
-				var upMag = possibleUp.magnitude;
+            public ControlPoint(Vector3 point, Vector3 tangent)
+                : this(point, tangent, point + (point - tangent)) { }
 
-				// if point, in and out tangents are linear, build an approx up
-				if( Mathf.Approximately(upMag, 0.0f) ) 
-				{
-					var right = Vector3.Cross(inTanRelative, Vector3.up);
-					Up = Vector3.Cross(inTanRelative, right).normalized;
-				}
-				else
-				{
-					// normalize upvector
-					Up = possibleUp / upMag; 
-				}
-			}
+            public ControlPoint(Vector3 point, Vector3 inTangent, Vector3 outTangent)
+                : this(point, inTangent, outTangent, Vector3.zero)
+            {
+                var inTanRelative = inTangent - point;
+                var outTanRelative = outTangent - point;
+                var possibleUp = Vector3.Cross(inTanRelative, outTanRelative);
+                var upMag = possibleUp.magnitude;
 
-    		public ControlPoint(Vector3 point, Vector3 inTangent, Vector3 outTangent, Vector3 upVector)
-    		{
-    			this.Point = point;
-    			this.InTangent = inTangent;
-    			this.OutTangent = outTangent;
-				this.Up = upVector;
-    		}
+                // if point, in and out tangents are linear, build an approx up
+                if (Mathf.Approximately(upMag, 0.0f))
+                {
+                    var right = Vector3.Cross(inTanRelative, Vector3.up);
+                    Up = Vector3.Cross(right, inTanRelative).normalized;
+                }
+                else
+                {
+                    // normalize upvector
+                    Up = possibleUp / upMag;
+                }
+            }
 
-			public ControlPoint ScaleTangents(float percent)
-			{
-				var inTanDiff = InTangent - Point;
-				InTangent = (inTanDiff * percent) + Point;
-				
-				var outTanDiff = OutTangent - Point;
-				OutTangent = (outTanDiff * percent) + Point;
+            public ControlPoint(Vector3 point, Vector3 inTangent, Vector3 outTangent, Vector3 upVector)
+            {
+                this.Point = point;
+                this.InTangent = inTangent;
+                this.OutTangent = outTangent;
+                this.Up = upVector;
+            }
 
-				return this;
-			}
+            public ControlPoint ScaleTangents(float percent)
+            {
+                var inTanDiff = InTangent - Point;
+                InTangent = (inTanDiff * percent) + Point;
+
+                var outTanDiff = OutTangent - Point;
+                OutTangent = (outTanDiff * percent) + Point;
+
+                return this;
+            }
         }
 
         private ControlPoint[] _controlPoints;
-		private float _recipControlPntCount;
+        private float _recipControlPntCount;
 
         private static Vector3 NextPoint(Vector3[] points, int currentIdx, bool closed)
         {
             var nextIdx = currentIdx + 1;
-            if( nextIdx >= points.Length )
+            if (nextIdx >= points.Length)
             {
-                if( closed )
+                if (closed)
                 {
                     nextIdx = 0;
                 }
@@ -84,9 +84,9 @@ namespace Procedural
         private static Vector3 LastPoint(Vector3[] points, int currentIdx, bool closed)
         {
             var lastIdx = currentIdx - 1;
-            if( lastIdx < 0 )
+            if (lastIdx < 0)
             {
-                if( closed )
+                if (closed)
                 {
                     lastIdx = points.Length - 1;
                 }
@@ -97,53 +97,53 @@ namespace Procedural
             }
             return points[lastIdx];
         }
-        
+
         public static Bezier ConstructSmoothSpline(IEnumerable<Vector3> points, bool closed = false)
         {
-        	var pointsArray = new List<Vector3>(points).ToArray();
-        	var ctrlPts = new List<ControlPoint>();
+            var pointsArray = new List<Vector3>(points).ToArray();
+            var ctrlPts = new List<ControlPoint>();
 
-        	for(int i = 0; i < pointsArray.Length; ++i)
-        	{
-        		var pnt = pointsArray[i];
-        		
+            for (int i = 0; i < pointsArray.Length; ++i)
+            {
+                var pnt = pointsArray[i];
+
                 var lastPnt = LastPoint(pointsArray, i, closed);
-        		var nextPnt = NextPoint(pointsArray, i, closed);
+                var nextPnt = NextPoint(pointsArray, i, closed);
 
-        		var lastToPntOvershoot = (pnt - lastPnt) + pnt;
-        		var nextToPntOvershoot = (pnt - nextPnt) + pnt;
+                var lastToPntOvershoot = (pnt - lastPnt) + pnt;
+                var nextToPntOvershoot = (pnt - nextPnt) + pnt;
 
-        		var inTangent = Vector3.Lerp(lastPnt, nextToPntOvershoot, 0.5f);
-        		var outTangent = Vector3.Lerp(nextPnt, lastToPntOvershoot, 0.5f);
+                var inTangent = Vector3.Lerp(lastPnt, nextToPntOvershoot, 0.5f);
+                var outTangent = Vector3.Lerp(nextPnt, lastToPntOvershoot, 0.5f);
 
                 inTangent = Vector3.Lerp(pnt, inTangent, 0.5f);
                 outTangent = Vector3.Lerp(pnt, outTangent, 0.5f);
 
-        		var cp = new ControlPoint(pnt, inTangent, outTangent);
+                var cp = new ControlPoint(pnt, inTangent, outTangent);
 
-        		ctrlPts.Add(cp);
-        	}
+                ctrlPts.Add(cp);
+            }
 
-            if(closed)
+            if (closed)
                 ctrlPts.Add(ctrlPts[0]);
 
-        	return new Bezier(ctrlPts);
+            return new Bezier(ctrlPts);
         }
 
         public static Bezier Circle(float radius)
         {
-            return Bezier.ConstructSmoothSpline (
+            return Bezier.ConstructSmoothSpline(
                 new Vector3[]
 				{
                     new Vector3(-radius, 0.0f, 0.0f),
                     new Vector3(0.0f, 0.0f, -radius),
                     new Vector3(radius, 0.0f, 0.0f),
                     new Vector3(0.0f, 0.0f, radius)
-                }, 
+                },
                 true
             );
         }
-        
+
         public bool Closed
         {
             get
@@ -155,192 +155,196 @@ namespace Procedural
             }
         }
 
-		internal void PerformControlPointOperation(Func<ControlPoint, ControlPoint> op)
-		{
-			for(int i = 0; i < _controlPoints.Length; ++i)
-				_controlPoints[i] = op(_controlPoints[i]);
-		}
-
-    	public Bezier(IEnumerable<ControlPoint> controlPoints)
-    	{
-    		UpdateControlPoints(controlPoints);
-    	}
-
-    	public IEnumerable<ControlPoint> ControlPoints
+        internal void PerformControlPointOperation(Func<ControlPoint, ControlPoint> op)
         {
-        	get { return _controlPoints; }
+            for (int i = 0; i < _controlPoints.Length; ++i)
+                _controlPoints[i] = op(_controlPoints[i]);
         }
 
-		public ControlPoint this[int index]
-		{
-			get
-			{
-				return _controlPoints[index];
-			}
-		}
+        public Bezier(IEnumerable<ControlPoint> controlPoints)
+        {
+            UpdateControlPoints(controlPoints);
+        }
 
-		public int ControlPointCount
-		{
-			get { return _controlPoints.Length; }
-		}
+        public IEnumerable<ControlPoint> ControlPoints
+        {
+            get { return _controlPoints; }
+        }
 
-		public IEnumerator<ControlPoint> GetEnumerator ()
-		{
-			foreach(var cp in _controlPoints)
-				yield return cp;
-		}
+        public ControlPoint this[int index]
+        {
+            get
+            {
+                return _controlPoints[index];
+            }
+        }
 
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
-		{
-			return _controlPoints.GetEnumerator();
-		}
+        public int ControlPointCount
+        {
+            get { return _controlPoints.Length; }
+        }
 
-    	private void UpdateControlPoints(IEnumerable<ControlPoint> controlPoints)
-    	{
-    		var cpList = new List<ControlPoint>(controlPoints);
-    		if( cpList.Count < 2 )
-    			throw new ArgumentException("A Bezier requires at least 2 controlPoints");
-    		
-    		_controlPoints = cpList.ToArray();
-			_recipControlPntCount = 1.0f / (float)_controlPoints.Length;
-    	}
+        public IEnumerator<ControlPoint> GetEnumerator()
+        {
+            foreach (var cp in _controlPoints)
+                yield return cp;
+        }
 
-		private IEnumerable<Vector3> IterateControlPointElements()
-		{
-			foreach(var cp in _controlPoints)
-			{
-				yield return cp.InTangent;
-				yield return cp.Point;
-				yield return cp.OutTangent;
-			}
-		}
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return _controlPoints.GetEnumerator();
+        }
 
-		private struct CPSample
-		{
-			public int segmentIdx {get; set;}
-			public float t {get; set;}
-		}
+        private void UpdateControlPoints(IEnumerable<ControlPoint> controlPoints)
+        {
+            var cpList = new List<ControlPoint>(controlPoints);
+            if (cpList.Count < 2)
+                throw new ArgumentException("A Bezier requires at least 2 controlPoints");
 
-		private CPSample GetCPSample(float splineT)
-		{
-			float cpCount = _controlPoints.Length - 1.0f;
-			float segmentSpaceT = Mathf.Clamp01(splineT) * cpCount;
-			int startSegment = Mathf.FloorToInt(segmentSpaceT);
-			float tInSegment = segmentSpaceT - Mathf.Floor(segmentSpaceT);
+            _controlPoints = cpList.ToArray();
+            _recipControlPntCount = 1.0f / (float)_controlPoints.Length;
+        }
 
-			return new CPSample(){
-				segmentIdx = startSegment, 
-				t = Mathf.Clamp01(tInSegment)
-			};
-		}
+        private IEnumerable<Vector3> IterateControlPointElements()
+        {
+            foreach (var cp in _controlPoints)
+            {
+                yield return cp.InTangent;
+                yield return cp.Point;
+                yield return cp.OutTangent;
+            }
+        }
+
+        private struct CPSample
+        {
+            public int segmentIdx { get; set; }
+            public float t { get; set; }
+        }
+
+        private CPSample GetCPSample(float splineT)
+        {
+            float cpCount = _controlPoints.Length - 1.0f;
+            float segmentSpaceT = Mathf.Clamp01(splineT) * cpCount;
+            int startSegment = Mathf.FloorToInt(segmentSpaceT);
+            float tInSegment = segmentSpaceT - Mathf.Floor(segmentSpaceT);
+
+            return new CPSample()
+            {
+                segmentIdx = startSegment,
+                t = Mathf.Clamp01(tInSegment)
+            };
+        }
 
         public Vector3 PositionSample(float t)
         {
-			var cpSample = GetCPSample(t);
+            var cpSample = GetCPSample(t);
 
-			if( cpSample.t <= 0.0f )
-				return _controlPoints[cpSample.segmentIdx].Point;
-			if( cpSample.t >= 1.0f )
-				return _controlPoints[cpSample.segmentIdx + 1].Point;
+            if (cpSample.t <= 0.0f)
+                return _controlPoints[cpSample.segmentIdx].Point;
+            if (cpSample.t >= 1.0f)
+                return _controlPoints[cpSample.segmentIdx + 1].Point;
 
-			float pntBFactor = cpSample.t;
-    		float pntAFactor = 1.0f - pntBFactor;
+            float pntBFactor = cpSample.t;
+            float pntAFactor = 1.0f - pntBFactor;
 
-			Vector3 pntA = _controlPoints[cpSample.segmentIdx].Point;
-			Vector3 cpA = _controlPoints[cpSample.segmentIdx].OutTangent;
-			Vector3 pntB = _controlPoints[cpSample.segmentIdx + 1].Point;
-			Vector3 cpB = _controlPoints[cpSample.segmentIdx + 1].InTangent;
+            Vector3 pntA = _controlPoints[cpSample.segmentIdx].Point;
+            Vector3 cpA = _controlPoints[cpSample.segmentIdx].OutTangent;
+            Vector3 pntB = _controlPoints[cpSample.segmentIdx + 1].Point;
+            Vector3 cpB = _controlPoints[cpSample.segmentIdx + 1].InTangent;
 
-    		float a2 = pntAFactor * pntAFactor;
-    		float a3 = a2 * pntAFactor;
-    		float b2 = pntBFactor * pntBFactor;
-    		float b3 = b2 * pntBFactor;
+            float a2 = pntAFactor * pntAFactor;
+            float a3 = a2 * pntAFactor;
+            float b2 = pntBFactor * pntBFactor;
+            float b3 = b2 * pntBFactor;
 
-    		return pntA * a3 +
-    			   cpA * 3.0f * a2 * pntBFactor + 
-    			   cpB * 3.0f * pntAFactor * b2 +
-    			   pntB * b3;
-    	}
+            return pntA * a3 +
+                   cpA * 3.0f * a2 * pntBFactor +
+                   cpB * 3.0f * pntAFactor * b2 +
+                   pntB * b3;
+        }
 
-		public Vector3 RightVector(float t)
-		{
-			var up = UpVector(t);
-			var forward = ForwardVector(t);
-			return Vector3.Cross(up, forward);
-		}
+        public Vector3 RightVector(float t)
+        {
+            var up = UpVector(t);
+            var forward = ForwardVector(t);
+            return Vector3.Cross(up, forward);
+        }
 
-		public Vector3 UpVector(float t)
-		{
-			var cpSample = GetCPSample(t);
-			
-			if( cpSample.t <= 0.0f )
-				return _controlPoints[cpSample.segmentIdx].Up;
-			if( cpSample.t >= 1.0f )
-				return _controlPoints[cpSample.segmentIdx + 1].Up;
+        public Vector3 UpVector(float t)
+        {
+            var cpSample = GetCPSample(t);
 
-			return Vector3.Lerp(
-				_controlPoints[cpSample.segmentIdx].Up,
-				_controlPoints[cpSample.segmentIdx + 1].Up,
-				cpSample.t
-			);
-		}
+            if (cpSample.t <= 0.0f)
+                return _controlPoints[cpSample.segmentIdx].Up;
+            if (cpSample.t >= 1.0f)
+                return _controlPoints[cpSample.segmentIdx + 1].Up;
+
+            var cpUp = Vector3.Lerp(
+                _controlPoints[cpSample.segmentIdx].Up,
+                _controlPoints[cpSample.segmentIdx + 1].Up,
+                cpSample.t
+            );
+
+            // Project the cpUp to the plane defined by the forward vector
+            return MathExt.ProjectPointOnPlane(ForwardVector(t), Vector3.zero, cpUp).normalized;
+        }
 
         public Vector3 ForwardVector(float t)
         {
-            if( t <= 0.0f )
+            if (t <= 0.0f)
             {
                 return (_controlPoints[0].OutTangent - _controlPoints[0].Point).normalized;
             }
-            else if( t >= 1.0f )
+            else if (t >= 1.0f)
             {
                 int lastIdx = _controlPoints.Length - 1;
                 return (_controlPoints[lastIdx].OutTangent - _controlPoints[lastIdx].Point).normalized;
             }
 
-			var beforeSample = PositionSample(Mathf.Clamp01(t - (0.01f * _recipControlPntCount)));
-			var afterSample = PositionSample(Mathf.Clamp01(t + (0.01f * _recipControlPntCount)));
+            var beforeSample = PositionSample(Mathf.Clamp01(t - (0.01f * _recipControlPntCount)));
+            var afterSample = PositionSample(Mathf.Clamp01(t + (0.01f * _recipControlPntCount)));
 
             return (afterSample - beforeSample).normalized;
         }
 
-		public float DistanceSample(float t)
-		{
-			t = Mathf.Clamp01(t);
-			if( t == 0.0f )
-				return 0.0f;
+        public float DistanceSample(float t)
+        {
+            t = Mathf.Clamp01(t);
+            if (t == 0.0f)
+                return 0.0f;
 
-			// for now, do a dumb approximation until I get more time
-			// to math this properly
-			var sampleCount = 12;
+            // for now, do a dumb approximation until I get more time
+            // to math this properly
+            var sampleCount = 12;
 
-			var dist = 0.0f;
-			var step = 1.0f / (float)sampleCount;
-			var current = step;
-			var lastSample = PositionSample(0.0f);
-			for(var i = 0; i < sampleCount; ++i)
-			{
-				var sample = PositionSample(current);
-				dist += (sample - lastSample).magnitude;
-				lastSample = sample;
-				current += step;
-			}
+            var dist = 0.0f;
+            var step = 1.0f / (float)sampleCount;
+            var current = step;
+            var lastSample = PositionSample(0.0f);
+            for (var i = 0; i < sampleCount; ++i)
+            {
+                var sample = PositionSample(current);
+                dist += (sample - lastSample).magnitude;
+                lastSample = sample;
+                current += step;
+            }
 
-			return dist * t;
-		}
+            return dist * t;
+        }
 
         public Mesh Triangulate(uint samples)
         {
             return Triangulate(samples, Vector3.zero);
         }
-        
+
         public Mesh Triangulate(uint samples, Vector3 offset)
         {
-            if( !Closed )
+            if (!Closed)
                 throw new InvalidOperationException("Only Closed Beziers can be Triangulated");
 
             var center = Vector3.zero;
             var cpCount = 0.0f;
-            foreach(var cp in _controlPoints)
+            foreach (var cp in _controlPoints)
             {
                 center += cp.Point;
                 cpCount += 1.0f;
@@ -358,7 +362,7 @@ namespace Procedural
 
             float step = 1.0f / (float)samples;
             float t = 0.0f;
-            for(uint i = 0; i < samples; ++i)
+            for (uint i = 0; i < samples; ++i)
             {
                 verts[i] = PositionSample(t) + offset;
                 t += step;

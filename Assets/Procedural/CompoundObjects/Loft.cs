@@ -6,17 +6,17 @@ using System.Linq;
 
 namespace Procedural
 {
-	public interface ILoft
-	{
-		ISpline Path { get; }
-		ISpline Shape { get; }
-		ISpline Scale { get; }
-		
-		bool StartCap { get; }
-		bool EndCap { get; }
+    public interface ILoft
+    {
+        ISpline Path { get; }
+        ISpline Shape { get; }
+        ISpline Scale { get; }
 
-		Vector3 SurfacePoint(float pathT, float shapeT);
-	}
+        bool StartCap { get; }
+        bool EndCap { get; }
+
+        Vector3 SurfacePoint(float pathT, float shapeT);
+    }
 
     public class Loft : ILoft
     {
@@ -45,54 +45,55 @@ namespace Procedural
                 throw new ArgumentNullException("path");
             if (shape == null)
                 throw new ArgumentNullException("shape");
-            
+
             Path = path;
             Shape = shape;
             Scale = _identitySpline;
         }
 
-		public Vector3 SurfacePoint(Vector2 t)
-		{
-			return SurfacePoint(t.x, t.y);
-		}
+        public Vector3 SurfacePoint(Vector2 t)
+        {
+            return SurfacePoint(t.x, t.y);
+        }
 
-		public Vector3 SurfacePoint(float pathT, float shapeT)
-		{
-			var pathPnt = Path.PositionSample(pathT);
-			var pathRot = GetPathRotation(pathT);
+        public Vector3 SurfacePoint(float pathT, float shapeT)
+        {
+            var pathPnt = Path.PositionSample(pathT);
+            var pathRot = GetPathRotation(pathT);
 
-			var shapePnt = Shape.PositionSample(shapeT);
-			var shapePntRotated = pathRot * shapePnt;
-			
-			return pathPnt + shapePntRotated;
-		}
+            var shapePnt = Shape.PositionSample(shapeT);
+            var shapePntRotated = pathRot * shapePnt;
 
-		private Quaternion _upToForwardRotation = Quaternion.FromToRotation(Vector3.up, Vector3.forward);
-		private Quaternion GetPathRotation(float pathT)
-		{
-			var pathDir = Path.ForwardVector(pathT);
-			var pathUp = Path.UpVector(pathT);
+            return pathPnt + shapePntRotated;
+        }
 
-			return Quaternion.LookRotation(pathDir, pathUp) * _upToForwardRotation;
-		}
+        private Quaternion _upToForwardRotation = Quaternion.FromToRotation(Vector3.up, Vector3.forward);
+        private Quaternion GetPathRotation(float pathT)
+        {
+            var pathDir = Path.ForwardVector(pathT);
+            var pathUp = Path.UpVector(pathT);
+
+            return Quaternion.LookRotation(pathDir, pathUp) * _upToForwardRotation;
+        }
 
         public Mesh GenerateMesh(uint pathSegments, uint shapeSegments)
         {
-            if( pathSegments < 1 )
+            if (pathSegments < 1)
                 throw new ArgumentException("pathSegments must be at least 1");
-            if( shapeSegments < 2 )
+            if (shapeSegments < 2)
                 throw new ArgumentException("shapeSegments must be at least 2");
 
             Mesh mesh = new Mesh();
 
-            var vertCount = (pathSegments+1) * (shapeSegments+1);
+            var vertCount = (pathSegments + 1) * (shapeSegments + 1);
 
             Vector3[] verts = new Vector3[vertCount];
             Vector4[] tangents = new Vector4[vertCount];
             Vector3[] norms = new Vector3[vertCount];
             Vector2[] uvs = new Vector2[vertCount];
 
-            Func<uint, uint, int> uvToVertIdx = (shapeSegment, pathSegment) => {
+            Func<uint, uint, int> uvToVertIdx = (shapeSegment, pathSegment) =>
+            {
                 return (int)((pathSegment * shapeSegments) + shapeSegment);
             };
 
@@ -100,24 +101,24 @@ namespace Procedural
             int[] tris = new int[triangleCount];
 
             float pathStep = 1.0f / (float)pathSegments;
-            float shapeStep = 1.0f / (float)(shapeSegments-1);
+            float shapeStep = 1.0f / (float)(shapeSegments - 1);
 
-            for(uint pathSeg = 0; pathSeg < pathSegments+1; ++pathSeg)
+            for (uint pathSeg = 0; pathSeg < pathSegments + 1; ++pathSeg)
             {
                 var pathT = pathStep * (float)pathSeg;
                 var pathPnt = Path.PositionSample(pathT);
-				var pathRot = GetPathRotation(pathT);
-                
-                for(uint shapeSeg = 0; shapeSeg < shapeSegments+1; ++shapeSeg)
+                var pathRot = GetPathRotation(pathT);
+
+                for (uint shapeSeg = 0; shapeSeg < shapeSegments + 1; ++shapeSeg)
                 {
                     var shapeT = shapeStep * (float)shapeSeg;
                     var shapePnt = Shape.PositionSample(shapeT) * Scale.PositionSample(pathT).y;
                     var shapeForward = Shape.ForwardVector(shapeT);
                     var vertIdx = uvToVertIdx(shapeSeg, pathSeg);
                     var shapePntRotated = pathRot * shapePnt;
-                    
+
                     verts[vertIdx] = pathPnt + shapePntRotated;
-                    
+
                     tangents[vertIdx].x = shapeForward.x;
                     tangents[vertIdx].y = shapeForward.y;
                     tangents[vertIdx].z = shapeForward.z;
@@ -130,9 +131,9 @@ namespace Procedural
 
             var highestVertIdx = -1;
             var triIdx = 0;
-            for(uint pathSeg = 0; pathSeg < pathSegments; ++pathSeg)
+            for (uint pathSeg = 0; pathSeg < pathSegments; ++pathSeg)
             {
-                for(uint shapeSeg = 0; shapeSeg < shapeSegments; ++shapeSeg)
+                for (uint shapeSeg = 0; shapeSeg < shapeSegments; ++shapeSeg)
                 {
                     var nextShapeSeg = (shapeSeg + 1) % shapeSegments;
                     var vert1 = uvToVertIdx(shapeSeg, pathSeg);
@@ -143,7 +144,7 @@ namespace Procedural
                     var vert6 = uvToVertIdx(nextShapeSeg, pathSeg + 1);
 
                     var highestVert = MathExt.Max(vert1, vert2, vert3, vert4, vert5, vert6);
-                    if( highestVert > highestVertIdx )
+                    if (highestVert > highestVertIdx)
                         highestVertIdx = highestVert;
 
                     tris[triIdx++] = vert1;
@@ -153,8 +154,8 @@ namespace Procedural
                     tris[triIdx++] = vert5;
                     tris[triIdx++] = vert6;
 
-                    Vector3 faceNormal1 = Vector3.Cross(verts[vert1] - verts[vert2], verts[vert1] - verts[vert3]).normalized; 
-                    Vector3 faceNormal2 = Vector3.Cross(verts[vert4] - verts[vert5], verts[vert4] - verts[vert6]).normalized; 
+                    Vector3 faceNormal1 = Vector3.Cross(verts[vert1] - verts[vert2], verts[vert1] - verts[vert3]).normalized;
+                    Vector3 faceNormal2 = Vector3.Cross(verts[vert4] - verts[vert5], verts[vert4] - verts[vert6]).normalized;
 
                     norms[vert1] += faceNormal1;
                     norms[vert2] += faceNormal1;
@@ -183,12 +184,12 @@ namespace Procedural
             }
 
             // If the shape is closed, make sure there is no normal crease at the loop
-            if(Shape.Closed)
+            if (Shape.Closed)
             {
                 var firstSegmentNorms = new Vector3[pathSegments];
                 Array.Copy(norms, firstSegmentNorms, pathSegments);
 
-                for (var pathSeg = 0u; pathSeg < pathSegments+1; ++pathSeg)
+                for (var pathSeg = 0u; pathSeg < pathSegments + 1; ++pathSeg)
                 {
                     var shapeVertsStart = pathSeg * shapeSegments;
                     var shapeVertsEnd = shapeVertsStart + shapeSegments - 1;
@@ -198,7 +199,7 @@ namespace Procedural
                 }
             }
 
-            for(int n = 0; n < norms.Length; ++n)
+            for (int n = 0; n < norms.Length; ++n)
             {
                 norms[n] = norms[n].normalized;
             }
@@ -211,21 +212,21 @@ namespace Procedural
             mesh.tangents = tangents;
             mesh.triangles = tris;
 
-            if( StartCap || EndCap )
+            if (StartCap || EndCap)
             {
                 var combineMeshes = new List<CombineInstance>();
 
-                combineMeshes.Add(new CombineInstance(){mesh = mesh});
+                combineMeshes.Add(new CombineInstance() { mesh = mesh });
 
                 var capVertCount = (int)shapeSegments - 1;
 
-                if( StartCap )
+                if (StartCap)
                 {
                     var startCapInstance = AddCrossSection(mesh, capVertCount, 0, Path.ForwardVector(0.0f) * -1.0f);
                     combineMeshes.Add(startCapInstance);
                 }
 
-                if( EndCap )
+                if (EndCap)
                 {
                     var endCapInstance = AddCrossSection(mesh, capVertCount, highestVertIdx - capVertCount, Path.ForwardVector(1.0f));
                     combineMeshes.Add(endCapInstance);
@@ -241,7 +242,7 @@ namespace Procedural
 
         private int[] FlipTris(int[] tris)
         {
-            for(int t = 0; t < tris.Length; t += 3)
+            for (int t = 0; t < tris.Length; t += 3)
             {
                 var swap = tris[t];
                 tris[t] = tris[t + 2];
@@ -263,7 +264,7 @@ namespace Procedural
             Array.Copy(mesh.uv, startVert, uvs, 0, vertCount);
             Array.Copy(mesh.tangents, startVert, tangents, 0, vertCount);
 
-            for(var i = 0; i < vertCount; ++i)
+            for (var i = 0; i < vertCount; ++i)
                 norms[i] = norm;
 
             var sliceMesh = new Mesh();
@@ -273,9 +274,9 @@ namespace Procedural
             sliceMesh.tangents = tangents;
 
             int[] tris;
-            if( vertCount == 4 ) // 3 shape segments
+            if (vertCount == 4) // 3 shape segments
             {
-                tris = new int[]{0, 1, 2};
+                tris = new int[] { 0, 1, 2 };
             }
             else
             {
@@ -284,13 +285,13 @@ namespace Procedural
                 var v1 = verts[tris[0]];
                 var v2 = verts[tris[1]];
                 var v3 = verts[tris[2]];
-                if( Vector3.Dot(Vector3.Cross(v2 - v3, v2 - v1).normalized, norm) < 0.0f )
+                if (Vector3.Dot(Vector3.Cross(v2 - v3, v2 - v1).normalized, norm) < 0.0f)
                     tris = FlipTris(tris);
             }
 
             sliceMesh.triangles = tris;
 
-            return new CombineInstance(){mesh = sliceMesh};
-        }   
+            return new CombineInstance() { mesh = sliceMesh };
+        }
     }
 }
