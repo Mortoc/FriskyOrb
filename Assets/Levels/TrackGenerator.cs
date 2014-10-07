@@ -75,8 +75,8 @@ namespace RtInfinity.Levels
 					Max = segmentJson["length"]["max"].AsFloat
 				},
 				Curviness = new MinMaxVal(){ 
-					Min = segmentJson["curivness"]["min"].AsFloat,
-					Max = segmentJson["curivness"]["max"].AsFloat
+					Min = segmentJson["curviness"]["min"].AsFloat,
+					Max = segmentJson["curviness"]["max"].AsFloat
 				},
 				Material = material
 			};
@@ -106,32 +106,22 @@ namespace RtInfinity.Levels
 
 		private ISpline BulidShape(TrackSegment prevSegment, SettingsSection settings)
 		{
-			var width = 1.0f;
+			var width = 10.0f;
 			var height = 0.5f;
-			var cornerRadius = 0.025f;
 
 			var left = width * -0.5f;
 			var right = width * 0.5f;
 			var bottom = 0.0f;
 			var top = height;
 
-			var shape = new Bezier(new Bezier.ControlPoint[]{
-				new Bezier.ControlPoint(new Vector3(66.0462f, 0.0f, -18.3079f), new Vector3(102.181f, 0.0f, 20.3476f), new Vector3(164.366f, 0.0f, 12.7845f)),
-				new Bezier.ControlPoint(new Vector3(226.55f, 0.0f, 5.2215f), new Vector3(224.87f, 0.0f, 16.9862f), new Vector3(229.912f, 0.0f, 40.5156f)),
-				new Bezier.ControlPoint(new Vector3(234.954f, 0.0f, 64.045f), new Vector3(110.584f, 0.0f, 57.3223f), new Vector3(110.584f, 0.0f, 57.3223f)),
-				new Bezier.ControlPoint(new Vector3(66.0462f, 0.0f, -18.3079f), new Vector3(102.181f, 0.0f, 20.3476f), new Vector3(164.366f, 0.0f, 12.7845f))
-			});
+			var shape = Bezier.ConstructSmoothSpline(new Vector3[]{
+				new Vector3(left, 0.0f, bottom),
+				new Vector3(right, 0.0f, bottom),
+				new Vector3(right, 0.0f, top),
+				new Vector3(left, 0.0f, top)
+			}, true);
 
-//			var shape = Bezier.ConstructSmoothSpline(new Vector3[]{
-//				new Vector3(left + cornerRadius, 0.0f, bottom),
-//				new Vector3(left, 0.0f, bottom + cornerRadius),
-//				new Vector3(left, 0.0f, top - cornerRadius),
-//				new Vector3(left + cornerRadius, 0.0f, top),
-//				new Vector3(right - cornerRadius, 0.0f, top),
-//				new Vector3(right, 0.0f, top - cornerRadius),
-//				new Vector3(right, 0.0f, bottom + cornerRadius),
-//				new Vector3(right - cornerRadius, 0.0f, bottom)
-//			}, true);
+			shape.ScaleTangents(0.1f);
 
 			return shape;
 		}
@@ -149,8 +139,13 @@ namespace RtInfinity.Levels
 			}
 
 			var pathLength = settings.Segment.Length.Random(_rand);
-			var pathMid = pathStart + (pathStartDir * pathLength * 0.5f);
-			var pathEnd = pathStart + (pathStartDir * pathLength);
+			var pathMid = pathStart + 
+							(pathStartDir * pathLength * 0.5f) + 
+							(0.5f * settings.Segment.Curviness.Random(_rand) * _rand.NextUnitVector());
+
+			var pathEnd = pathStart + 
+							(pathStartDir * pathLength) +
+							(settings.Segment.Curviness.Random(_rand) * _rand.NextUnitVector());
 
 			return Bezier.ConstructSmoothSpline(new Vector3[]{
 				pathStart,

@@ -51,6 +51,11 @@ namespace Procedural
             Scale = _identitySpline;
         }
 
+		public Vector3 SurfacePoint(Vector2 t)
+		{
+			return SurfacePoint(t.x, t.y);
+		}
+
 		public Vector3 SurfacePoint(float pathT, float shapeT)
 		{
 			var pathPnt = Path.PositionSample(pathT);
@@ -62,19 +67,13 @@ namespace Procedural
 			return pathPnt + shapePntRotated;
 		}
 
+		private Quaternion _upToForwardRotation = Quaternion.FromToRotation(Vector3.up, Vector3.forward);
 		private Quaternion GetPathRotation(float pathT)
 		{
-			var pathDir = Path.ForwardSample(pathT);
-			var pathRot = Quaternion.FromToRotation(Vector3.up, pathDir);
-			
-			if( pathDir == -Vector3.up )
-			{
-				// Compensate for the gimbal lock when 
-				// pathDir is polar opposite to up
-				pathRot *= Quaternion.AngleAxis(180.0f, Vector3.up);
-			}
+			var pathDir = Path.ForwardVector(pathT);
+			var pathUp = Path.UpVector(pathT);
 
-			return pathRot;
+			return Quaternion.LookRotation(pathDir, pathUp) * _upToForwardRotation;
 		}
 
         public Mesh GenerateMesh(uint pathSegments, uint shapeSegments)
@@ -113,7 +112,7 @@ namespace Procedural
                 {
                     var shapeT = shapeStep * (float)shapeSeg;
                     var shapePnt = Shape.PositionSample(shapeT) * Scale.PositionSample(pathT).y;
-                    var shapeForward = Shape.ForwardSample(shapeT);
+                    var shapeForward = Shape.ForwardVector(shapeT);
                     var vertIdx = uvToVertIdx(shapeSeg, pathSeg);
                     var shapePntRotated = pathRot * shapePnt;
                     
@@ -222,13 +221,13 @@ namespace Procedural
 
                 if( StartCap )
                 {
-                    var startCapInstance = AddCrossSection(mesh, capVertCount, 0, Path.ForwardSample(0.0f) * -1.0f);
+                    var startCapInstance = AddCrossSection(mesh, capVertCount, 0, Path.ForwardVector(0.0f) * -1.0f);
                     combineMeshes.Add(startCapInstance);
                 }
 
                 if( EndCap )
                 {
-                    var endCapInstance = AddCrossSection(mesh, capVertCount, highestVertIdx - capVertCount, Path.ForwardSample(1.0f));
+                    var endCapInstance = AddCrossSection(mesh, capVertCount, highestVertIdx - capVertCount, Path.ForwardVector(1.0f));
                     combineMeshes.Add(endCapInstance);
                 }
 

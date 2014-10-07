@@ -54,9 +54,14 @@ namespace Procedural
 
 		#endregion
 
+		void OnEnable()
+		{
+			GenerateMesh();
+		}
+
         public override int GetHashCode()
         {
-        	if( PathObj || ShapeObj )
+        	if( !PathObj || !ShapeObj )
         		return 0;
         		
             var pathHash = PathObj.PointsHash() + pathSegments;
@@ -79,7 +84,7 @@ namespace Procedural
         protected override void GenerateMesh()
         {
             if( _loft == null )
-                _loft = new Loft(Path, Shape);
+                _loft = new Loft(PathObj, ShapeObj);
 
             if( Scale != null )
                 _loft.Scale = Scale;       
@@ -94,5 +99,25 @@ namespace Procedural
 
             meshFilter.sharedMesh = _loft.GenerateMesh((uint)pathSegments, (uint)shapeSegments);
         }
+
+		public bool _showSurfPnt = true;
+		public Vector2 surfPnt;
+
+		void OnDrawGizmos()
+		{
+			if( _showSurfPnt )
+			{
+				surfPnt.x = Mathf.Abs(surfPnt.x) % 1.0f;
+				surfPnt.y = Mathf.Abs(surfPnt.y) % 1.0f;
+
+				Gizmos.color = Color.green;
+
+				var pnt = _loft.SurfacePoint(surfPnt);
+				var centerPnt = _loft.Path.PositionSample(surfPnt.x);
+				var norm = (pnt - centerPnt).normalized + pnt;
+
+				Gizmos.DrawLine (pnt, norm);
+			}
+		}
     }
 }

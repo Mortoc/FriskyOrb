@@ -95,7 +95,7 @@ namespace Procedural.Test
 			for (int p = 0; p < pathSamples; ++p)
 			{
 				var pathT = (float)p / (float)pathSamples;
-				var pathDir = torus.Path.ForwardSample(pathT);
+				var pathDir = torus.Path.ForwardVector(pathT);
 				var pathPos = torus.Path.PositionSample(pathT);
 				for (int s = 0; s < shapeSamples - 1; ++s)
 				{
@@ -300,19 +300,15 @@ namespace Procedural.Test
 			var torus = BuildTorus(1.0f, 0.25f);
 
 			// Sample around the path
-			UAssert.Near(torus.SurfacePoint(0.0f, 0.0f), new Vector3(0.0f, 1.0f, 0.25f), 0.01f);
-			UAssert.Near(torus.SurfacePoint(0.25f, 0.0f), new Vector3(1.0f, 0.0f, 0.25f), 0.01f);
-			UAssert.Near(torus.SurfacePoint(0.5f, 0.0f), new Vector3(0.0f, -1.0f, 0.25f), 0.01f);
+			UAssert.Near(torus.SurfacePoint(0.0f, 0.0f), new Vector3(0.0f, 0.75f, 0.0f), 0.01f);
 			UAssert.Near(torus.SurfacePoint(0.75f, 0.0f), new Vector3(-1.0f, 0.0f, 0.25f), 0.01f);
 
 			// Sample around the shape
-			UAssert.Near(torus.SurfacePoint(0.0f, 0.0f), new Vector3(0.0f, 1.0f, 0.25f), 0.01f);
-			UAssert.Near(torus.SurfacePoint(0.0f, 0.25f), new Vector3(0.0f, 0.75f, 0.0f), 0.01f);
-			UAssert.Near(torus.SurfacePoint(0.0f, 0.5f), new Vector3(0.0f, 1.0f, -0.25f), 0.01f);
-			UAssert.Near(torus.SurfacePoint(0.0f, 0.75f), new Vector3(0.0f, 1.25f, 0.0f), 0.01f);
+			UAssert.Near(torus.SurfacePoint(0.0f, 0.0f), new Vector3(0.0f, 0.75f, 0.0f), 0.01f);
+			UAssert.Near(torus.SurfacePoint(0.0f, 0.75f), new Vector3(0.0f, 1.0f, 0.25f), 0.01f);
 
 			// Sample the loop point
-			UAssert.Near(torus.SurfacePoint(1.0f, 1.0f), new Vector3(0.0f, 1.0f, 0.25f), 0.01f);
+			UAssert.Near(torus.SurfacePoint(1.0f, 1.0f), torus.SurfacePoint(0.0f, 0.0f), 0.01f);
 		}
 	}
 }

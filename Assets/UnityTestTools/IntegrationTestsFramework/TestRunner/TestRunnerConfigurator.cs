@@ -72,7 +72,7 @@ namespace UnityTest
 			string text = null;
 			try
 			{
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !UNITY_WEBPLAYER
 				text = System.IO.File.ReadAllText(System.IO.Path.Combine("Temp", fileName));
 #endif
 			}

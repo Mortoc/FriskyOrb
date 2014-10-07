@@ -150,7 +150,7 @@ namespace Procedural.Test
         }
 
         [Test]
-        public void ForwardSampleVerificationOnAStraightLine()
+		public void ForwardVectorVerificationOnAStraightLine()
         {
             var points = new Vector3[]{
                 new Vector3(-300.0f, 100.0f, 37.5f),
@@ -162,13 +162,13 @@ namespace Procedural.Test
 
             for(float t = 0.0f; t < 1.0f; t += 0.05f)
             {
-                UAssert.Near(Vector3.Dot(bezier.ForwardSample(t), pntsDirection), 1.0f, 0.001f);
+                UAssert.Near(Vector3.Dot(bezier.ForwardVector(t), pntsDirection), 1.0f, 0.001f);
             }
         }
 
 
         [Test]
-        public void ForwardSampleVerificationOnACircle()
+		public void ForwardVectorVerificationOnACircle()
         {
             var points = new Vector3[]{
                 new Vector3(1.0f, 0.0f, 0.0f),
@@ -182,9 +182,50 @@ namespace Procedural.Test
             for(float t = 0.0f; t < 1.0f; t += 0.05f)
             {
                 var expectedAngle = Mathf.Cos(t);
-                UAssert.Near(Vector3.Dot(bezier.ForwardSample(t), Vector3.up), expectedAngle, 0.1f);
+				UAssert.Near(Vector3.Dot(bezier.ForwardVector(t), Vector3.up), expectedAngle, 0.1f);
             }
         }
+
+		[Test]
+		public void UpVectorIsPerpendicularToForwardVector()
+		{
+			var points = new Vector3[]{
+				new Vector3(1.0f, 0.0f, 0.0f),
+				new Vector3(0.0f, 1.0f, 0.0f),
+				new Vector3(-1.0f, 0.0f, 0.0f),
+				new Vector3(0.0f, -1.0f, 0.0f),
+			};
+			
+			var bezier = Bezier.ConstructSmoothSpline(points);
+			
+			for(float t = 0.0f; t < 1.0f; t += 0.05f)
+			{
+				UAssert.Near(Vector3.Dot(bezier.ForwardVector(t), bezier.UpVector(t)), 0.0f, 0.01f);
+			}
+		}
+
+		
+		[Test]
+		public void UpVectorDoesntFlip_ObservedErrorCase1()
+		{
+			var bezier1 = Bezier.ConstructSmoothSpline(new Vector3[]{
+				new Vector3(0.0f, 0.0f, 1.0f),
+				new Vector3(1.0f, 0.0f, 0.0f),
+				new Vector3(0.0f, 0.0f, 0.0f),
+				new Vector3(-1.0f, 0.0f, -1.0f),
+			}, true);
+
+			var firstUp = bezier1.UpVector(0.0f);
+			var previousUp = firstUp;
+			for(float t = 0.05f; t < 1.0f; t += 0.05f)
+			{
+				var thisUp = bezier1.UpVector(t);
+				Assert.Less((previousUp - thisUp).magnitude, 0.1f);
+				previousUp = thisUp;
+			}
+			// Make sure it doesn't flip at the loop point
+			Assert.Less((previousUp - firstUp).magnitude, 0.1f);
+		}
 
 
         [Test]
@@ -199,8 +240,8 @@ namespace Procedural.Test
             
             var bezier = Bezier.ConstructSmoothSpline(points, true);
 
-            var dir1 = bezier.ForwardSample(0.0f);
-            var dir2 = bezier.ForwardSample(1.0f);
+			var dir1 = bezier.ForwardVector(0.0f);
+			var dir2 = bezier.ForwardVector(1.0f);
 
             UAssert.Near(dir1, dir2, 0.0001f);
         }

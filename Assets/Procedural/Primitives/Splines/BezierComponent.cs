@@ -12,6 +12,8 @@ namespace Procedural
         public Color _tangentColor = Color.Lerp(Color.red, Color.black, 0.75f);
         public Color _handleColor = Color.Lerp(Color.red, Color.black, 0.85f);
         public bool _showForwardVectors = false;
+		public bool _showUpVectors = false;
+		public bool _showRightVectors = false;
         public bool _triangulate = false;
         public int _triangulateSegments = 16;
         public bool _reverseCPs = false;
@@ -38,11 +40,17 @@ namespace Procedural
             return _bezier.PositionSample(t);
         }
 
-        public Vector3 ForwardSample(float t)
+        public Vector3 ForwardVector(float t)
         {
             UpdateBezier();
-            return _bezier.ForwardSample(t);
+            return _bezier.ForwardVector(t);
         }
+		
+		public Vector3 UpVector(float t)
+		{
+			UpdateBezier();
+			return _bezier.UpVector(t);
+		}
 
 		public float DistanceSample(float t)
 		{
@@ -145,9 +153,22 @@ namespace Procedural
                     if( _showForwardVectors )
                     {
                         Gizmos.color = Color.Lerp(_splineColor, Color.blue, 0.25f);
-                        Gizmos.DrawLine(current, current + _bezier.ForwardSample(t));
+                        Gizmos.DrawLine(current, current + _bezier.ForwardVector(t));
                         Gizmos.color = _splineColor;
                     }
+					if( _showUpVectors )
+					{
+						Gizmos.color = Color.Lerp(_splineColor, Color.green, 0.33f);
+						Gizmos.DrawLine(current, current + _bezier.UpVector(t));
+						Gizmos.color = _splineColor;
+					}
+					
+					if( _showRightVectors )
+					{
+						Gizmos.color = Color.Lerp(_splineColor, Color.red, 0.66f);
+						Gizmos.DrawLine(current, current + _bezier.RightVector(t));
+						Gizmos.color = _splineColor;
+					}
 
                     last = current;
                 }
@@ -160,8 +181,14 @@ namespace Procedural
                 Gizmos.color = _tangentColor;
                 foreach(var cp in _bezier.ControlPoints)
                 {
-                    Gizmos.DrawLine(transform.TransformPoint(cp.Point), transform.TransformPoint(cp.InTangent));
-                    Gizmos.DrawLine(transform.TransformPoint(cp.Point), transform.TransformPoint(cp.OutTangent));
+					var point = transform.TransformPoint(cp.Point);
+                    Gizmos.DrawLine(point, transform.TransformPoint(cp.InTangent));
+                    Gizmos.DrawLine(point, transform.TransformPoint(cp.OutTangent));
+
+					if( _showUpVectors )
+					{
+						Gizmos.DrawLine(point, point + (cp.Up * 1.2f));
+					}
                 }
                 
                 Gizmos.color = _handleColor;

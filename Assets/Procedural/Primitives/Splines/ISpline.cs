@@ -13,7 +13,12 @@ public interface ISpline
 	/// <summary>
 	/// Gets the approximate derivative at the parametric value T
 	/// </summary>
-	Vector3 ForwardSample(float t);
+	Vector3 ForwardVector(float t);
+	
+	/// <summary>
+	/// Gets a smoothed up vector for the parametric value T
+	/// </summary>
+	Vector3 UpVector(float t);
 
 	/// <summary>
 	/// Gets the approximate length along the spline from the start to T

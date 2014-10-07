@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Legs
-  m_Shader: {fileID: 4800000, guid: 32e5b237318dd4b43b0ab671d9b9a02e, type: 3}
+  m_Name: SpaceRace
+  m_Shader: {fileID: 4800000, guid: 8b959bd0e524d9941b0e292e3922b179, type: 3}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
@@ -31,15 +31,19 @@ Material:
       data:
         first:
           name: _Reflection
-        second: .321428567
+        second: .160714284
       data:
         first:
           name: _Shininess
-        second: 1.59202516
+        second: .230562001
+      data:
+        first:
+          name: _duoPower
+        second: 3.25
       data:
         first:
           name: _Gloss
-        second: 2.85714293
+        second: 2.07142854
       data:
         first:
           name: _FrezPow
@@ -47,17 +51,17 @@ Material:
       data:
         first:
           name: _FrezFalloff
-        second: 0
-      data:
-        first:
-          name: _hdrInt
-        second: 1
+        second: 4
     m_Colors:
       data:
         first:
           name: _Color
-        second: {r: .501960814, g: 0, b: 0, a: 1}
+        second: {r: 0, g: 0, b: 0, a: 1}
       data:
         first:
           name: _SpecColor
-        second: {r: .572413921, g: 0, b: 1, a: 1}
+        second: {r: .200000003, g: .200000003, b: .200000003, a: 1}
+      data:
+        first:
+          name: _Color2
+        second: {r: 0, g: 0, b: .501960814, a: 1}

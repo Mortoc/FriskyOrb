@@ -12,18 +12,41 @@ namespace Procedural
     		public Vector3 Point { get; set; }
     		public Vector3 InTangent { get; set; }
     		public Vector3 OutTangent { get; set; }
+			public Vector3 Up { get; set; }
 
     		public ControlPoint(Vector3 point)
     			: this(point, point, point) {}
 
     		public ControlPoint(Vector3 point, Vector3 tangent)
     			: this(point, tangent, point + (point - tangent)) {}
+			
+			public ControlPoint(Vector3 point, Vector3 inTangent, Vector3 outTangent)
+				: this(point, inTangent, outTangent, Vector3.zero) 
+			{
+				var inTanRelative = inTangent - point;
+				var outTanRelative = outTangent - point;
+				var possibleUp = Vector3.Cross(inTanRelative, outTanRelative);
+				var upMag = possibleUp.magnitude;
 
-    		public ControlPoint(Vector3 point, Vector3 inTangent, Vector3 outTangent)
+				// if point, in and out tangents are linear, build an approx up
+				if( Mathf.Approximately(upMag, 0.0f) ) 
+				{
+					var right = Vector3.Cross(inTanRelative, Vector3.up);
+					Up = Vector3.Cross(inTanRelative, right).normalized;
+				}
+				else
+				{
+					// normalize upvector
+					Up = possibleUp / upMag; 
+				}
+			}
+
+    		public ControlPoint(Vector3 point, Vector3 inTangent, Vector3 outTangent, Vector3 upVector)
     		{
     			this.Point = point;
     			this.InTangent = inTangent;
     			this.OutTangent = outTangent;
+				this.Up = upVector;
     		}
 
 			public ControlPoint ScaleTangents(float percent)
@@ -39,6 +62,7 @@ namespace Procedural
         }
 
         private ControlPoint[] _controlPoints;
+		private float _recipControlPntCount;
 
         private static Vector3 NextPoint(Vector3[] points, int currentIdx, bool closed)
         {
@@ -109,7 +133,8 @@ namespace Procedural
         public static Bezier Circle(float radius)
         {
             return Bezier.ConstructSmoothSpline (
-                new Vector3[] {
+                new Vector3[]
+				{
                     new Vector3(-radius, 0.0f, 0.0f),
                     new Vector3(0.0f, 0.0f, -radius),
                     new Vector3(radius, 0.0f, 0.0f),
@@ -177,27 +202,54 @@ namespace Procedural
     			throw new ArgumentException("A Bezier requires at least 2 controlPoints");
     		
     		_controlPoints = cpList.ToArray();
+			_recipControlPntCount = 1.0f / (float)_controlPoints.Length;
     	}
+
+		private IEnumerable<Vector3> IterateControlPointElements()
+		{
+			foreach(var cp in _controlPoints)
+			{
+				yield return cp.InTangent;
+				yield return cp.Point;
+				yield return cp.OutTangent;
+			}
+		}
+
+		private struct CPSample
+		{
+			public int segmentIdx {get; set;}
+			public float t {get; set;}
+		}
+
+		private CPSample GetCPSample(float splineT)
+		{
+			float cpCount = _controlPoints.Length - 1.0f;
+			float segmentSpaceT = Mathf.Clamp01(splineT) * cpCount;
+			int startSegment = Mathf.FloorToInt(segmentSpaceT);
+			float tInSegment = segmentSpaceT - Mathf.Floor(segmentSpaceT);
+
+			return new CPSample(){
+				segmentIdx = startSegment, 
+				t = Mathf.Clamp01(tInSegment)
+			};
+		}
 
         public Vector3 PositionSample(float t)
         {
-        	float cpCount = _controlPoints.Length - 1.0f;
-        	float segmentSpaceT = Mathf.Clamp01(t) * cpCount;
-        	int startSegment = Mathf.FloorToInt(segmentSpaceT);
-        	float tInSegment = segmentSpaceT - Mathf.Floor(segmentSpaceT);
+			var cpSample = GetCPSample(t);
 
-        	if( tInSegment <= 0.0f )
-        		return _controlPoints[startSegment].Point;
-        	if( tInSegment >= 1.0f )
-        		return _controlPoints[startSegment + 1].Point;
+			if( cpSample.t <= 0.0f )
+				return _controlPoints[cpSample.segmentIdx].Point;
+			if( cpSample.t >= 1.0f )
+				return _controlPoints[cpSample.segmentIdx + 1].Point;
 
-    		float pntBFactor = tInSegment;
+			float pntBFactor = cpSample.t;
     		float pntAFactor = 1.0f - pntBFactor;
 
-        	Vector3 pntA = _controlPoints[startSegment].Point;
-        	Vector3 cpA = _controlPoints[startSegment].OutTangent;
-        	Vector3 pntB = _controlPoints[startSegment + 1].Point;
-        	Vector3 cpB = _controlPoints[startSegment + 1].InTangent;
+			Vector3 pntA = _controlPoints[cpSample.segmentIdx].Point;
+			Vector3 cpA = _controlPoints[cpSample.segmentIdx].OutTangent;
+			Vector3 pntB = _controlPoints[cpSample.segmentIdx + 1].Point;
+			Vector3 cpB = _controlPoints[cpSample.segmentIdx + 1].InTangent;
 
     		float a2 = pntAFactor * pntAFactor;
     		float a3 = a2 * pntAFactor;
@@ -210,21 +262,43 @@ namespace Procedural
     			   pntB * b3;
     	}
 
-        public Vector3 ForwardSample(float t)
+		public Vector3 RightVector(float t)
+		{
+			var up = UpVector(t);
+			var forward = ForwardVector(t);
+			return Vector3.Cross(up, forward);
+		}
+
+		public Vector3 UpVector(float t)
+		{
+			var cpSample = GetCPSample(t);
+			
+			if( cpSample.t <= 0.0f )
+				return _controlPoints[cpSample.segmentIdx].Up;
+			if( cpSample.t >= 1.0f )
+				return _controlPoints[cpSample.segmentIdx + 1].Up;
+
+			return Vector3.Lerp(
+				_controlPoints[cpSample.segmentIdx].Up,
+				_controlPoints[cpSample.segmentIdx + 1].Up,
+				cpSample.t
+			);
+		}
+
+        public Vector3 ForwardVector(float t)
         {
-            if( t < 0.001f )
+            if( t <= 0.0f )
             {
                 return (_controlPoints[0].OutTangent - _controlPoints[0].Point).normalized;
             }
-            else if( t > 0.999f )
+            else if( t >= 1.0f )
             {
                 int lastIdx = _controlPoints.Length - 1;
                 return (_controlPoints[lastIdx].OutTangent - _controlPoints[lastIdx].Point).normalized;
             }
 
-            float recipCpCount = 1.0f / (float)_controlPoints.Length;
-            var beforeSample = PositionSample(Mathf.Clamp01(t - (0.01f * recipCpCount)));
-            var afterSample = PositionSample(Mathf.Clamp01(t + (0.01f * recipCpCount)));
+			var beforeSample = PositionSample(Mathf.Clamp01(t - (0.01f * _recipControlPntCount)));
+			var afterSample = PositionSample(Mathf.Clamp01(t + (0.01f * _recipControlPntCount)));
 
             return (afterSample - beforeSample).normalized;
         }
@@ -273,7 +347,7 @@ namespace Procedural
             }
             center /= cpCount;
 
-            var dirStart = ForwardSample(0.0f);
+            var dirStart = ForwardVector(0.0f);
             var pntStart = PositionSample(0.0f);
 
             var up = Vector3.Cross(dirStart, pntStart - center);
