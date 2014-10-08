@@ -21,11 +21,11 @@ namespace Procedural.Test
         [Test]
         public void BeziersSampleThroughControlPoints()
         {
-            var cpTStep = 1.0f / (float)(_simpleArc.ControlPoints.Count() - 1);
+            var cpTStep = 1.0f / (float)(_simpleArc.Count() - 1);
             var currentT = 0.0f;
 
             // Sample at each control point
-            foreach(var cp in _simpleArc.ControlPoints)
+            foreach(var cp in _simpleArc)
             {
                 UAssert.Near(_simpleArc.PositionSample(currentT), cp.Point, 0.0001f);
                 currentT += cpTStep;
@@ -35,7 +35,7 @@ namespace Procedural.Test
         [Test]
         public void BeziersInterpolateSamples()
         {
-            var cps = new List<Bezier.ControlPoint>(_simpleArc.ControlPoints);
+            var cps = new List<IControlPoint>(_simpleArc);
 
             // Samples between t=[0.1, 0.499] and t=[0.501, .9] should be y > to the non-interpolated linear position
             for(float t = 0.1f; t < 0.499f; t += 0.01f)
@@ -82,7 +82,7 @@ namespace Procedural.Test
             }
 
             // Check that all the spline tangents are locked
-            var controlPoints = new List<Bezier.ControlPoint>(bezier.ControlPoints);
+            var controlPoints = new List<IControlPoint>(bezier);
             for(int i = 1; i < controlPoints.Count - 1; ++i)
             {
                 var controlPoint = controlPoints[i];
@@ -121,7 +121,7 @@ namespace Procedural.Test
             }
 
             // Check that all the spline tangents are locked
-            var controlPoints = new List<Bezier.ControlPoint>(bezier.ControlPoints);
+            var controlPoints = new List<IControlPoint>(bezier);
             for(int i = 1; i < controlPoints.Count - 1; ++i)
             {
                 var controlPoint = controlPoints[i];

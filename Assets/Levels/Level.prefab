@@ -8,12 +8,11 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400000}
+  - 114: {fileID: 11400000}
   - 114: {fileID: 11400002}
   - 114: {fileID: 11400004}
   - 114: {fileID: 11400006}
   - 114: {fileID: 11400008}
-  - 114: {fileID: 11400010}
-  - 114: {fileID: 11400000}
   m_Layer: 8
   m_Name: Level
   m_TagString: Untagged
@@ -41,21 +40,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 208a2ecbba00d904fabd6d09b6d2fc88, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _skin: {fileID: 11400000, guid: 2d831c5a0b6294b439ddbd36bade89ae, type: 2}
-  _sweepInTime: .5
-  _sweepOutTime: .200000003
-  _displayTime: 2
---- !u!114 &11400002
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ddf47dad4326034cbf911830111efc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
@@ -63,7 +47,7 @@ MonoBehaviour:
   _endGuiPrefab: {fileID: 100000, guid: 4f848cef20a25e4409ea852814e357f8, type: 2}
   _generatorSettings: {fileID: 4900000, guid: 1a942cf04db844598beaddba24e9ef5e, type: 3}
   _activeTrackSegments: 32
---- !u!114 &11400004
+--- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -75,27 +59,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _skin: {fileID: 11400000, guid: 2d831c5a0b6294b439ddbd36bade89ae, type: 2}
-  _sweepInText: {fileID: 11400000}
---- !u!114 &11400006
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28c9882125574df4ebab40cd876ebf42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Background: {r: 0, g: 0, b: 0, a: 1}
-  DarkBlue: {r: .0235294122, g: 0, b: .160784319, a: 1}
-  Pink: {r: 1, g: 0, b: .988235295, a: 1}
-  Orange: {r: .831372559, g: .470588237, b: .0588235296, a: 1}
-  Yellow: {r: .929411769, g: .866666675, b: 0, a: 1}
-  Green: {r: .180392161, g: .819607854, b: .0666666701, a: 1}
-  Blue: {r: 0, g: .188235298, b: .749019623, a: 1}
-  Red: {r: 1, g: 0, b: .258823544, a: 1}
---- !u!114 &11400008
+  _sweepInText: {fileID: 11400008}
+--- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -112,7 +77,7 @@ MonoBehaviour:
   ExplodeBarrellValue: 0
   ActivatePowerupValue: 0
   JumpValue: 0
---- !u!114 &11400010
+--- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -124,6 +89,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _levelNamesCSV: {fileID: 4900000, guid: f45d58c7ce8f02b4995af92b443a4ac4, type: 3}
+--- !u!114 &11400008
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 208a2ecbba00d904fabd6d09b6d2fc88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _skin: {fileID: 11400000, guid: 2d831c5a0b6294b439ddbd36bade89ae, type: 2}
+  _sweepInTime: .5
+  _sweepOutTime: .200000003
+  _displayTime: 2
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -39,7 +39,9 @@ namespace RtInfinity.Levels
 			TrackSegment lastSegment = null;
 			for(int i = 0; i < _activeTrackSegments; ++i)
 			{
+                Profiler.BeginSample("Generate Track Segment");
 				lastSegment = BuildSegment(lastSegment);
+                Profiler.EndSample();
 			}
 			return _segments;
 		}
@@ -47,6 +49,11 @@ namespace RtInfinity.Levels
 		private TrackSegment BuildSegment(TrackSegment lastSegment)
 		{
 			var trackObj = new GameObject("TrackSegment");
+
+            trackObj.transform.position = lastSegment
+                ? lastSegment.transform.TransformPoint(lastSegment.Loft.Path.PositionSample(1.0f))
+                : Vector3.zero;
+
 			trackObj.transform.parent = transform;
 			
 			var trackSeg = trackObj.GetOrAddComponent<TrackSegment>();
@@ -56,7 +63,7 @@ namespace RtInfinity.Levels
 			return trackSeg;
 		}
 
-		public Vector3 GetSurfacePoint(float travelDist, float x)
+		public Vector3 GetSurfacePoint(float travelDist, float s)
 		{
 			TrackSegment track = _segments[0];
 			while(track.EndDist < travelDist)
@@ -66,10 +73,12 @@ namespace RtInfinity.Levels
 			var pathT = distInSeg / (track.EndDist - track.StartDist);
 
 			var shapeLength = track.Loft.Shape.DistanceSample(1.0f);
-			var distOnShape = x % shapeLength;
+			var distOnShape = s % shapeLength;
 			var shapeT = distOnShape / shapeLength;
 
-			return track.Loft.SurfacePoint(pathT, shapeT);
+			return track.transform.TransformPoint(
+                track.Loft.SurfacePoint(pathT, shapeT)
+            );
 		}
 
 		public void UpdatePlayerPosition(float travelDist)

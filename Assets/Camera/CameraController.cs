@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 
+using RtInfinity.Players;
+
 public class CameraController : MonoBehaviour
 {
     private Player _player = null;

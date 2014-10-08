@@ -2,6 +2,7 @@
 using System.Collections;
 
 using RtInfinity.Levels;
+using RtInfinity.Players;
 
 public class LevelGui : MonoBehaviour
 {

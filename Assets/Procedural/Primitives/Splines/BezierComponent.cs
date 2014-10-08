@@ -179,7 +179,7 @@ namespace Procedural
                 }
 
                 Gizmos.color = _tangentColor;
-                foreach(var cp in _bezier.ControlPoints)
+                foreach(var cp in _bezier)
                 {
 					var point = transform.TransformPoint(cp.Point);
                     Gizmos.DrawLine(point, transform.TransformPoint(cp.InTangent));
@@ -194,7 +194,7 @@ namespace Procedural
                 Gizmos.color = _handleColor;
                 float pntRadius = 0.0f;
                 float pntCount = 0.0f;
-                foreach(var cp in _bezier.ControlPoints)
+                foreach(var cp in _bezier)
                 {
                     pntRadius += (transform.TransformPoint(cp.InTangent) - transform.TransformPoint(cp.OutTangent)).magnitude;
                     pntCount += 1.0f;
@@ -202,13 +202,24 @@ namespace Procedural
                 pntRadius /= pntCount;
                 pntRadius *= 0.02f;
 
-                foreach(var cp in _bezier.ControlPoints)
+                foreach(var cp in _bezier)
                 {
                     Gizmos.DrawSphere(transform.TransformPoint(cp.Point), pntRadius);
                     Gizmos.DrawSphere(transform.TransformPoint(cp.InTangent), pntRadius * 0.75f);
                     Gizmos.DrawSphere(transform.TransformPoint(cp.OutTangent), pntRadius * 0.75f);
                 }
             }
+        }
+
+        public IEnumerator<IControlPoint> GetEnumerator()
+        {
+            foreach (var cp in _bezier)
+                yield return cp;
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return _bezier.GetEnumerator();
         }
     }
 }

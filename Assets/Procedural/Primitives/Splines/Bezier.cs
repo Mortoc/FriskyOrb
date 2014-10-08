@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Procedural
 {
-    public class Bezier : ISpline, IEnumerable<Bezier.ControlPoint>
+    public class Bezier : ISpline
     {
-        public struct ControlPoint
+        public struct ControlPoint : IControlPoint
         {
             public Vector3 Point { get; set; }
             public Vector3 InTangent { get; set; }
@@ -166,12 +166,7 @@ namespace Procedural
             UpdateControlPoints(controlPoints);
         }
 
-        public IEnumerable<ControlPoint> ControlPoints
-        {
-            get { return _controlPoints; }
-        }
-
-        public ControlPoint this[int index]
+        public IControlPoint this[int index]
         {
             get
             {
@@ -374,6 +369,12 @@ namespace Procedural
             mesh.triangles = Triangulator.Triangulate(verts);
 
             return mesh;
+        }
+
+        IEnumerator<IControlPoint> IEnumerable<IControlPoint>.GetEnumerator()
+        {
+            foreach (var cp in _controlPoints)
+                yield return cp;
         }
     }
 }

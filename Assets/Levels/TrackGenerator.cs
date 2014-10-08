@@ -129,29 +129,25 @@ namespace RtInfinity.Levels
 		private ISpline BuildPath(TrackSegment prevSegment, SettingsSection settings)
 		{
 			var pathStart = Vector3.zero;
-			var pathStartDir = Vector3.forward;
-
-			if( prevSegment )
-			{
-				var prevPath = prevSegment.Loft.Path;
-				pathStart = prevPath.PositionSample(1.0f);
-				pathStartDir = (pathStart - prevPath.PositionSample(0.99f)).normalized;
-			}
+            var pathStartDir = prevSegment
+                ? prevSegment.Loft.Path.ForwardVector(1.0f)
+                : Vector3.forward;
 
 			var pathLength = settings.Segment.Length.Random(_rand);
-			var pathMid = pathStart + 
-							(pathStartDir * pathLength * 0.5f) + 
-							(0.5f * settings.Segment.Curviness.Random(_rand) * _rand.NextUnitVector());
 
-			var pathEnd = pathStart + 
-							(pathStartDir * pathLength) +
-							(settings.Segment.Curviness.Random(_rand) * _rand.NextUnitVector());
+			var pathEnd = pathStart + (pathStartDir * pathLength);
+            var pathEndInTangent = Vector3.Lerp(pathStart, pathEnd, 0.5f) + 
+                                 (settings.Segment.Curviness.Random(_rand) * _rand.NextUnitVector());
+            var pathEndOutTangent = (-1.0f * (pathEndInTangent - pathEnd)) + pathEnd;
 
-			return Bezier.ConstructSmoothSpline(new Vector3[]{
-				pathStart,
-				pathMid,
-				pathEnd
-			});
+            var lastPathEndUp = prevSegment
+                ? prevSegment.Loft.Path.Last().Up
+                : Vector3.up;
+
+            return new Bezier(new Bezier.ControlPoint[]{
+                new Bezier.ControlPoint(pathStart, pathStart + (pathStartDir * -1.0f), pathStart + pathStartDir, lastPathEndUp),
+                new Bezier.ControlPoint(pathEnd, pathEndInTangent, pathEndOutTangent, Vector3.up)
+            });
 		}
 
 		public Material GetTrackMaterial(TrackSegment segment)

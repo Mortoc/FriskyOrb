@@ -20,19 +20,41 @@ namespace RtInfinity.Levels.Test
 			GameObject.DestroyImmediate(_fixtureGameObject);
 		}
 
-		[Test]
-		public void LevelTracksGenerateMultipleTrackSegments()
-		{
-			var track =  _fixtureGameObject.GetOrAddComponent<LevelTrack>();
-			track.Init (_generator, 8);
-			
-			var segments = track.Generate();
+        [Test]
+        public void LevelTrackPivotsAreAtPathStart()
+        {
+            var track = _fixtureGameObject.GetOrAddComponent<LevelTrack>();
+            track.Init(_generator, 4);
 
-			Assert.AreEqual(8, segments.Count());
+            var segments = track.Generate();
 
-			foreach( var seg in segments )
-				Assert.IsNotNull(seg);
-		}
+            foreach (var seg in segments)
+            {
+                UAssert.Near(seg.Loft.Path.PositionSample(0.0f), Vector3.zero, 0.01f);
+            }
+        }
+
+        [Test]
+        public void LevelTracksArePlacedEndToEnd()
+        {
+            var track = _fixtureGameObject.GetOrAddComponent<LevelTrack>();
+            track.Init(_generator, 4);
+
+            var segments = track.Generate();
+            var prevEnd = Vector3.zero;
+            foreach (var seg in segments)
+            {
+                var segmentStart = seg.transform.TransformPoint(
+                    seg.Loft.Path.PositionSample(0.0f)
+                );
+                
+                UAssert.Near(segmentStart, prevEnd, 0.01f);
+
+                prevEnd = seg.transform.TransformPoint(
+                    seg.Loft.Path.PositionSample(1.0f)
+                );
+            }
+        }
 
 		[Test]
 		public void GetSurfacePointDoesntBreakAcrossBoundaries()
@@ -44,8 +66,8 @@ namespace RtInfinity.Levels.Test
 			var segment0 = segments[0];
 			var segment1 = segments[1];
 
-			var seg0Pnt = track.GetSurfacePoint(segment0.EndDist * 0.9999f, 0.25f);
-			var seg1Pnt = track.GetSurfacePoint(segment1.StartDist * 1.0001f, 0.25f);
+			var seg0Pnt = track.GetSurfacePoint(segment0.EndDist, 0.25f);
+			var seg1Pnt = track.GetSurfacePoint(segment1.StartDist, 0.25f);
 
 			UAssert.Near(seg0Pnt, seg1Pnt, 0.01f);
 			UAssert.NotNear(Vector3.zero, seg0Pnt, 0.1f);

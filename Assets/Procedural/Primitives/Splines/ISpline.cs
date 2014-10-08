@@ -3,7 +3,16 @@
 using System;
 using System.Collections.Generic;
 
-public interface ISpline
+
+public interface IControlPoint
+{
+    Vector3 Point { get; set; }
+    Vector3 InTangent { get; set; }
+    Vector3 OutTangent { get; set; }
+    Vector3 Up { get; set; }
+}
+
+public interface ISpline : IEnumerable<IControlPoint>
 {
 	/// <summary>
 	/// Gets the world-space point at the parametric value T

@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
+using RtInfinity.Players;
 
 public class JumpAction : MonoBehaviour
 {

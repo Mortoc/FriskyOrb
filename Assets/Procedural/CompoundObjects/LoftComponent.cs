@@ -119,7 +119,7 @@ namespace Procedural
                 var centerPnt = _loft.Path.PositionSample(surfPnt.x);
                 var norm = (pnt - centerPnt).normalized + pnt;
 
-                Gizmos.DrawLine(pnt, norm);
+                Gizmos.DrawLine(transform.TransformPoint(pnt), transform.TransformPoint(norm));
             }
         }
     }

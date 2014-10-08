@@ -2,6 +2,8 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
+using RtInfinity.Players;
+
 public class PlayerMovementController : IPlayerController
 {
     private const float FORWARD_POWER = 15000.0f;

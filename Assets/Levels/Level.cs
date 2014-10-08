@@ -2,9 +2,10 @@
 using System;
 using System.Collections.Generic;
 
+using RtInfinity.Players;
+
 namespace RtInfinity.Levels
 {
-
 	public class Level : MonoBehaviour
 	{
 	    public static void Begin(int levelSeed)
@@ -84,7 +85,7 @@ namespace RtInfinity.Levels
 
 	    private void SetRandomSeed(int maxSeed)
 	    {
-	        if (PlayerPrefs.HasKey("next_level_seed") &&
+	        if ( PlayerPrefs.HasKey("next_level_seed") &&
 	             PlayerPrefs.GetInt("next_level_seed") > 0 &&
 	             PlayerPrefs.GetInt("next_level_seed") < maxSeed)
 	            _seed = PlayerPrefs.GetInt("next_level_seed");

@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+using RtInfinity.Players;
+
 public class Powerup : Doodad
 {
     [SerializeField]
