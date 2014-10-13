@@ -103,7 +103,7 @@ PlayerSettings:
     type: 3}
   AndroidTargetDevice: 0
   AndroidSplashScreenScale: 2
-  AndroidKeystoreName: C:/Users/Morto_000/Documents/Projects/FriskyOrb/Keys/production.keystore
+  AndroidKeystoreName: Keys/production.keystore
   AndroidKeyaliasName: starbomb production
   resolutionDialogBanner: {fileID: 0}
   m_BuildTargetIcons:

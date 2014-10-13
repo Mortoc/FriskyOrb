@@ -74,6 +74,32 @@ namespace RtInfinity.Levels.Test
 		}
 
 		[Test]
+		public void TrackSegmentsAreSeamless()
+		{
+			var track = _fixtureGameObject.GetOrAddComponent<LevelTrack>();
+			track.Init (_generator, 2);
+			var segments = new List<TrackSegment>(track.Generate());
+			var segment0 = segments[0];
+			var segment1 = segments[1];
+
+			var pathSeamPoint = segment0.transform.TransformPoint(
+				segment0.Loft.Path.PositionSample(1.0f)
+			);
+			var path2SeamPoint = segment1.transform.TransformPoint(
+				segment1.Loft.Path.PositionSample(0.0f)
+			);
+			UAssert.Near(pathSeamPoint, path2SeamPoint, 0.0001f);
+
+			var pathSeamDir = segment0.Loft.Path.ForwardVector(1.0f);
+			var path2SeamDir = segment1.Loft.Path.ForwardVector(0.0f);
+			UAssert.Near(pathSeamDir, path2SeamDir, 0.0001f);
+
+//			MathExt.ProjectPointOnPlane(pathSeamPoint, pathSeamDir
+
+			Assert.Fail();
+		}
+
+		[Test]
 		public void UpdatingPlayerDistanceMakesNewTracksAndCleansUpOldOnes()
 		{
 			var track =  _fixtureGameObject.GetOrAddComponent<LevelTrack>();

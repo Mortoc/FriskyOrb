@@ -75,5 +75,14 @@ namespace RtInfinity.Levels
 			var meshCollider = gameObject.GetOrAddComponent<MeshCollider>();
 			meshCollider.sharedMesh = _loft.GenerateMesh(COLLISION_PATH_SEGMENTS, COLLISION_SHAPE_SEGMENTS);
 		}
+
+		
+		public Vector2 PointToSurfaceT(Vector3 worldPosition)
+		{
+			var localPosition = transform.InverseTransformPoint(worldPosition);
+			var closestPath = Loft.Path.ClosestT(localPosition);
+
+			return Vector2.zero;
+		}
 	}
 }

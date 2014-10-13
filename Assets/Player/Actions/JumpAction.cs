@@ -23,7 +23,7 @@ public class JumpAction : MonoBehaviour
         _player.OnGrounded += PlayerLanded;
     }
 
-    private void PlayerLanded()
+    private void PlayerLanded(RaycastHit rh)
     {
 		if ( !JumpEnded )
 	    {

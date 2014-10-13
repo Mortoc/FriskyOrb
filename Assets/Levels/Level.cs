@@ -44,8 +44,10 @@ namespace RtInfinity.Levels
 		[SerializeField]
 		private TextAsset _generatorSettings;
 		private TrackGenerator _generator;
+
 		[SerializeField]
 		private int _activeTrackSegments = 32;
+		private TrackSegment _mostRecentSegment;
 
 	    public string Name { get; private set; }
 	
@@ -63,6 +65,7 @@ namespace RtInfinity.Levels
 			_generator = new TrackGenerator(_rand, _generatorSettings.text);
 			var track = gameObject.GetOrAddComponent<LevelTrack>().Init(_generator, _activeTrackSegments);
 			var segments = track.Generate();
+			_mostRecentSegment = segments.First();
 
 	        InputHandler.BuildInputHandler();
 
@@ -97,5 +100,10 @@ namespace RtInfinity.Levels
 	    {
 	        Score.Instance.RegisterEvent(Score.Event.SegmentComplete);
 	    }
+
+		public void PlayerIsNowAt(Vector3 worldSpacePosition)
+		{
+			//_mostRecentSegment.WorldToPathT(worldSpacePosition);
+		}
 	}
 }

@@ -149,6 +149,26 @@ namespace Procedural.Test
             }
         }
 
+		
+		[Test]
+		public void NearestPointOnSplineVerification()
+		{
+			var points = new Vector3[]{
+				new Vector3(1.0f, 0.0f, 0.0f),
+				new Vector3(0.0f, 1.0f, 0.0f),
+				new Vector3(-1.0f, 0.0f, 0.0f),
+				new Vector3(0.0f, -1.0f, 0.0f)
+			};
+			
+			var bezier = Bezier.ConstructSmoothSpline(points, true);
+
+
+			UAssert.Near(0.2f, bezier.ClosestT(new Vector3(0.0f, 100.0f, 0.0f)), 0.01f);
+			UAssert.Near(0.4f, bezier.ClosestT(new Vector3(-100.0f, 0.0f, 0.0f)), 0.01f);
+			UAssert.Near(0.6f, bezier.ClosestT(new Vector3(0.0f, -100.0f, 0.0f)), 0.01f);
+		}
+
+
         [Test]
 		public void ForwardVectorVerificationOnAStraightLine()
         {

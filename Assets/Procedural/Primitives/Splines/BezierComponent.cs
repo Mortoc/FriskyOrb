@@ -58,6 +58,12 @@ namespace Procedural
 			return _bezier.DistanceSample(t);
 		}
 
+		public float ClosestT(Vector3 pos)
+		{
+			UpdateBezier();
+			return _bezier.ClosestT(pos);
+		}
+
         public bool Closed
         {
             get

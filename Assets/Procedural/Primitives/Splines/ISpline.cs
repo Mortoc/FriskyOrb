@@ -34,6 +34,9 @@ public interface ISpline : IEnumerable<IControlPoint>
 	/// </summary>
 	float DistanceSample(float t);
 
+	
+	float ClosestT(Vector3 point);
+
     bool Closed { get; }
 }
 

@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+using RtInfinity.Functional;
+
 public class SquashStretch : MonoBehaviour 
 {
 	public IEnumerable<Renderer> Renderers { get; set; }

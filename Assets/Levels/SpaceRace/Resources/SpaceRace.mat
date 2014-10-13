@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: SpaceRace
-  m_Shader: {fileID: 4800000, guid: 8b959bd0e524d9941b0e292e3922b179, type: 3}
+  m_Shader: {fileID: 4800000, guid: a282efa270b9a2a44ab96235f4c18985, type: 3}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
@@ -22,7 +22,21 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
+          name: _BumpMap
+        second:
+          m_Texture: {fileID: 2800000, guid: 9c3478159609c7645bc7bbf154658520, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
           name: _Cube
+        second:
+          m_Texture: {fileID: 8900000, guid: f72031966eaf8cc4aaf1c3483aff0adc, type: 2}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _EnvTex
         second:
           m_Texture: {fileID: 8900000, guid: f72031966eaf8cc4aaf1c3483aff0adc, type: 2}
           m_Scale: {x: 1, y: 1}
@@ -31,11 +45,11 @@ Material:
       data:
         first:
           name: _Reflection
-        second: .160714284
+        second: .357142836
       data:
         first:
           name: _Shininess
-        second: .230562001
+        second: .958217084
       data:
         first:
           name: _duoPower
@@ -43,25 +57,69 @@ Material:
       data:
         first:
           name: _Gloss
-        second: 2.07142854
+        second: 1.35714281
       data:
         first:
           name: _FrezPow
-        second: 0
+        second: .214285731
       data:
         first:
           name: _FrezFalloff
-        second: 4
+        second: 0
+      data:
+        first:
+          name: _RimPower
+        second: 3.10928559
+      data:
+        first:
+          name: _Spread
+        second: .5
+      data:
+        first:
+          name: _hdrInt
+        second: .375
+      data:
+        first:
+          name: _base_height
+        second: .360000014
+      data:
+        first:
+          name: _height_blur
+        second: .699999988
+      data:
+        first:
+          name: _top_rim_offset
+        second: 0
+      data:
+        first:
+          name: _top_rim_blur
+        second: .519999981
+      data:
+        first:
+          name: _Vertexpower
+        second: .949999988
     m_Colors:
       data:
         first:
           name: _Color
-        second: {r: 0, g: 0, b: 0, a: 1}
+        second: {r: .0980392173, g: .0980392173, b: .0980392173, a: 1}
       data:
         first:
           name: _SpecColor
-        second: {r: .200000003, g: .200000003, b: .200000003, a: 1}
+        second: {r: .23156698, g: .23592256, b: .375199318, a: 1}
       data:
         first:
           name: _Color2
         second: {r: 0, g: 0, b: .501960814, a: 1}
+      data:
+        first:
+          name: _top_color
+        second: {r: 0, g: 0, b: .501960814, a: 1}
+      data:
+        first:
+          name: _bottom_color
+        second: {r: 0, g: 0, b: 0, a: 1}
+      data:
+        first:
+          name: _Rim_Color
+        second: {r: 1, g: 1, b: 1, a: 1}

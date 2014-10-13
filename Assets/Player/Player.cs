@@ -9,8 +9,8 @@ namespace RtInfinity.Players
     public class Player : MonoBehaviour
     {
         public event Action OnFixedUpdate;
-        public event Action OnGrounded;
-        public event Action OnUngrounded;
+        public event Action<RaycastHit> OnGrounded;
+		public event Action OnUngrounded;
         public event Action OnDeath;
 
         public event Action<Collision> CollisionEntered;
@@ -57,7 +57,7 @@ namespace RtInfinity.Players
             rigidbody.position = rigidbody.position - offset;
 
             if (grounded && !IsGrounded)
-                OnGrounded();
+                OnGrounded(rh);
             else if (!grounded && IsGrounded)
                 OnUngrounded();
 
@@ -84,7 +84,7 @@ namespace RtInfinity.Players
             GetComponentInChildren<PlayerExplodeFX>().Player = this;
         }
 
-        private void BecameGrounded()
+        private void BecameGrounded(RaycastHit rh)
         {
             audio.Play();
         }
@@ -97,12 +97,7 @@ namespace RtInfinity.Players
         void FixedUpdate()
         {
             OnFixedUpdate();
-            UpdateLevelPosition();
-        }
-
-        private void UpdateLevelPosition()
-        {
-
+			Level.PlayerIsNowAt(rigidbody.position);
         }
 
         private IEnumerable<Renderer> PlayerRenderers()

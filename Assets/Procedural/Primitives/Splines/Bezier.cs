@@ -327,6 +327,51 @@ namespace Procedural
             return dist * t;
         }
 
+		public float ClosestT(Vector3 point)
+		{
+			// initial samples: one on each CP and each CP midpoint
+			// This makes sure if the path is loopy, we find the
+			// actual nearest segment without bailing out too early.
+			var initialSamples = (_controlPoints.Length * 2) - 1;
+
+			var step = 1.0f / (float)initialSamples;
+			var t = 0.0f;
+			var closest = PositionSample(t);
+			var closestSqrMag = (point - closest).sqrMagnitude;
+			var closestT = 0.0f;
+
+			for(int i = 1; i < initialSamples; ++i)
+			{
+				t += step;
+				var sample = PositionSample(t);
+				var sampleSqrMag = (point - sample).sqrMagnitude;
+				if( sampleSqrMag < closestSqrMag )
+				{
+					closest = sample;
+					closestT = t;
+					closestSqrMag = sampleSqrMag;
+				}
+			}
+
+			// Now that we have the rough segment to search, do a more fine grained search
+			var start = Mathf.Clamp01 (t - (step * 0.5f));
+			var end = Mathf.Clamp01(t + (step * 0.5f));
+			var smallStep = step * 0.1f;
+			for(t = start; t < end; t += smallStep)
+			{
+				var sample = PositionSample(t);
+				var sampleSqrMag = (point - sample).sqrMagnitude;
+
+				if( sampleSqrMag < closestSqrMag )
+				{
+					closest = sample;
+					closestT = t;
+					closestSqrMag = sampleSqrMag;
+				}
+			}
+			return closestT;
+		}
+
         public Mesh Triangulate(uint samples)
         {
             return Triangulate(samples, Vector3.zero);
