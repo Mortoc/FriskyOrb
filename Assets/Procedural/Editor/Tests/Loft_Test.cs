@@ -88,8 +88,8 @@ namespace Procedural.Test
         public void LoftAlignsShapeToPathDirection()
         {
             var torus = BuildTorus(1.0f, 0.25f);
-            var shapeSamples = 16u;
-            var pathSamples = 16u;
+            var shapeSamples = 16;
+            var pathSamples = 16;
             Mesh loftMesh = torus.GenerateMesh(pathSamples, shapeSamples);
 
             for (int p = 0; p < pathSamples; ++p)
@@ -143,8 +143,8 @@ namespace Procedural.Test
         public void ContinuousLoftsDontBreakNormalsAtLoop()
         {
             var torus = BuildTorus(10.0f, 1.0f);
-            var shapeSteps = 10u;
-            var pathSteps = 16u;
+            var shapeSteps = 10;
+            var pathSteps = 16;
             Mesh loftMesh = torus.GenerateMesh(shapeSteps, pathSteps);
 
             for (var s = 0u; s < shapeSteps; ++s)
@@ -162,8 +162,8 @@ namespace Procedural.Test
         public void LoftsGenerateUVs()
         {
             var torus = BuildTorus(10.0f, 1.0f);
-            var shapeSamples = 10u;
-            var pathSamples = 5u;
+            var shapeSamples = 10;
+            var pathSamples = 5;
             Mesh loftMesh = torus.GenerateMesh(shapeSamples, pathSamples);
 
             var maxDist = Mathf.Sqrt(2.001f);
@@ -183,8 +183,8 @@ namespace Procedural.Test
         public void LoftsGenerateTangentss()
         {
             var torus = BuildTorus(10.0f, 1.0f);
-            var shapeSamples = 10u;
-            var pathSamples = 5u;
+            var shapeSamples = 10;
+            var pathSamples = 5;
             Mesh loftMesh = torus.GenerateMesh(shapeSamples, pathSamples);
 
             for (int p = 0; p < pathSamples; ++p)
@@ -206,8 +206,8 @@ namespace Procedural.Test
         public void LoftsCanScaleAlongPath()
         {
             var tube = BuildTube(1.0f, 1.0f);
-            var shapeSamples = 24u;
-            var pathSamples = 24u;
+            var shapeSamples = 24;
+            var pathSamples = 24;
             tube.Scale = new Bezier(new Bezier.ControlPoint[]{
 				new Bezier.ControlPoint(
 					new Vector3(0.0f, 0.0f, 0.0f),

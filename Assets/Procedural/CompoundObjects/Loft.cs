@@ -29,12 +29,12 @@ namespace Procedural
         public bool EndCap { get; set; }
 
         // A spline that evaluates to y=1, z=1 for all values of x
-        private static ISpline _identitySpline = Bezier.ConstructSmoothSpline(new Vector3[]{
+        private static ISpline _flatScaleSpline = Bezier.ConstructSmoothSpline(new Vector3[]{
             new Vector3(0.0f, 1.0f, 1.0f),
             new Vector3(1.0f, 1.0f, 1.0f)
         });
 
-        public static Mesh GenerateMesh(ISpline path, ISpline shape, uint pathSegments, uint shapeSegments)
+        public static Mesh GenerateMesh(ISpline path, ISpline shape, int pathSegments, int shapeSegments)
         {
             return new Loft(path, shape).GenerateMesh(pathSegments, shapeSegments);
         }
@@ -48,7 +48,7 @@ namespace Procedural
 
             Path = path;
             Shape = shape;
-            Scale = _identitySpline;
+			Scale = _flatScaleSpline;
         }
 
         public Vector3 SurfacePoint(Vector2 t)
@@ -76,7 +76,7 @@ namespace Procedural
             return Quaternion.LookRotation(pathDir, pathUp) * _upToForwardRotation;
         }
 
-        public Mesh GenerateMesh(uint pathSegments, uint shapeSegments)
+        public Mesh GenerateMesh(int pathSegments, int shapeSegments)
         {
             if (pathSegments < 1)
                 throw new ArgumentException("pathSegments must be at least 1");
@@ -92,7 +92,7 @@ namespace Procedural
             Vector3[] norms = new Vector3[vertCount];
             Vector2[] uvs = new Vector2[vertCount];
 
-            Func<uint, uint, int> uvToVertIdx = (shapeSegment, pathSegment) =>
+            Func<int, int, int> uvToVertIdx = (shapeSegment, pathSegment) =>
             {
                 return (int)((pathSegment * shapeSegments) + shapeSegment);
             };
@@ -103,22 +103,24 @@ namespace Procedural
             float pathStep = 1.0f / (float)pathSegments;
             float shapeStep = 1.0f / (float)(shapeSegments - 1);
 
-            for (uint pathSeg = 0; pathSeg < pathSegments + 1; ++pathSeg)
+            for (int pathSeg = 0; pathSeg < pathSegments + 1; ++pathSeg)
             {
                 var pathT = pathStep * (float)pathSeg;
                 var pathPnt = Path.PositionSample(pathT);
                 var pathRot = GetPathRotation(pathT);
+				var pathTScale = Scale.PositionSample(pathT).y;
 
-                for (uint shapeSeg = 0; shapeSeg < shapeSegments + 1; ++shapeSeg)
+                for (int shapeSeg = 0; shapeSeg < shapeSegments + 1; ++shapeSeg)
                 {
                     var shapeT = shapeStep * (float)shapeSeg;
-                    var shapePnt = Shape.PositionSample(shapeT) * Scale.PositionSample(pathT).y;
-                    var shapeForward = Shape.ForwardVector(shapeT);
-                    var vertIdx = uvToVertIdx(shapeSeg, pathSeg);
+
+					var shapePnt = Shape.PositionSample(shapeT) * pathTScale;
                     var shapePntRotated = pathRot * shapePnt;
+					var vertIdx = uvToVertIdx(shapeSeg, pathSeg);
 
                     verts[vertIdx] = pathPnt + shapePntRotated;
 
+					var shapeForward = Shape.ForwardVector(shapeT);
                     tangents[vertIdx].x = shapeForward.x;
                     tangents[vertIdx].y = shapeForward.y;
                     tangents[vertIdx].z = shapeForward.z;
@@ -131,9 +133,9 @@ namespace Procedural
 
             var highestVertIdx = -1;
             var triIdx = 0;
-            for (uint pathSeg = 0; pathSeg < pathSegments; ++pathSeg)
+            for (int pathSeg = 0; pathSeg < pathSegments; ++pathSeg)
             {
-                for (uint shapeSeg = 0; shapeSeg < shapeSegments; ++shapeSeg)
+                for (int shapeSeg = 0; shapeSeg < shapeSegments; ++shapeSeg)
                 {
                     var nextShapeSeg = (shapeSeg + 1) % shapeSegments;
                     var vert1 = uvToVertIdx(shapeSeg, pathSeg);
@@ -176,7 +178,7 @@ namespace Procedural
                 var firstSegmentNorms = new Vector3[shapeSegments];
                 Array.Copy(norms, firstSegmentNorms, shapeSegments);
 
-                for (var shapeSeg = 0u; shapeSeg < shapeSegments; ++shapeSeg)
+                for (var shapeSeg = 0; shapeSeg < shapeSegments; ++shapeSeg)
                 {
                     norms[shapeSeg] += norms[lastPathShapeBaseIdx + shapeSeg];
                     norms[lastPathShapeBaseIdx + shapeSeg] += firstSegmentNorms[shapeSeg];
@@ -189,7 +191,7 @@ namespace Procedural
                 var firstSegmentNorms = new Vector3[pathSegments];
                 Array.Copy(norms, firstSegmentNorms, pathSegments);
 
-                for (var pathSeg = 0u; pathSeg < pathSegments + 1; ++pathSeg)
+                for (var pathSeg = 0; pathSeg < pathSegments + 1; ++pathSeg)
                 {
                     var shapeVertsStart = pathSeg * shapeSegments;
                     var shapeVertsEnd = shapeVertsStart + shapeSegments - 1;

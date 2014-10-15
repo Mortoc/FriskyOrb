@@ -1,10 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Levels/Editor/Tests/LevelTrack_Test.cs">
     <Files>
-      <File FileName="Assets/Procedural/Editor/Tests/Bezier_Test.cs" Line="168" Column="31" />
-      <File FileName="Assets/Procedural/Primitives/Splines/Bezier.cs" Line="370" Column="6" />
-      <File FileName="Assets/Levels/Editor/Tests/LevelTrack_Test.cs" Line="97" Column="60" />
+      <File FileName="Assets/Levels/Editor/Tests/LevelTrack_Test.cs" Line="142" Column="3" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -19,6 +17,11 @@
               <Node name="CompoundObjects" expanded="True" />
               <Node name="Primitives" expanded="True">
                 <Node name="Splines" expanded="True" />
+              </Node>
+            </Node>
+            <Node name="UnityTestTools" expanded="True">
+              <Node name="Assertions" expanded="True">
+                <Node name="Comparers" expanded="True" />
               </Node>
             </Node>
           </Node>
@@ -46,6 +49,7 @@
               </Node>
             </Node>
           </Node>
+          <Node name="Assembly-CSharp-firstpass" expanded="True" />
         </State>
       </Pad>
       <Pad Id="MonoDevelop.NUnit.TestPad">

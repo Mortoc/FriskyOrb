@@ -100,7 +100,7 @@ namespace Procedural
             if (meshFilter.sharedMesh)
                 DestroyImmediate(meshFilter.sharedMesh);
 
-            meshFilter.sharedMesh = _loft.GenerateMesh((uint)pathSegments, (uint)shapeSegments);
+            meshFilter.sharedMesh = _loft.GenerateMesh(pathSegments, shapeSegments);
         }
 
         public bool _showSurfPnt = true;

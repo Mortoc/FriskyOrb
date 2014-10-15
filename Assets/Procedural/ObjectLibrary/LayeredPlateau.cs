@@ -76,8 +76,8 @@ namespace Procedural
 		        	}
 		        );
 
-		        var heightSegs = (uint)(heightSegments * (thisHeightPercent / layerHeightMax));
-		        var shapeSegs = (uint)(radiusSegments * (scaleDown * scaleDown));
+		        var heightSegs = heightSegments * (thisHeightPercent / layerHeightMax);
+		        var shapeSegs = radiusSegments * (scaleDown * scaleDown);
 
 		        if( heightSegs > 0 && shapeSegs > 2 )
 		        {
@@ -86,7 +86,7 @@ namespace Procedural
 		        	loft.EndCap = true;
 		        	loft.Scale = _layerProfile;
 
-		        	combineMeshInstance.mesh = loft.GenerateMesh( heightSegs, shapeSegs );
+		        	combineMeshInstance.mesh = loft.GenerateMesh( (int)heightSegs, (int)shapeSegs );
 			        combineMeshInstances.Add(combineMeshInstance);
 			    }
 

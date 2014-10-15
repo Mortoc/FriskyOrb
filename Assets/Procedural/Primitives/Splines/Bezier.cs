@@ -270,9 +270,13 @@ namespace Procedural
             var cpSample = GetCPSample(t);
 
             if (cpSample.t <= 0.0f)
+			{
                 return _controlPoints[cpSample.segmentIdx].Up;
+			}
             if (cpSample.t >= 1.0f)
+			{
                 return _controlPoints[cpSample.segmentIdx + 1].Up;
+			}
 
             var cpUp = Vector3.Lerp(
                 _controlPoints[cpSample.segmentIdx].Up,
@@ -295,9 +299,10 @@ namespace Procedural
                 int lastIdx = _controlPoints.Length - 1;
                 return (_controlPoints[lastIdx].OutTangent - _controlPoints[lastIdx].Point).normalized;
             }
-
-            var beforeSample = PositionSample(Mathf.Clamp01(t - (0.01f * _recipControlPntCount)));
-            var afterSample = PositionSample(Mathf.Clamp01(t + (0.01f * _recipControlPntCount)));
+			
+			var offset = 0.01f * _recipControlPntCount;
+			var beforeSample = PositionSample(Mathf.Clamp01(t - offset));
+			var afterSample = PositionSample(Mathf.Clamp01(t + offset));
 
             return (afterSample - beforeSample).normalized;
         }
