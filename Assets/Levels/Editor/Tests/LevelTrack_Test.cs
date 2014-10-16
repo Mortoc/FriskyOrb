@@ -12,8 +12,9 @@ namespace RtInfinity.Levels.Test
     [Category("Gameplay")]
     internal class LevelTrack_Test : IDisposable
     {
-		private GameObject _fixtureGameObject = new GameObject("TestTrack");
 		private TrackGenerator _generator = new MockTrackGenerator();
+		private GameObject _fixtureGameObject = new GameObject("TestTrack");
+
 		
 		public void Dispose ()
 		{
@@ -113,17 +114,17 @@ namespace RtInfinity.Levels.Test
 			for(int i = 0; i < seg0SeamVertIndices.Count; ++i) 
 			{
 				int? positionPair = null;
+				var seg0Pos = segment0Mesh.vertices[seg0SeamVertIndices[i]];
 
 				for(int j = 0; j < seg1SeamVertIndices.Count; ++j)
 				{
-					var seg0Pos = segment0Mesh.vertices[seg0SeamVertIndices[i]];
 					var seg1Pos = segment1Mesh.vertices[seg1SeamVertIndices[j]];
 
 					if( (segment0.transform.TransformPoint(seg0Pos) - segment1.transform.TransformPoint(seg1Pos)).magnitude < 0.0001f )
 						positionPair = j;
 				}
 
-				Assert.IsNotNull(positionPair);
+				Assert.IsNotNull(positionPair, "No pair for vert at " + seg0Pos);
 				verticesPaired[i] = Tuple.New(i, (int)positionPair);
 			}
 

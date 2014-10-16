@@ -101,11 +101,12 @@ namespace Procedural
             int[] tris = new int[triangleCount];
 
             float pathStep = 1.0f / (float)pathSegments;
-            float shapeStep = 1.0f / (float)(shapeSegments - 1);
+            float shapeStep = 1.0f / (float)shapeSegments;
 
             for (int pathSeg = 0; pathSeg < pathSegments + 1; ++pathSeg)
             {
                 var pathT = pathStep * (float)pathSeg;
+
                 var pathPnt = Path.PositionSample(pathT);
                 var pathRot = GetPathRotation(pathT);
 				var pathTScale = Scale.PositionSample(pathT).y;
@@ -120,6 +121,7 @@ namespace Procedural
 
                     verts[vertIdx] = pathPnt + shapePntRotated;
 
+					var shapeUp = Shape.UpVector(shapeT);
 					var shapeForward = Shape.ForwardVector(shapeT);
                     tangents[vertIdx].x = shapeForward.x;
                     tangents[vertIdx].y = shapeForward.y;
@@ -128,6 +130,8 @@ namespace Procedural
 
                     uvs[vertIdx].x = shapeT;
                     uvs[vertIdx].y = pathT;
+
+					norms[vertIdx] = Vector3.Cross(shapeUp, shapeForward).normalized;
                 }
             }
 
@@ -155,16 +159,6 @@ namespace Procedural
                     tris[triIdx++] = vert4;
                     tris[triIdx++] = vert5;
                     tris[triIdx++] = vert6;
-
-                    Vector3 faceNormal1 = Vector3.Cross(verts[vert1] - verts[vert2], verts[vert1] - verts[vert3]).normalized;
-                    Vector3 faceNormal2 = Vector3.Cross(verts[vert4] - verts[vert5], verts[vert4] - verts[vert6]).normalized;
-
-                    norms[vert1] += faceNormal1;
-                    norms[vert2] += faceNormal1;
-                    norms[vert3] += faceNormal1;
-                    norms[vert4] += faceNormal2;
-                    norms[vert5] += faceNormal2;
-                    norms[vert6] += faceNormal2;
                 }
             }
 
@@ -199,11 +193,6 @@ namespace Procedural
                     norms[shapeVertsStart] += norms[shapeVertsEnd];
                     norms[shapeVertsEnd] += startNorm;
                 }
-            }
-
-            for (int n = 0; n < norms.Length; ++n)
-            {
-                norms[n] = norms[n].normalized;
             }
 
             mesh.vertices = verts;

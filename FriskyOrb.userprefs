@@ -1,14 +1,18 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Levels/Editor/Tests/LevelTrack_Test.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Levels/TrackSegment.cs">
     <Files>
-      <File FileName="Assets/Levels/Editor/Tests/LevelTrack_Test.cs" Line="142" Column="3" />
+      <File FileName="Assets/Levels/Editor/Tests/LevelTrack_Test.cs" Line="103" Column="70" />
+      <File FileName="Assets/Levels/LevelTrack.cs" Line="37" Column="29" />
+      <File FileName="Assets/Levels/TrackSegment.cs" Line="67" Column="33" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Assembly-CSharp" expanded="True">
-            <Node name="Levels" expanded="True" />
+            <Node name="Levels" expanded="True">
+              <Node name="TrackSegment.cs" selected="True" />
+            </Node>
             <Node name="Misc" expanded="True" />
             <Node name="Player" expanded="True">
               <Node name="Actions" expanded="True" />
@@ -28,9 +32,7 @@
           <Node name="Assembly-CSharp-Editor" expanded="True">
             <Node name="Levels" expanded="True">
               <Node name="Editor" expanded="True">
-                <Node name="Tests" expanded="True">
-                  <Node name="LevelTrack_Test.cs" selected="True" />
-                </Node>
+                <Node name="Tests" expanded="True" />
               </Node>
             </Node>
             <Node name="Misc" expanded="True">

@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+
 
 namespace RtInfinity.Levels.Test
 {
@@ -12,19 +12,28 @@ namespace RtInfinity.Levels.Test
 	{
 		private const string MOCK_SETTINGS_JSON = @"{
 			section: {
-				name: 'test',
+				name: 'start',
 				segment: {
+					material: 'SpaceRace',
+					profile: {
+						type: 'rounded-rect',
+						params: {
+							width: 10.0,
+							height: 3.0,
+							roundness: 0.1
+						}
+					},
 					scale: {
 						min: 4.0,
 						max: 5.0
 					},
 					length: {
-						min: 10.0,
-						max: 10.0
+						min: 30.0,
+						max: 30.0
 					},
 					curviness: {
-						min: 1.0,
-						max: 2.0
+						min: 5.0,
+						max: 5.0
 					}
 				}
 			}

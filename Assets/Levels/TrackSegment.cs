@@ -12,10 +12,10 @@ namespace RtInfinity.Levels
 	/// </summary>
 	public class TrackSegment : MonoBehaviour
 	{
-		private const int PATH_SEGMENTS = 32;
-		private const int SHAPE_SEGMENTS = 24;
+		private const int PATH_SEGMENTS = 64;
+		private const int SHAPE_SEGMENTS = 72;
 		private const int COLLISION_PATH_SEGMENTS = 16;
-		private const int COLLISION_SHAPE_SEGMENTS = 12;
+		private const int COLLISION_SHAPE_SEGMENTS = 24;
 
 		private TrackGenerator _generator;
 		private Loft _loft;
@@ -62,6 +62,10 @@ namespace RtInfinity.Levels
 			_loft = _generator.BuildSegmentLoft(lastSegment, Section);
 			EndDist = StartDist + _loft.Path.DistanceSample(1.0f);
 			GenerateMeshFromLoft();
+
+			// Debug to see the segment's beziers/lofts
+			//var loftComponent = gameObject.AddComponent<LoftComponent>();
+			//loftComponent.SetLoft(_loft);
 		}
 
 		private void GenerateMeshFromLoft()
@@ -74,15 +78,6 @@ namespace RtInfinity.Levels
 
 			var meshCollider = gameObject.GetOrAddComponent<MeshCollider>();
 			meshCollider.sharedMesh = _loft.GenerateMesh(COLLISION_PATH_SEGMENTS, COLLISION_SHAPE_SEGMENTS);
-		}
-
-		
-		public Vector2 PointToSurfaceT(Vector3 worldPosition)
-		{
-			var localPosition = transform.InverseTransformPoint(worldPosition);
-			var closestPath = Loft.Path.ClosestT(localPosition);
-
-			return Vector2.zero;
 		}
 	}
 }

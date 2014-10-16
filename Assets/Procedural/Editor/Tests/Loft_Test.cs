@@ -131,9 +131,9 @@ namespace Procedural.Test
                 var n2 = loftMesh.normals[loftMesh.triangles[tri + 1]];
                 var n3 = loftMesh.normals[loftMesh.triangles[tri + 2]];
 
-                UAssert.Near(v1.normalized, n1, 0.15f);
-                UAssert.Near(v2.normalized, n2, 0.15f);
-                UAssert.Near(v3.normalized, n3, 0.15f);
+                UAssert.Near(v1.normalized, n1, 0.01f);
+                UAssert.Near(v2.normalized, n2, 0.01f);
+                UAssert.Near(v3.normalized, n3, 0.01f);
             }
 
             Mesh.DestroyImmediate(loftMesh);
@@ -293,6 +293,39 @@ namespace Procedural.Test
 
             Assert.Greater(upFacingTris, 1);
         }
+
+		[Test]
+		public void AllUVValuesAreInValidRange()
+		{
+			var cyclinder = BuildTube(1.0f, 1.0f);
+			var mesh = cyclinder.GenerateMesh(10, 10);
+			foreach(var uv in mesh.uv)
+			{
+				UAssert.Near(uv.x, Mathf.Clamp01(uv.x), Mathf.Epsilon);
+				UAssert.Near(uv.y, Mathf.Clamp01(uv.y), Mathf.Epsilon);
+			}
+		}
+		
+		[Test]
+		public void NoVertsAreOverlappingUnlessForUVLoop()
+		{
+			var cyclinder = BuildTube(1.0f, 1.0f);
+			
+			var mesh = cyclinder.GenerateMesh(10, 10);
+
+			for(int i = 0; i < (mesh.vertexCount - 1); ++i)
+			{
+				for(int j = i+1; j < mesh.vertexCount; ++j)
+				{
+					var areSamePnt = (mesh.vertices[i] - mesh.vertices[j]).magnitude < 0.00001f;
+					
+					// The only case that verts can be the same position is for UV wrapping
+					if( areSamePnt )
+						UAssert.Near((mesh.uv[i] - mesh.uv[j]).magnitude, 1.0f, 0.0001f);
+				}
+			}
+		}
+
 
         [Test]
         public void SurfacePositionTest()

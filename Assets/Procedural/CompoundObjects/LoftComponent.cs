@@ -54,6 +54,36 @@ namespace Procedural
 
         #endregion
 
+		public void SetLoft(Loft loft)
+		{
+			_loft = loft;
+			if( _loft.Path is Bezier )
+			{
+				var pathObj = new GameObject("Path");
+				pathObj.transform.parent = transform;
+
+				var path = pathObj.AddComponent<BezierComponent>();
+				path.OverrideBezier(_loft.Path as Bezier);
+			}
+			if( _loft.Shape is Bezier )
+			{
+				var shapeObj = new GameObject("Scale");
+				shapeObj.transform.parent = transform;
+				
+				var shape = shapeObj.AddComponent<BezierComponent>();
+				shape.OverrideBezier(_loft.Shape as Bezier);
+			}
+			if( _loft.Scale is Bezier )
+			{
+				var scaleObj = new GameObject("Scale");
+				scaleObj.transform.parent = transform;
+				
+				var scale = scaleObj.AddComponent<BezierComponent>();
+				scale.OverrideBezier(_loft.Scale as Bezier);
+			}
+			GenerateMesh();
+		}
+
         void OnEnable()
         {
             GenerateMesh();

@@ -64,6 +64,24 @@ namespace Procedural
 			return _bezier.ClosestT(pos);
 		}
 
+		public IControlPoint LastControlPoint
+		{
+			get 
+			{ 
+				UpdateBezier();
+				return _bezier.LastControlPoint; 
+			}
+		}
+		
+		public IControlPoint FirstControlPoint
+		{
+			get 
+			{ 
+				UpdateBezier();
+				return _bezier.FirstControlPoint; 
+			}
+		}
+
         public bool Closed
         {
             get

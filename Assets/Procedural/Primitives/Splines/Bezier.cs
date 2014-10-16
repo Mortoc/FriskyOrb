@@ -64,6 +64,16 @@ namespace Procedural
         private ControlPoint[] _controlPoints;
         private float _recipControlPntCount;
 
+		public IControlPoint LastControlPoint
+		{
+			get { return _controlPoints[_controlPoints.Length - 1]; }
+		}
+		
+		public IControlPoint FirstControlPoint
+		{
+			get { return _controlPoints[0]; }
+		}
+
         private static Vector3 NextPoint(Vector3[] points, int currentIdx, bool closed)
         {
             var nextIdx = currentIdx + 1;

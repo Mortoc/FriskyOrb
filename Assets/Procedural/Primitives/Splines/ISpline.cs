@@ -38,5 +38,11 @@ public interface ISpline : IEnumerable<IControlPoint>
 	float ClosestT(Vector3 point);
 
     bool Closed { get; }
+
+	/// Convenience function since first control point is commonly accessed
+	IControlPoint LastControlPoint { get; }
+
+	/// Convenience function since last control point is commonly accessed
+	IControlPoint FirstControlPoint { get; }
 }
 
