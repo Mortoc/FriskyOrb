@@ -220,6 +220,15 @@ namespace Procedural
             }
         }
 
+		// Converts T values to the (0 - 1) range
+		private float ClampT(float t)
+		{
+			if( Closed )
+				return t % 1.0f;
+			else
+				return Mathf.Clamp01 (t);
+		}
+
         private struct CPSample
         {
             public int segmentIdx { get; set; }
@@ -229,14 +238,14 @@ namespace Procedural
         private CPSample GetCPSample(float splineT)
         {
             float cpCount = _controlPoints.Length - 1.0f;
-            float segmentSpaceT = Mathf.Clamp01(splineT) * cpCount;
+			float segmentSpaceT = Mathf.Clamp01(splineT) * cpCount;
             int startSegment = Mathf.FloorToInt(segmentSpaceT);
             float tInSegment = segmentSpaceT - Mathf.Floor(segmentSpaceT);
 
             return new CPSample()
             {
                 segmentIdx = startSegment,
-                t = Mathf.Clamp01(tInSegment)
+				t = ClampT(tInSegment)
             };
         }
 
@@ -300,21 +309,16 @@ namespace Procedural
 
         public Vector3 ForwardVector(float t)
         {
-            if (t <= 0.0f)
-            {
-                return (_controlPoints[0].OutTangent - _controlPoints[0].Point).normalized;
-            }
-            else if (t >= 1.0f)
-            {
-                int lastIdx = _controlPoints.Length - 1;
-                return (_controlPoints[lastIdx].OutTangent - _controlPoints[lastIdx].Point).normalized;
-            }
-			
 			var offset = 0.01f * _recipControlPntCount;
-			var beforeSample = PositionSample(Mathf.Clamp01(t - offset));
-			var afterSample = PositionSample(Mathf.Clamp01(t + offset));
 
-            return (afterSample - beforeSample).normalized;
+
+			Vector3 beforeSample;
+			Vector3 afterSample;
+			
+			beforeSample = PositionSample(ClampT(t - offset));
+			afterSample = PositionSample(ClampT(t + offset));
+
+			return (beforeSample - afterSample).normalized;
         }
 
         public float DistanceSample(float t)
@@ -426,7 +430,7 @@ namespace Procedural
 
             mesh.vertices = verts;
             mesh.normals = norms;
-            mesh.triangles = Triangulator.Triangulate(verts);
+            mesh.triangles = Triangulator.Triangulate(verts, up);
 
             return mesh;
         }

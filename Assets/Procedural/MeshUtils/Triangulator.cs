@@ -12,8 +12,7 @@ namespace Procedural
 
             for(int i = 0; i < points.Length; ++i)
             {
-                result[i] = MathExt.ProjectPointOnPlane(pointsNormHint, Vector3.zero, points[i]);
-                result[i] = rotationToXZ * result[i];
+				result[i] = rotationToXZ * MathExt.ProjectPointOnPlane(pointsNormHint, Vector3.zero, points[i]);
             }
 
             return result;
@@ -28,36 +27,28 @@ namespace Procedural
 
         public static int[] Triangulate(Vector3[] points, Vector3 pointsNormHint)
         {
+			int pointsCount = points.Length;
+			if (pointsCount <= 3)
+				return new int[]{0, 1, 2};
+
             points = ProjectPointsToXZ(points, pointsNormHint);
 
-            // Debug.Log(points.Length + " points with an area of " + Mathf.Abs(Area(points)));
-            // foreach(var pnt in points)
-            //     Debug.Log("> " + pnt.x.ToString("f5") + ", " + pnt.z.ToString("f5"));
-
             List<int> indices = new List<int>();
-     
-            int n = points.Length;
-            if (n < 3)
-                return indices.ToArray();
-     
-            int[] V = new int[n];
+            int[] unassignedVerts = new int[pointsCount];
             if (Area(points) > 0) 
             {
-                for (int v = 0; v < n; v++)
-                    V[v] = v;
+                for (int v = 0; v < pointsCount; v++)
+                    unassignedVerts[v] = v;
             }
             else 
             {
-                for (int v = 0; v < n; v++)
-                    V[v] = (n - 1) - v;
+                for (int v = 0; v < pointsCount; v++)
+                    unassignedVerts[v] = (pointsCount - 1) - v;
             }
      
-            int nv = n;
+            int nv = pointsCount;
             int count = 2 * nv;
-            for (int m = 0, v = nv - 1; nv > 2; ) {
-                if ((count--) <= 0)
-                    return indices.ToArray();
-     
+            for (int m = 0, v = nv - 1; nv > 0; ) {
                 int u = v;
                 if (nv <= u)
                     u = 0;
@@ -70,22 +61,25 @@ namespace Procedural
                 if (nv <= w)
                     w = 0;
      
-                if (Snip(points, u, v, w, nv, V)) {
-                    var a = V[u];
-                    var b = V[v];
-                    var c = V[w];
+                if (Snip(points, u, v, w, nv, unassignedVerts)) {
+                    var a = unassignedVerts[u];
+                    var b = unassignedVerts[v];
+                    var c = unassignedVerts[w];
                     indices.Add(a);
                     indices.Add(b);
                     indices.Add(c);
                     m++;
-                    for( int s = v, t = v + 1; t < nv; s++, t++)
-                        V[s] = V[t];
+                    for(int s = v, t = v + 1; t < nv; s++, t++)
+                        unassignedVerts[s] = unassignedVerts[t];
                     nv--;
                     count = 2 * nv;
                 }
-            }
-        
-            indices.Reverse();
+
+				if ((count--) <= 0)
+					return indices.ToArray();
+			}
+			
+			indices.Reverse();
             return indices.ToArray();
         }
      
@@ -101,16 +95,19 @@ namespace Procedural
         }
      
         private static bool Snip (Vector3[] points, int u, int v, int w, int n, int[] V) {
-            int p;
             var A = points[V[u]];
             var B = points[V[v]];
             var C = points[V[w]];
-            if (Mathf.Epsilon > (((B.x - A.x) * (C.z - A.z)) - ((B.z - A.z) * (C.x - A.x))))
+            if (Mathf.Epsilon > ((B.x - A.x) * (C.z - A.z)) - ((B.z - A.z) * (C.x - A.x)))
                 return false;
-            for (p = 0; p < n; p++) {
+
+            for (int p = 0; p < n; p++) 
+			{
                 if ((p == u) || (p == v) || (p == w))
                     continue;
+
                 var P = points[V[p]];
+
                 if (InsideTriangle(A, B, C, P))
                     return false;
             }
@@ -132,7 +129,9 @@ namespace Procedural
             cCROSSap = cx * apy - cy * apx;
             bCROSScp = bx * cpy - by * cpx;
             
-            return ((aCROSSbp >= 0.0f) && (bCROSScp >= 0.0f) && (cCROSSap >= 0.0f));
+            return (aCROSSbp >= 0.0f) && 
+				   (bCROSScp >= 0.0f) && 
+				   (cCROSSap >= 0.0f);
         }
     }
 }

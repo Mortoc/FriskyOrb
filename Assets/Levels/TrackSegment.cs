@@ -12,9 +12,9 @@ namespace RtInfinity.Levels
 	/// </summary>
 	public class TrackSegment : MonoBehaviour
 	{
-		private const int PATH_SEGMENTS = 64;
-		private const int SHAPE_SEGMENTS = 72;
-		private const int COLLISION_PATH_SEGMENTS = 16;
+		private const int PATH_SEGMENTS = 12;
+		private const int SHAPE_SEGMENTS = 24;
+		private const int COLLISION_PATH_SEGMENTS = 12;
 		private const int COLLISION_SHAPE_SEGMENTS = 24;
 
 		private TrackGenerator _generator;

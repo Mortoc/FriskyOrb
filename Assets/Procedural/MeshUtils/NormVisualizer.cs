@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
 
 
 namespace Procedural
@@ -11,6 +11,7 @@ namespace Procedural
 		void OnDrawGizmos()
 		{
 			var meshFilter = GetComponent<MeshFilter>();
+			Func<Vector3, Vector3> transformFunc = transform.TransformPoint;
 
 			if( meshFilter && meshFilter.sharedMesh )
 			{
@@ -19,9 +20,8 @@ namespace Procedural
 
 				for(int v = 0; v < mesh.vertexCount; ++v)
 				{
-					var vert = transform.TransformPoint(mesh.vertices[v]);
+					var vert = transformFunc(mesh.vertices[v]);
 					var norm = mesh.normals[v];
-
 					Gizmos.DrawLine(vert, vert + norm);
 				}
 			}

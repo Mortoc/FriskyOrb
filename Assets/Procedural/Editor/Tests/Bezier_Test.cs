@@ -182,7 +182,9 @@ namespace Procedural.Test
 
             for(float t = 0.0f; t < 1.0f; t += 0.05f)
             {
-                UAssert.Near(Vector3.Dot(bezier.ForwardVector(t), pntsDirection), 1.0f, 0.001f);
+				var forward = bezier.ForwardVector(t);
+				UAssert.Near(forward, forward.normalized, 0.00001f);
+				UAssert.Near(Vector3.Dot(forward, pntsDirection), 1.0f, 0.001f);
             }
         }
 
@@ -201,8 +203,11 @@ namespace Procedural.Test
 
             for(float t = 0.0f; t < 1.0f; t += 0.05f)
             {
-                var expectedAngle = Mathf.Cos(t);
-				UAssert.Near(Vector3.Dot(bezier.ForwardVector(t), Vector3.up), expectedAngle, 0.1f);
+                var expectedAngleCos = Mathf.Cos(t);
+				var forward = bezier.ForwardVector(t);
+
+				UAssert.Near(forward, forward.normalized, 0.00001f);
+				UAssert.Near(Vector3.Dot(forward, Vector3.right), expectedAngleCos, 0.1f);
             }
         }
 
@@ -263,7 +268,9 @@ namespace Procedural.Test
 			var dir1 = bezier.ForwardVector(0.0f);
 			var dir2 = bezier.ForwardVector(1.0f);
 
-            UAssert.Near(dir1, dir2, 0.0001f);
+			// Big epsilon here because it should change slightly 
+			// between the incoming and outgoing samples
+            UAssert.Near(dir1, dir2, 0.1f);
         }
 
         [Test]

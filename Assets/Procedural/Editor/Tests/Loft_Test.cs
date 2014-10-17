@@ -116,7 +116,7 @@ namespace Procedural.Test
         public void LoftGenerateProperNormals()
         {
             var tube = BuildTube(10.0f, 1.0f);
-            Mesh loftMesh = tube.GenerateMesh(10, 16);
+            Mesh loftMesh = tube.GenerateMesh(10, 10);
 
             for (int tri = 0; tri < loftMesh.triangles.Length; tri += 3)
             {
@@ -131,9 +131,9 @@ namespace Procedural.Test
                 var n2 = loftMesh.normals[loftMesh.triangles[tri + 1]];
                 var n3 = loftMesh.normals[loftMesh.triangles[tri + 2]];
 
-                UAssert.Near(v1.normalized, n1, 0.01f);
-                UAssert.Near(v2.normalized, n2, 0.01f);
-                UAssert.Near(v3.normalized, n3, 0.01f);
+                UAssert.Near(v1.normalized * -1.0f, n1, 0.1f);
+				UAssert.Near(v2.normalized * -1.0f, n2, 0.1f);
+				UAssert.Near(v3.normalized * -1.0f, n3, 0.1f);
             }
 
             Mesh.DestroyImmediate(loftMesh);
