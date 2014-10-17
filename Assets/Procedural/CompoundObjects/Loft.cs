@@ -203,37 +203,7 @@ namespace Procedural
 
             //Debug.Log("Highest Vert in a Tri: " + highestVertIdx);
             //Debug.Log("Total Verts: " + vertCount);
-
-            // If the path is closed, make sure there is no normal crease at the loop
-            if (Path.Closed)
-            {
-                var lastPathShapeBaseIdx = shapeSegments * pathSegments;
-                var firstSegmentNorms = new Vector3[shapeSegments];
-                Array.Copy(norms, firstSegmentNorms, shapeSegments);
-
-                for (var shapeSeg = 0; shapeSeg < shapeSegments; ++shapeSeg)
-                {
-                    norms[shapeSeg] += norms[lastPathShapeBaseIdx + shapeSeg];
-                    norms[lastPathShapeBaseIdx + shapeSeg] += firstSegmentNorms[shapeSeg];
-                }
-            }
-
-            // If the shape is closed, make sure there is no normal crease at the loop
-            if (Shape.Closed)
-            {
-                var firstSegmentNorms = new Vector3[pathSegments];
-                Array.Copy(norms, firstSegmentNorms, pathSegments);
-
-                for (var pathSeg = 0; pathSeg < pathSegments + 1; ++pathSeg)
-                {
-                    var shapeVertsStart = pathSeg * shapeSegments;
-                    var shapeVertsEnd = shapeVertsStart + shapeSegments - 1;
-                    var startNorm = norms[shapeVertsStart];
-                    norms[shapeVertsStart] += norms[shapeVertsEnd];
-                    norms[shapeVertsEnd] += startNorm;
-                }
-            }
-			
+            	
 			
 			for(int i = 0; i < norms.Length; ++i)
 				norms[i] = norms[i].normalized;
@@ -246,6 +216,12 @@ namespace Procedural
             mesh.normals = norms;
             mesh.tangents = tangents;
             mesh.triangles = tris;
+
+            // If the loft is closed, make sure there is no normal crease at the loops
+            if (Path.Closed || Shape.Closed)
+            {
+                MeshOperations.SoftWeld(mesh, mesh, Mathf.Epsilon);
+            }
 
             if (StartCap || EndCap)
             {

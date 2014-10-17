@@ -93,18 +93,48 @@ namespace Procedural.Test
 		[Test]
 		public void SoftWeldWorksOnTheSameMeshTwice()
 		{
-			UAssert.NotNear(_mesh1.normals[3], _mesh2.normals[4], 0.00001f);
+			UAssert.NotNear(_mesh1.normals[3], _mesh1.normals[4], 0.00001f);
 			
 			MeshOperations.SoftWeld(_mesh1, _mesh1, 0.3333f);
 			
-			UAssert.Near(_mesh1.normals[3], _mesh2.normals[4], 0.00001f);
+			UAssert.Near(_mesh1.normals[3], _mesh1.normals[4], 0.00001f);
 			UAssert.Near(_mesh1.normals[3], _mesh1.normals[3].normalized, 0.00001f);
 		}
 
 		[Test]
 		public void SoftWeldTakesInToAccountTransforms()
 		{
-			Assert.Fail ();
+            var gameObject1 = new GameObject("one");
+            var gameObject2 = new GameObject("two");
+
+            try
+            {
+                gameObject1.transform.position = Vector3.up;
+                var verts1 = _mesh1.vertices;
+                for (var i = 0; i < verts1.Length; ++i)
+                    verts1[i] = verts1[i] - Vector3.up;
+
+                MeshOperations.SoftWeld
+                (
+                    _mesh1, 
+                    gameObject1.transform, 
+                    _mesh2, 
+                    gameObject2.transform, 
+                    0.3333f
+                );
+
+                UAssert.Near(_mesh1.vertices[1], _mesh2.vertices[1], 0.00001f);
+                UAssert.Near(_mesh1.normals[1], _mesh2.normals[1], 0.00001f);
+                UAssert.NotNear(_mesh1.normals[2], _mesh2.normals[2], 0.00001f);
+
+                UAssert.Near(_mesh1.normals[1], _mesh1.normals[1].normalized, 0.00001f);
+                UAssert.Near(_mesh1.normals[2], _mesh1.normals[2].normalized, 0.00001f);
+            }
+            finally
+            {
+                GameObject.DestroyImmediate(gameObject1);
+                GameObject.DestroyImmediate(gameObject2);
+            }
 		}
 	}
 }

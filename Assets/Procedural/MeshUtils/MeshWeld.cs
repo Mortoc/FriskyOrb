@@ -37,11 +37,9 @@ namespace Procedural
 						verts1[i] = newPos;
 						verts2[j] = newPos;
 
-						Debug.Log ("Old Norms: " + norms1[i] + ", " + norms2[j]);
 						var newNorm = Vector3.Slerp(norms1[i], norms2[j], 0.5f);
 						norms1[i] = newNorm;
 						norms2[j] = newNorm;
-						Debug.Log ("New Norm: " + newNorm);
 					}
 				}
 			
