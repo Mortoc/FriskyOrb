@@ -2,7 +2,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+
+using Procedural.MeshOperations;
 
 namespace Procedural
 {
@@ -81,6 +82,7 @@ namespace Procedural
 
         public Mesh GenerateMesh(int pathSegments, int shapeSegments)
         {
+            float genMeshStartTime = Time.realtimeSinceStartup;
             if (pathSegments < 1)
                 throw new ArgumentException("pathSegments must be at least 1");
             if (shapeSegments < 2)
@@ -220,7 +222,10 @@ namespace Procedural
             // If the loft is closed, make sure there is no normal crease at the loops
             if (Path.Closed || Shape.Closed)
             {
-                MeshOperations.SoftWeld(mesh, mesh, Mathf.Epsilon);
+                float weldStartTime = Time.realtimeSinceStartup;
+                var weld = new Weld(mesh, mesh);
+                weld.SoftWeld(0.001f);
+                Debug.Log("Weld Time: " + (Time.realtimeSinceStartup - weldStartTime));
             }
 
             if (StartCap || EndCap)
@@ -246,6 +251,7 @@ namespace Procedural
                 combineMeshes.ForEach(ci => Mesh.DestroyImmediate(ci.mesh));
             }
 
+            Debug.Log("Total Time: " + (Time.realtimeSinceStartup - genMeshStartTime));
             return mesh;
         }
 
