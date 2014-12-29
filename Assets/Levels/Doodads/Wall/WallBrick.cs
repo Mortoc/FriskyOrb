@@ -11,7 +11,7 @@ public class WallBrick : ShootableDoodad
 		base.TakeDamage(damage);
 
 		var damagePercent = Mathf.Clamp01(CurrentHitPoints / TotalHitPoints);
-		renderer.material.color = Color.Lerp(Color.red, Color.white, damagePercent);
+		GetComponent<Renderer>().material.color = Color.Lerp(Color.red, Color.white, damagePercent);
 	}
 
 	public void OnCollisionEnter(Collision collision)

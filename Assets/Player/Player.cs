@@ -46,15 +46,15 @@ namespace RtInfinity.Players
 
         private void UpdateIsGrounded()
         {
-            SphereCollider sphereCol = this.collider as SphereCollider;
+            SphereCollider sphereCol = this.GetComponent<Collider>() as SphereCollider;
             Vector3 gravDir = Physics.gravity / _startingGravityMag;
             float distCheck = transform.localScale.magnitude * sphereCol.radius * 2.0f;
             Vector3 offset = gravDir * -0.5f * distCheck;
 
             RaycastHit rh;
-            rigidbody.position = rigidbody.position + offset;
-            bool grounded = rigidbody.SweepTest(gravDir, out rh, 1.0f);
-            rigidbody.position = rigidbody.position - offset;
+            GetComponent<Rigidbody>().position = GetComponent<Rigidbody>().position + offset;
+            bool grounded = GetComponent<Rigidbody>().SweepTest(gravDir, out rh, 1.0f);
+            GetComponent<Rigidbody>().position = GetComponent<Rigidbody>().position - offset;
 
             if (grounded && !IsGrounded)
                 OnGrounded(rh);
@@ -86,18 +86,18 @@ namespace RtInfinity.Players
 
         private void BecameGrounded(RaycastHit rh)
         {
-            audio.Play();
+            GetComponent<AudioSource>().Play();
         }
 
         private void BecameUngrounded()
         {
-            audio.Stop();
+            GetComponent<AudioSource>().Stop();
         }
 
         void FixedUpdate()
         {
             OnFixedUpdate();
-			Level.PlayerIsNowAt(rigidbody.position);
+			Level.PlayerIsNowAt(GetComponent<Rigidbody>().position);
         }
 
         private IEnumerable<Renderer> PlayerRenderers()

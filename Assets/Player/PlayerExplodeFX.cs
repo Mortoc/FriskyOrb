@@ -16,13 +16,13 @@ public class PlayerExplodeFX : FX
 
     public override void PerformFX()
     {
-		audio.Play ();
+		GetComponent<AudioSource>().Play ();
         foreach (Transform fragment in transform)
         {
             fragment.gameObject.SetActive(true);
-			fragment.rigidbody.velocity = Player.rigidbody.velocity;
-            fragment.rigidbody.AddForce(UnityEngine.Random.onUnitSphere * _explodeForce, ForceMode.Impulse);
-            fragment.rigidbody.AddTorque(UnityEngine.Random.onUnitSphere * _rotateForce, ForceMode.Impulse);
+			fragment.GetComponent<Rigidbody>().velocity = Player.GetComponent<Rigidbody>().velocity;
+            fragment.GetComponent<Rigidbody>().AddForce(UnityEngine.Random.onUnitSphere * _explodeForce, ForceMode.Impulse);
+            fragment.GetComponent<Rigidbody>().AddTorque(UnityEngine.Random.onUnitSphere * _rotateForce, ForceMode.Impulse);
         }
     }
 }

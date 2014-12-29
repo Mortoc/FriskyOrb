@@ -26,13 +26,13 @@ public class ExplodeyBarrellFX : FX
 
         if (_explosionSounds.Length > 0)
         {
-            if( !audio )
+            if( !GetComponent<AudioSource>() )
                 gameObject.AddComponent<AudioSource>();
 
-            audio.clip = _explosionSounds[UnityEngine.Random.Range(0, _explosionSounds.Length)];
-            audio.loop = false;
-            audio.volume = 1.0f;
-            audio.Play();
+            GetComponent<AudioSource>().clip = _explosionSounds[UnityEngine.Random.Range(0, _explosionSounds.Length)];
+            GetComponent<AudioSource>().loop = false;
+            GetComponent<AudioSource>().volume = 1.0f;
+            GetComponent<AudioSource>().Play();
         }
 
         StartCoroutine(CleanupFragments(fragments));

@@ -45,11 +45,11 @@ public class PlayerMovementController : IPlayerController
 
     private void FixedUpdate()
     {
-        Vector3 velocity = _player.rigidbody.velocity;
+        Vector3 velocity = _player.GetComponent<Rigidbody>().velocity;
         float speed = velocity.magnitude;
         float accel = CurrentPower(speed);
         Vector3 left = Vector3.Cross(Vector3.up, _player.Heading);
-        _player.rigidbody.AddForce(_player.Heading * accel * Time.fixedDeltaTime);
+        _player.GetComponent<Rigidbody>().AddForce(_player.Heading * accel * Time.fixedDeltaTime);
 
         float steeringAmount = _inputHandler.SteeringAmount();
         float leftDotVel = Vector3.Dot(left, velocity);
@@ -59,6 +59,6 @@ public class PlayerMovementController : IPlayerController
             steeringAmount *= TRACTION;
         }
 
-        _player.rigidbody.AddForce(left * STEERING_SPEED * steeringAmount * Time.fixedDeltaTime, ForceMode.Impulse);
+        _player.GetComponent<Rigidbody>().AddForce(left * STEERING_SPEED * steeringAmount * Time.fixedDeltaTime, ForceMode.Impulse);
     }
 }

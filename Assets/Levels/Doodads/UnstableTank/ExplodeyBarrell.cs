@@ -15,7 +15,7 @@ public class ExplodeyBarrell : ShootableDoodad
 
     void Start()
     {
-        rigidbody.Sleep();
+        GetComponent<Rigidbody>().Sleep();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -24,7 +24,7 @@ public class ExplodeyBarrell : ShootableDoodad
         {
             Explode(collision.collider.gameObject);
 
-            Vector3 forceDir = (collision.rigidbody.position - rigidbody.position + (Vector3.up * 0.25f)).normalized;
+            Vector3 forceDir = (collision.rigidbody.position - GetComponent<Rigidbody>().position + (Vector3.up * 0.25f)).normalized;
             collision.rigidbody.AddForce(forceDir * _playerForce, ForceMode.Impulse);
 
             var powerupBar = FindObjectOfType<PowerupBar>();
@@ -43,9 +43,9 @@ public class ExplodeyBarrell : ShootableDoodad
 
         float fuseTime = 0.66f;
 
-        Vector3 playerDir = (rigidbody.position - player.rigidbody.position).normalized;
-        rigidbody.AddForce(playerDir * strength, ForceMode.Impulse);
-        rigidbody.AddTorque(strength * UnityEngine.Random.onUnitSphere, ForceMode.Impulse);
+        Vector3 playerDir = (GetComponent<Rigidbody>().position - player.GetComponent<Rigidbody>().position).normalized;
+        GetComponent<Rigidbody>().AddForce(playerDir * strength, ForceMode.Impulse);
+        GetComponent<Rigidbody>().AddTorque(strength * UnityEngine.Random.onUnitSphere, ForceMode.Impulse);
 
         yield return new WaitForSeconds(fuseTime);
 

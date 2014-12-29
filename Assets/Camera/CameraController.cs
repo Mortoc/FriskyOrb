@@ -25,14 +25,14 @@ public class CameraController : MonoBehaviour
     private void PlayerDied()
     {
         gameObject.AddComponent<Rigidbody>();
-        rigidbody.velocity = _player.rigidbody.velocity;
+        GetComponent<Rigidbody>().velocity = _player.GetComponent<Rigidbody>().velocity;
     }
 
     void OnPreRender()
     {
         if (Player)
         {
-            Rigidbody playerRB = Player.rigidbody;
+            Rigidbody playerRB = Player.GetComponent<Rigidbody>();
 
             Vector3 lookAtPos = playerRB.position + (Player.Heading * _lookAheadDistance);
 

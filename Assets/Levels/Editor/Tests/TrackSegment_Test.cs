@@ -51,7 +51,7 @@ namespace RtInfinity.Levels.Test
 			Assert.IsTrue(segment.GetComponent<MeshFilter>());
 			Assert.IsTrue(segment.GetComponent<MeshFilter>().sharedMesh);
 			Assert.IsTrue(segment.GetComponent<MeshRenderer>());
-			Assert.IsTrue(segment.renderer.sharedMaterial);
+			Assert.IsTrue(segment.GetComponent<Renderer>().sharedMaterial);
 			Assert.IsTrue(segment.GetComponent<MeshCollider>());
 		}
 

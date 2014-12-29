@@ -114,7 +114,7 @@ public class SquashStretch : MonoBehaviour
 
 	private void UpdatePhysics()
 	{
-		var velocity = rigidbody.position - _lastPosition;
+		var velocity = GetComponent<Rigidbody>().position - _lastPosition;
 		var acceleration = velocity - _lastVelocity;
 		var impulse = acceleration - _lastAcceleration;
 		var impulseMagnitude = impulse.magnitude;
@@ -135,7 +135,7 @@ public class SquashStretch : MonoBehaviour
 		if (Renderers == null) 
 			Renderers = GetComponentsInChildren<Renderer> ();
 
-		_axis = rigidbody.velocity.normalized;
+		_axis = GetComponent<Rigidbody>().velocity.normalized;
 		foreach (Renderer r in Renderers)
 		{
 			foreach (Material mat in r.materials)

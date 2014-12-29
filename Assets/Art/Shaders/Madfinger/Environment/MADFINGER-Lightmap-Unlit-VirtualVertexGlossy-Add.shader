@@ -1,3 +1,6 @@
+// Upgrade NOTE: commented out 'sampler2D unity_Lightmap', a built-in variable
+// Upgrade NOTE: replaced tex2D unity_Lightmap with UNITY_SAMPLE_TEX2D
+
 // - Unlit
 // - Per-vertex (virtual) camera space specular light
 // - SUPPORTS lightmap
@@ -27,7 +30,7 @@ SubShader {
 	
 	#ifndef LIGHTMAP_OFF
 	float4 unity_LightmapST;
-	sampler2D unity_Lightmap;
+	// sampler2D unity_Lightmap;
 	#endif
 
 	//float _MainTexMipBias;
@@ -92,7 +95,7 @@ SubShader {
 			#endif
 			
 			#ifndef LIGHTMAP_OFF
-			fixed3 lm = DecodeLightmap (tex2D(unity_Lightmap, i.lmap));
+			fixed3 lm = DecodeLightmap (UNITY_SAMPLE_TEX2D(unity_Lightmap, i.lmap));
 			c.rgb *= lm;
 			#endif
 			

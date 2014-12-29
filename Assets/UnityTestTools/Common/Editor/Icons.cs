@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -6,73 +7,73 @@ using UnityEngine;
 
 namespace UnityTest
 {
-	public static class Icons
-	{
-		private static string iconsFolderName = "icons";
-		private static string iconsFolderPath = String.Format ("UnityTestTools{0}Common{0}Editor{0}{1}", Path.DirectorySeparatorChar, iconsFolderName);
-		
-		private static string iconsAssetsPath = "";
+    public static class Icons
+    {
+        const string k_IconsFolderName = "icons";
+        private static readonly string k_IconsFolderPath = String.Format("UnityTestTools{0}Common{0}Editor{0}{1}", Path.DirectorySeparatorChar, k_IconsFolderName);
 
-		public static readonly Texture2D failImg;
-		public static readonly Texture2D ignoreImg;
-		public static readonly Texture2D runImg;
-		public static readonly Texture2D runFailedImg;
-		public static readonly Texture2D runAllImg;
-		public static readonly Texture2D successImg;
-		public static readonly Texture2D unknownImg;
-		public static readonly Texture2D inconclusiveImg;
-		public static readonly Texture2D stopwatchImg;
-		public static readonly Texture2D plusImg;
-		public static readonly Texture2D gearImg;
+        private static readonly string k_IconsAssetsPath = "";
 
-		public static readonly GUIContent guiUnknownImg;
-		public static readonly GUIContent guiInconclusiveImg;
-		public static readonly GUIContent guiIgnoreImg;
-		public static readonly GUIContent guiSuccessImg;
-		public static readonly GUIContent guiFailImg;
-		
-		static Icons ()
-		{
-			var dirs = Directory.GetDirectories ("Assets", iconsFolderName, SearchOption.AllDirectories).Where (s => s.EndsWith (iconsFolderPath));
-			if (dirs.Any())
-				iconsAssetsPath = dirs.First();
-			else
-				Debug.LogWarning ("The UnityTestTools asset folder path is incorrect. If you relocated the tools please change the path accordingly (Icons.cs).");
-			
-			failImg = LoadTexture ("failed.png");
-			ignoreImg = LoadTexture("ignored.png");
-			successImg = LoadTexture("passed.png");
-			unknownImg = LoadTexture("normal.png");
-			inconclusiveImg = LoadTexture("inconclusive.png");
-			stopwatchImg = LoadTexture("stopwatch.png");
+        public static readonly Texture2D FailImg;
+        public static readonly Texture2D IgnoreImg;
+        public static readonly Texture2D RunImg;
+        public static readonly Texture2D RunFailedImg;
+        public static readonly Texture2D RunAllImg;
+        public static readonly Texture2D SuccessImg;
+        public static readonly Texture2D UnknownImg;
+        public static readonly Texture2D InconclusiveImg;
+        public static readonly Texture2D StopwatchImg;
+        public static readonly Texture2D PlusImg;
+        public static readonly Texture2D GearImg;
 
-			if (EditorGUIUtility.isProSkin)
-			{
-				runAllImg = LoadTexture ("play-darktheme.png");
-				runImg = LoadTexture ("play_selected-darktheme.png");
-				runFailedImg = LoadTexture ("rerun-darktheme.png");
-				plusImg = LoadTexture ("create-darktheme.png");
-				gearImg = LoadTexture ("options-darktheme.png");
-			}
-			else
-			{
-				runAllImg = LoadTexture ("play-lighttheme.png");
-				runImg = LoadTexture ("play_selected-lighttheme.png");
-				runFailedImg = LoadTexture ("rerun-lighttheme.png");
-				plusImg = LoadTexture ("create-lighttheme.png");
-				gearImg = LoadTexture ("options-lighttheme.png");
-			}
+        public static readonly GUIContent GUIUnknownImg;
+        public static readonly GUIContent GUIInconclusiveImg;
+        public static readonly GUIContent GUIIgnoreImg;
+        public static readonly GUIContent GUISuccessImg;
+        public static readonly GUIContent GUIFailImg;
 
-			guiUnknownImg = new GUIContent (unknownImg);
-			guiInconclusiveImg = new GUIContent (inconclusiveImg);
-			guiIgnoreImg = new GUIContent (ignoreImg);
-			guiSuccessImg = new GUIContent (successImg);
-			guiFailImg = new GUIContent (failImg);
-		}
+        static Icons()
+        {
+            var dirs = Directory.GetDirectories("Assets", k_IconsFolderName, SearchOption.AllDirectories).Where(s => s.EndsWith(k_IconsFolderPath));
+            if (dirs.Any())
+                k_IconsAssetsPath = dirs.First();
+            else
+                Debug.LogWarning("The UnityTestTools asset folder path is incorrect. If you relocated the tools please change the path accordingly (Icons.cs).");
 
-		private static Texture2D LoadTexture (string fileName)
-		{
-			return (Texture2D)Resources.LoadAssetAtPath (iconsAssetsPath + Path.DirectorySeparatorChar + fileName, typeof (Texture2D));
-		}
-	}
+            FailImg = LoadTexture("failed.png");
+            IgnoreImg = LoadTexture("ignored.png");
+            SuccessImg = LoadTexture("passed.png");
+            UnknownImg = LoadTexture("normal.png");
+            InconclusiveImg = LoadTexture("inconclusive.png");
+            StopwatchImg = LoadTexture("stopwatch.png");
+
+            if (EditorGUIUtility.isProSkin)
+            {
+                RunAllImg = LoadTexture("play-darktheme.png");
+                RunImg = LoadTexture("play_selected-darktheme.png");
+                RunFailedImg = LoadTexture("rerun-darktheme.png");
+                PlusImg = LoadTexture("create-darktheme.png");
+                GearImg = LoadTexture("options-darktheme.png");
+            }
+            else
+            {
+                RunAllImg = LoadTexture("play-lighttheme.png");
+                RunImg = LoadTexture("play_selected-lighttheme.png");
+                RunFailedImg = LoadTexture("rerun-lighttheme.png");
+                PlusImg = LoadTexture("create-lighttheme.png");
+                GearImg = LoadTexture("options-lighttheme.png");
+            }
+
+            GUIUnknownImg = new GUIContent(UnknownImg);
+            GUIInconclusiveImg = new GUIContent(InconclusiveImg);
+            GUIIgnoreImg = new GUIContent(IgnoreImg);
+            GUISuccessImg = new GUIContent(SuccessImg);
+            GUIFailImg = new GUIContent(FailImg);
+        }
+
+        private static Texture2D LoadTexture(string fileName)
+        {
+            return (Texture2D)Resources.LoadAssetAtPath(k_IconsAssetsPath + Path.DirectorySeparatorChar + fileName, typeof(Texture2D));
+        }
+    }
 }

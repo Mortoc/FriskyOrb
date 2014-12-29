@@ -1,3 +1,6 @@
+// Upgrade NOTE: commented out 'sampler2D unity_Lightmap', a built-in variable
+// Upgrade NOTE: replaced tex2D unity_Lightmap with UNITY_SAMPLE_TEX2D
+
 //same like HIGH + self shadow enabled
 
 Shader "RedDotGames/Mobile/Lightmapping Support/Car Paint Ultra Detail" {
@@ -43,7 +46,7 @@ SubShader {
  		 #include "UnityCG.cginc"
  
                 half4 unity_LightmapST;
-                sampler2D unity_Lightmap;
+                // sampler2D unity_Lightmap;
  
  
          // User-specified properties
@@ -151,7 +154,7 @@ SubShader {
          fixed4 frag(vertexOutput input) : COLOR
          {
 		 
-                    fixed3 lm = DecodeLightmap(tex2D(unity_Lightmap, input.tex.zw)).rgb;
+                    fixed3 lm = DecodeLightmap(UNITY_SAMPLE_TEX2D(unity_Lightmap, input.tex.zw)).rgb;
 					
 		    //fixed4 encodedNormal = tex2D(_BumpMap, _BumpMap_ST.xy * input.tex.xy + _BumpMap_ST.zw);
 		 

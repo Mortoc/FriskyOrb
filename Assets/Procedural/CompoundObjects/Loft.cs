@@ -82,7 +82,7 @@ namespace Procedural
 
         public Mesh GenerateMesh(int pathSegments, int shapeSegments)
         {
-            float genMeshStartTime = Time.realtimeSinceStartup;
+            //float genMeshStartTime = Time.realtimeSinceStartup;
             if (pathSegments < 1)
                 throw new ArgumentException("pathSegments must be at least 1");
             if (shapeSegments < 2)
@@ -213,7 +213,7 @@ namespace Procedural
 
             mesh.vertices = verts;
             mesh.uv = uvs;
-            mesh.uv1 = uvs;
+            mesh.uv2 = uvs;
             mesh.uv2 = uvs;
             mesh.normals = norms;
             mesh.tangents = tangents;
@@ -222,10 +222,10 @@ namespace Procedural
             // If the loft is closed, make sure there is no normal crease at the loops
             if (Path.Closed || Shape.Closed)
             {
-                float weldStartTime = Time.realtimeSinceStartup;
+                //float weldStartTime = Time.realtimeSinceStartup;
                 var weld = new Weld(mesh, mesh);
                 weld.SoftWeld(0.001f);
-                Debug.Log("Weld Time: " + (Time.realtimeSinceStartup - weldStartTime));
+                //Debug.Log("Weld Time: " + (Time.realtimeSinceStartup - weldStartTime));
             }
 
             if (StartCap || EndCap)
@@ -251,7 +251,7 @@ namespace Procedural
                 combineMeshes.ForEach(ci => Mesh.DestroyImmediate(ci.mesh));
             }
 
-            Debug.Log("Total Time: " + (Time.realtimeSinceStartup - genMeshStartTime));
+            //Debug.Log("Total Time: " + (Time.realtimeSinceStartup - genMeshStartTime));
             return mesh;
         }
 

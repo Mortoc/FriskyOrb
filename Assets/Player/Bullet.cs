@@ -27,7 +27,7 @@ public class Bullet : MonoBehaviour
 		_layerMask = LayerMask.GetMask("Shootable-Doodad");
 
 		var mats = new List<Material>();
-		foreach(var mat in renderer.materials) 
+		foreach(var mat in GetComponent<Renderer>().materials) 
 			if( mat.HasProperty("_stretch") )
 				mats.Add(mat);
 		_stretchMaterials = mats.ToArray();
@@ -37,8 +37,8 @@ public class Bullet : MonoBehaviour
 	
 	void FixedUpdate()
 	{
-		var speed = rigidbody.velocity.magnitude;
-		var dir = rigidbody.velocity / speed;
+		var speed = GetComponent<Rigidbody>().velocity.magnitude;
+		var dir = GetComponent<Rigidbody>().velocity / speed;
 
 		if( speed < 0.01f ) 
 		{
@@ -67,17 +67,17 @@ public class Bullet : MonoBehaviour
 
 	public void Explode()
 	{
-		foreach(var collider in Physics.OverlapSphere(rigidbody.position, _explosionRadius, _layerMask)) {
-			if( collider.rigidbody ) {
-				var positionDiff = collider.rigidbody.position - rigidbody.position;
+		foreach(var collider in Physics.OverlapSphere(GetComponent<Rigidbody>().position, _explosionRadius, _layerMask)) {
+			if( collider.GetComponent<Rigidbody>() ) {
+				var positionDiff = collider.GetComponent<Rigidbody>().position - GetComponent<Rigidbody>().position;
 				var distance = positionDiff.magnitude;
 				var direction = positionDiff / distance;
 				var explosionForce = direction * _explosionForce;
-				var velocityForce = rigidbody.velocity * 0.025f * _explosionForce;
+				var velocityForce = GetComponent<Rigidbody>().velocity * 0.025f * _explosionForce;
 				
-				collider.rigidbody.useGravity = true;
-				collider.rigidbody.AddForce((explosionForce + velocityForce) * Mathf.Lerp(0.5f, 1.0f, UnityEngine.Random.value), ForceMode.Impulse);
-				collider.rigidbody.AddTorque(UnityEngine.Random.onUnitSphere * collider.rigidbody.mass * _explosionForce * 0.01f, ForceMode.Impulse);
+				collider.GetComponent<Rigidbody>().useGravity = true;
+				collider.GetComponent<Rigidbody>().AddForce((explosionForce + velocityForce) * Mathf.Lerp(0.5f, 1.0f, UnityEngine.Random.value), ForceMode.Impulse);
+				collider.GetComponent<Rigidbody>().AddTorque(UnityEngine.Random.onUnitSphere * collider.GetComponent<Rigidbody>().mass * _explosionForce * 0.01f, ForceMode.Impulse);
 
 				var shootableDoodad = collider.GetComponent<ShootableDoodad>();
 				if( shootableDoodad ) 

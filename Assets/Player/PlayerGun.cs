@@ -31,13 +31,13 @@ public class PlayerGun : MonoBehaviour
 	{
 		if( Time.time > _nextShotTime )
 		{
-			var dir = rigidbody.velocity.normalized;
+			var dir = GetComponent<Rigidbody>().velocity.normalized;
 			RaycastHit rh;
-			if( Physics.SphereCast(rigidbody.position, 1.0f, dir, out rh, _maxRange, _layerMask) )
+			if( Physics.SphereCast(GetComponent<Rigidbody>().position, 1.0f, dir, out rh, _maxRange, _layerMask) )
 			{	
 				var bullet = (GameObject)Instantiate(_bulletPrefab);
-				bullet.rigidbody.position = rigidbody.position + (UnityEngine.Random.onUnitSphere * _bulletEmitJitter);
-				bullet.rigidbody.AddForce(dir * _fireForce + rigidbody.velocity, ForceMode.Impulse);
+				bullet.GetComponent<Rigidbody>().position = GetComponent<Rigidbody>().position + (UnityEngine.Random.onUnitSphere * _bulletEmitJitter);
+				bullet.GetComponent<Rigidbody>().AddForce(dir * _fireForce + GetComponent<Rigidbody>().velocity, ForceMode.Impulse);
 				_nextShotTime = Time.time + _fireRate;
 			}
 		}
