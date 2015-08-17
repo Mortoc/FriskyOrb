@@ -191,20 +191,20 @@ public class Analytics : MonoBehaviour
                 gua.sendEventHit(category, "graphicsDeviceVersion", SystemInfo.graphicsDeviceVersion);
                 gua.sendEventHit(category, "graphicsShaderLevel", SystemInfo.graphicsShaderLevel.ToString(), SystemInfo.graphicsShaderLevel);
                 // round down to chunks for label (10-5000 MPix depending on value range)
-                int pixelFillrateChunkSize = 5000;
-                if (SystemInfo.graphicsPixelFillrate < 40000)
-                    pixelFillrateChunkSize = 2000;
-                if (SystemInfo.graphicsPixelFillrate < 10000)
-                    pixelFillrateChunkSize = 1000;
-                else if (SystemInfo.graphicsPixelFillrate < 4000)
-                    pixelFillrateChunkSize = 500;
-                else if (SystemInfo.graphicsPixelFillrate < 1300)
-                    pixelFillrateChunkSize = 100;
-                else if (SystemInfo.graphicsPixelFillrate < 200)
-                    pixelFillrateChunkSize = 20;
-                else if (SystemInfo.graphicsPixelFillrate < 100)
-                    pixelFillrateChunkSize = 10;
-                gua.sendEventHit(category, "graphicsPixelFillrate", (pixelFillrateChunkSize * (SystemInfo.graphicsPixelFillrate / pixelFillrateChunkSize)).ToString(), SystemInfo.graphicsPixelFillrate);
+//                int pixelFillrateChunkSize = 5000;
+//                if (SystemInfo.graphicsPixelFillrate < 40000)
+//                    pixelFillrateChunkSize = 2000;
+//                if (SystemInfo.graphicsPixelFillrate < 10000)
+//                    pixelFillrateChunkSize = 1000;
+//                else if (SystemInfo.graphicsPixelFillrate < 4000)
+//                    pixelFillrateChunkSize = 500;
+//                else if (SystemInfo.graphicsPixelFillrate < 1300)
+//                    pixelFillrateChunkSize = 100;
+//                else if (SystemInfo.graphicsPixelFillrate < 200)
+//                    pixelFillrateChunkSize = 20;
+//                else if (SystemInfo.graphicsPixelFillrate < 100)
+//                    pixelFillrateChunkSize = 10;
+//                gua.sendEventHit(category, "graphicsPixelFillrate", (pixelFillrateChunkSize * (SystemInfo.graphicsPixelFillrate / pixelFillrateChunkSize)).ToString(), SystemInfo.graphicsPixelFillrate);
                 gua.sendEventHit(category, "deviceType", SystemInfo.deviceType.ToString());
                 // round down to 512 chunks for label
 #if !UNITY_3_5

@@ -1,17 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Procedural/Primitives/2D/ISpline.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/UnityTestTools/Assertions/Editor/AssertionExplorerWindow.cs">
     <Files>
-      <File FileName="Assets/Procedural/Primitives/2D/ISpline.cs" Line="12" Column="1" />
+      <File FileName="Assets/Analytics/Scripts/Analytics.cs" Line="207" Column="5" />
+      <File FileName="Assets/UnityTestTools/Assertions/Editor/AssertionExplorerWindow.cs" Line="31" Column="19" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True" selected="True" />
-      </Pad>
-      <Pad Id="MonoDevelop.NUnit.TestPad">
-        <State expanded="True" selected="True" />
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

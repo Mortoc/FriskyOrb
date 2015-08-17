@@ -357,7 +357,6 @@ public class LevelSegment : MonoBehaviour
             var collisionMesh = BuildCollisionMesh(SEGMENT_DETAIL / COLLISION_DETAIL_DENOMINATOR);
 
             var col = gameObject.AddComponent<MeshCollider>();
-            col.smoothSphereCollisions = true;
             col.sharedMesh = collisionMesh;
             col.enabled = false;
         }
@@ -373,14 +372,14 @@ public class LevelSegment : MonoBehaviour
     public event Action OnIsNoLongerCurrent;
     public void IsNoLongerCurrent()
     {
-        if (collider)
+        if (GetComponent<Collider>())
         {
-            collider.enabled = false;
-            Next.collider.enabled = true;
+            GetComponent<Collider>().enabled = false;
+            Next.GetComponent<Collider>().enabled = true;
             foreach(Doodad childDoodad in GetComponentsInChildren<Doodad>())
             {
-                if (childDoodad.rigidbody)
-                    childDoodad.rigidbody.useGravity = true;
+                if (childDoodad.GetComponent<Rigidbody>())
+                    childDoodad.GetComponent<Rigidbody>().useGravity = true;
             }
         }
         Next.Previous = null; // Clear reference to this

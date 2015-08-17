@@ -1,3 +1,7 @@
+// Upgrade NOTE: commented out 'float4 unity_LightmapST', a built-in variable
+// Upgrade NOTE: commented out 'sampler2D unity_Lightmap', a built-in variable
+// Upgrade NOTE: replaced tex2D unity_Lightmap with UNITY_SAMPLE_TEX2D
+
 Shader "MADFINGER/Environment/Cube env map (Supports Lightmap)" {
 
 Properties 
@@ -20,8 +24,8 @@ SubShader {
 	samplerCUBE _EnvTex;
 	
 	#ifndef LIGHTMAP_OFF
-	float4 unity_LightmapST;
-	sampler2D unity_Lightmap;
+	// float4 unity_LightmapST;
+	// sampler2D unity_Lightmap;
 	#endif
 
 	float3 _SpecColor;
@@ -69,7 +73,7 @@ SubShader {
 			fixed4 c 	= tex2D (_MainTex, i.uv.xy);
 			
 			#ifndef LIGHTMAP_OFF
-			c.xyz *= DecodeLightmap (tex2D(unity_Lightmap, i.lmap));
+			c.xyz *= DecodeLightmap (UNITY_SAMPLE_TEX2D(unity_Lightmap, i.lmap));
 			#endif
 			
 			c.xyz += texCUBE(_EnvTex,i.refl) * c.a;

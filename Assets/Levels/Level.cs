@@ -146,7 +146,7 @@ public class Level : MonoBehaviour
 		{
 			first.IsNoLongerCurrent();
 		};
-		first.Next.collider.enabled = true;
+		first.Next.GetComponent<Collider>().enabled = true;
 
 		InputHandler.BuildInputHandler();
 
@@ -373,11 +373,11 @@ public class Level : MonoBehaviour
 			LevelSegment.PathSample pathSample = segment.GetPathSample(doodadT);
 			if (pathSample.HasSurface)
 			{
-				bool segmentColliderWasEnabled = segment.collider.enabled;
+				bool segmentColliderWasEnabled = segment.GetComponent<Collider>().enabled;
 				Vector3 doodadPosition = Vector3.Lerp(pathSample.Left, pathSample.Right, Mathf.Lerp(0.2f, 0.8f, _rand.NextSingle()));
 				RaycastHit rh;
 				Ray ray = new Ray(segment.transform.TransformPoint(doodadPosition) + Vector3.up, Vector3.down * 2.0f);
-				segment.collider.enabled = true;
+				segment.GetComponent<Collider>().enabled = true;
 				if (Physics.Raycast(ray, out rh, 2.0f))
 				{
 					GameObject doodadObj = Instantiate(doodad.Prefab) as GameObject;
@@ -390,7 +390,7 @@ public class Level : MonoBehaviour
 						doodadRigidbody.Sleep();
 					}
 				}
-				segment.collider.enabled = segmentColliderWasEnabled;
+				segment.GetComponent<Collider>().enabled = segmentColliderWasEnabled;
 			}
 		}
 	}

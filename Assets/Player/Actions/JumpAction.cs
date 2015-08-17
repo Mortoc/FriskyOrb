@@ -49,7 +49,7 @@ public class JumpAction : MonoBehaviour
 		if (JumpEnded || !_player)
 			return;
 
-		_player.rigidbody.AddForce(Physics.gravity.normalized * 2.0f * _jumpStrength, ForceMode.Impulse);
+		_player.GetComponent<Rigidbody>().AddForce(Physics.gravity.normalized * 2.0f * _jumpStrength, ForceMode.Impulse);
 	}
 
     private void ApplyJump()
@@ -57,14 +57,14 @@ public class JumpAction : MonoBehaviour
         if (!_player)
             return;
 
-        if( _player.rigidbody.velocity.y < 0.0f )
+        if( _player.GetComponent<Rigidbody>().velocity.y < 0.0f )
         {
-            Vector3 vel = _player.rigidbody.velocity;
+            Vector3 vel = _player.GetComponent<Rigidbody>().velocity;
             vel.y = 0.0f;
-            _player.rigidbody.velocity = vel;
+            _player.GetComponent<Rigidbody>().velocity = vel;
         }
 
-        _player.rigidbody.AddForce(Physics.gravity.normalized * -1.0f * _jumpStrength, ForceMode.Impulse);
+        _player.GetComponent<Rigidbody>().AddForce(Physics.gravity.normalized * -1.0f * _jumpStrength, ForceMode.Impulse);
         _jumpEffect.PerformFX();
     }
 }

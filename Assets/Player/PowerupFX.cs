@@ -54,7 +54,7 @@ public class PowerupFX : FX
         {
             orbiter.AddComponent<Rigidbody>();
             
-            orbiter.rigidbody.AddForce((transform.position - orbiter.transform.position) * UnityEngine.Random.value * 50.0f, ForceMode.Impulse);
+            orbiter.GetComponent<Rigidbody>().AddForce((transform.position - orbiter.transform.position) * UnityEngine.Random.value * 50.0f, ForceMode.Impulse);
             Destroy(orbiter.GetComponent<PowerupOrbiterFX>());
             orbiter.transform.parent = null;
         }

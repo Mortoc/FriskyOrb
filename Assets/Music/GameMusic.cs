@@ -18,17 +18,17 @@ public class GameMusic : MonoBehaviour
 
         yield return new WaitForSeconds(_startDelay);
 
-        audio.volume = 0.0f;
-        audio.Play();
+        GetComponent<AudioSource>().volume = 0.0f;
+        GetComponent<AudioSource>().Play();
 
         // Fade In
         float recipFadeTime = 1.0f / _fadeInTime;
         for (float time = 0.0f; time < _fadeInTime; time += Time.deltaTime)
         {
             yield return 0;
-            audio.volume = Mathf.Lerp(0.0f, _volume, time * recipFadeTime);
+            GetComponent<AudioSource>().volume = Mathf.Lerp(0.0f, _volume, time * recipFadeTime);
         }
-        audio.volume = _volume;
+        GetComponent<AudioSource>().volume = _volume;
 
         while (gameObject)
         {

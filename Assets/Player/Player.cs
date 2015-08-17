@@ -49,17 +49,17 @@ public class Player : MonoBehaviour
 
     private void UpdateIsGrounded()
     {
-        SphereCollider sphereCol = this.collider as SphereCollider;
+        SphereCollider sphereCol = this.GetComponent<Collider>() as SphereCollider;
         Vector3 gravDir = Physics.gravity / _startingGravityMag;
         float distCheck = transform.localScale.magnitude * sphereCol.radius * 2.0f;
         Vector3 offset = gravDir * -0.5f * distCheck;
 
         RaycastHit rh;
 
-        rigidbody.position = rigidbody.position + offset;
+        GetComponent<Rigidbody>().position = GetComponent<Rigidbody>().position + offset;
         //bool grounded = Physics.Raycast(rigidbody.position, Vector3.down, ((SphereCollider)collider).radius, _groundMask);
-        bool grounded = rigidbody.SweepTest(gravDir, out rh, 1.0f);
-        rigidbody.position = rigidbody.position - offset;
+        bool grounded = GetComponent<Rigidbody>().SweepTest(gravDir, out rh, 1.0f);
+        GetComponent<Rigidbody>().position = GetComponent<Rigidbody>().position - offset;
 
         if (grounded && !IsGrounded)
             OnGrounded();
@@ -94,13 +94,13 @@ public class Player : MonoBehaviour
     private void BecameGrounded()
     {
         _groundEffectParticles.enableEmission = true;
-		audio.Play();
+		GetComponent<AudioSource>().Play();
     }
 
     private void BecameUngrounded()
     {
         _groundEffectParticles.enableEmission = false;
-		audio.Stop();
+		GetComponent<AudioSource>().Stop();
     }
 
 	public Vector3 NearestPathPoint { get; set; }
@@ -110,11 +110,11 @@ public class Player : MonoBehaviour
     {
         if (CurrentSegment)
         {
-			NearestPathT = CurrentSegment.Path.GetApproxT(rigidbody.position);
+			NearestPathT = CurrentSegment.Path.GetApproxT(GetComponent<Rigidbody>().position);
 
 			if (NearestPathT > 0.999f)
             {
-				NearestPathT = CurrentSegment.Next.Path.GetApproxT(rigidbody.position);
+				NearestPathT = CurrentSegment.Next.Path.GetApproxT(GetComponent<Rigidbody>().position);
 				NearestPathPoint = CurrentSegment.Next.Path.GetPoint(NearestPathT);
 
                 LevelSegment oldSegment = CurrentSegment;
@@ -126,13 +126,13 @@ public class Player : MonoBehaviour
 				NearestPathPoint = CurrentSegment.Path.GetPoint(NearestPathT);
             }
 
-			if (NearestPathPoint.y > rigidbody.position.y + _fallToDeathThreshold)
+			if (NearestPathPoint.y > GetComponent<Rigidbody>().position.y + _fallToDeathThreshold)
             {
                 PlayerDied();
             }
         }
 
-        _groundEffectParticles.transform.position = rigidbody.position - _initialGroundParticleOffset;
+        _groundEffectParticles.transform.position = GetComponent<Rigidbody>().position - _initialGroundParticleOffset;
 
         OnFixedUpdate();
     }

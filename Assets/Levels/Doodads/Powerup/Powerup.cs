@@ -36,7 +36,7 @@ public class Powerup : Doodad
 
             PowerupBar bar = GameObject.FindObjectOfType<PowerupBar>();
 
-            if (!audio)
+            if (!GetComponent<AudioSource>())
                 gameObject.AddComponent<AudioSource>();
 
 
@@ -44,15 +44,15 @@ public class Powerup : Doodad
             if (!bar.HealthFull())
             {
                 StartCoroutine(AnimateCollection(player, bar));
-                audio.pitch = Mathf.Lerp(0.75f, 1.25f, UnityEngine.Random.value);
+                GetComponent<AudioSource>().pitch = Mathf.Lerp(0.75f, 1.25f, UnityEngine.Random.value);
             }
             else
             {
                 StartCoroutine(BounceOffPlayer(player));
-                audio.pitch = Mathf.Lerp(0.5f, 0.75f, UnityEngine.Random.value);
+                GetComponent<AudioSource>().pitch = Mathf.Lerp(0.5f, 0.75f, UnityEngine.Random.value);
             }
 
-			audio.Play();
+			GetComponent<AudioSource>().Play();
         }
     }
 
@@ -74,21 +74,21 @@ public class Powerup : Doodad
         gameObject.AddComponent<Rigidbody>();
         gameObject.GetComponent<SphereCollider>().isTrigger = false;
         gameObject.layer = 0;
-        Vector3 dir = transform.position - player.rigidbody.position;
+        Vector3 dir = transform.position - player.GetComponent<Rigidbody>().position;
         dir.y = 0.0f;
         dir = dir.normalized;
         dir += Vector3.Lerp(-0.5f * Physics.gravity, -1.0f * Physics.gravity, UnityEngine.Random.value);
         
-        rigidbody.mass = Mathf.Lerp(0.2f, 0.4f, UnityEngine.Random.value);
-        rigidbody.AddForce
+        GetComponent<Rigidbody>().mass = Mathf.Lerp(0.2f, 0.4f, UnityEngine.Random.value);
+        GetComponent<Rigidbody>().AddForce
         (
-            (player.rigidbody.velocity * 0.5f) + (dir * _bounceEffect), 
+            (player.GetComponent<Rigidbody>().velocity * 0.5f) + (dir * _bounceEffect), 
             ForceMode.Impulse
         );
 
         yield return new WaitForSeconds(0.1f);
 
-        collider.isTrigger = false;
+        GetComponent<Collider>().isTrigger = false;
         gameObject.layer = LayerMask.NameToLayer("FX");
 
         Renderer childRenderer = GetComponentInChildren<Renderer>();
@@ -101,7 +101,7 @@ public class Powerup : Doodad
 
     private System.Collections.IEnumerator AnimateCollection(Player player, PowerupBar bar)
     {
-        Destroy(collider);
+        Destroy(GetComponent<Collider>());
         Vector3 startPosition = transform.position;
         Vector3 startScale = transform.localScale;
         Vector3 randOffset = UnityEngine.Random.onUnitSphere * _collectAnimationRandomOffsetAmount;
@@ -128,7 +128,7 @@ public class Powerup : Doodad
                 (transform.position - player.transform.position).sqrMagnitude < (player.transform.localScale.sqrMagnitude * 0.1f) )
             {
                 particlesFired = true;
-                particleSystem.Play();
+                GetComponent<ParticleSystem>().Play();
             }
         }
 

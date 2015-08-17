@@ -45,7 +45,7 @@ public class GroundPlane : MonoBehaviour
         Vector3 animDir = _lastCameraPosition - cameraPosition;
         Vector2 uvAnim = new Vector2(animDir.x, animDir.z) * _animateSpeed * Time.deltaTime;
         _textureOffset += uvAnim;
-        Material mat = renderer.material;
+        Material mat = GetComponent<Renderer>().material;
         foreach (string textureName in _textureNames)
         {
             mat.SetTextureOffset(textureName, _textureOffset);

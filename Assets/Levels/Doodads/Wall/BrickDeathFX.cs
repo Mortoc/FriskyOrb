@@ -6,7 +6,7 @@ public class BrickDeathFX : FX
 	private static IEnumerator AnimateBrickDeath(GameObject brickDeath)
 	{
 		yield return new WaitForSeconds(UnityEngine.Random.value * 0.2f);
-		brickDeath.particleSystem.Emit(2);
+		brickDeath.GetComponent<ParticleSystem>().Emit(2);
 		yield return new WaitForSeconds(10.0f);
 		Destroy(brickDeath);
 	}

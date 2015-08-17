@@ -13,7 +13,7 @@ namespace Procedural
         {
             _lastHash = 0;
 
-        	if( !renderer )
+        	if( !GetComponent<Renderer>() )
         		gameObject.AddComponent<MeshRenderer>();
 
         	if( !GetComponent<MeshFilter>() )

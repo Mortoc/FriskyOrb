@@ -178,7 +178,7 @@ namespace Procedural
 
             mesh.vertices = verts;
             mesh.uv = uvs;
-            mesh.uv1 = uvs;
+            mesh.uv2 = uvs;
             mesh.uv2 = uvs;
             mesh.normals = norms;
             mesh.tangents = tangents;

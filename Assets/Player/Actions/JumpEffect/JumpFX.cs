@@ -12,8 +12,8 @@ public class JumpFX : FX
     {
         transform.forward = Physics.gravity.normalized;
 
-        particleSystem.Emit(
-            Mathf.FloorToInt(particleSystem.emissionRate * particleSystem.duration)
+        GetComponent<ParticleSystem>().Emit(
+            Mathf.FloorToInt(GetComponent<ParticleSystem>().emissionRate * GetComponent<ParticleSystem>().duration)
         );
     }
 

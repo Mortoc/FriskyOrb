@@ -14,7 +14,7 @@ public abstract class InputHandler : MonoBehaviour
         {
             case RuntimePlatform.Android:
             case RuntimePlatform.IPhonePlayer:
-            case RuntimePlatform.MetroPlayerARM:
+            case RuntimePlatform.WSAPlayerARM:
             case RuntimePlatform.WP8Player:
                 result = inputObj.AddComponent<MobileInputHandler>();
                 break;

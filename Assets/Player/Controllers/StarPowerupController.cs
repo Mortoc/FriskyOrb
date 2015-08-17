@@ -40,7 +40,7 @@ public class StarPowerupController : IPlayerController
     {
         Vector3 floatOffset = Vector3.up;
         YieldInstruction untilNextFixedUpdate = new WaitForFixedUpdate();
-        Rigidbody playerRB = _player.rigidbody;
+        Rigidbody playerRB = _player.GetComponent<Rigidbody>();
         playerRB.isKinematic = true;
 
         LevelSegment segment = _player.CurrentSegment;
@@ -94,9 +94,9 @@ public class StarPowerupController : IPlayerController
                 {
                     explodeyBarrell.ForcePush(_player, forceWithFalloff);
                 }
-                else if( collider.rigidbody )
+                else if( collider.GetComponent<Rigidbody>() )
                 {
-                    collider.rigidbody.AddForce((playerRB.position - collider.rigidbody.position).normalized * forceWithFalloff);
+                    collider.GetComponent<Rigidbody>().AddForce((playerRB.position - collider.GetComponent<Rigidbody>().position).normalized * forceWithFalloff);
                 }
             }
         }

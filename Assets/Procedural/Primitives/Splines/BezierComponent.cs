@@ -79,7 +79,7 @@ namespace Procedural
                     if( meshFilter.sharedMesh )
                         DestroyImmediate(meshFilter.sharedMesh);
 
-                    if( !renderer )
+                    if( !GetComponent<Renderer>() )
                         gameObject.AddComponent<MeshRenderer>();
 
                     meshFilter.sharedMesh = _bezier.Triangulate((uint)_triangulateSegments);
@@ -89,8 +89,8 @@ namespace Procedural
                     if( meshFilter.sharedMesh )
                         DestroyImmediate(meshFilter.sharedMesh);
 
-                    if( renderer )
-                        DestroyImmediate(renderer);
+                    if( GetComponent<Renderer>() )
+                        DestroyImmediate(GetComponent<Renderer>());
 
                     DestroyImmediate(meshFilter);
                 }
