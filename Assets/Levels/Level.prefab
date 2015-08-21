@@ -64,9 +64,6 @@ MonoBehaviour:
   - Name: Explodey Barrell
     Prefab: {fileID: 100004, guid: d6ccf97073699374893ef96af0822074, type: 2}
     Difficulty: 1.10000002
-  - Name: Wall
-    Prefab: {fileID: 100034, guid: 8dcef766dcf73435bb014d79c16ba227, type: 2}
-    Difficulty: .100000001
   _tweakables:
   - Name: Hello World
     StartSegment: 0
@@ -90,8 +87,8 @@ MonoBehaviour:
     MinHeightDifference: 0
     MaxHeightDifference: 0
     AscendOnly: 0
-    ChanceOfDoodad: 0
-    MaxDoodadDifficulty: 1
+    ChanceOfDoodad: .99000001
+    MaxDoodadDifficulty: 10
     MaxDifficulty: 1
     ChanceOfPowerupString: 1
     PowerupStringAvgLength: 5
@@ -154,11 +151,11 @@ MonoBehaviour:
     PowerupStringLengthJitter: 0
   - Name: You Probably Won't Pass
     StartSegment: 21
-    ApproxSegmentLength: 45
+    ApproxSegmentLength: 20
     SegmentLengthJitter: 3
-    Curviness: 5
-    MinHeightDifference: 2
-    MaxHeightDifference: 8
+    Curviness: 1
+    MinHeightDifference: 1
+    MaxHeightDifference: 3
     AscendOnly: 0
     ChanceOfDoodad: 0
     MaxDoodadDifficulty: 0
@@ -168,11 +165,11 @@ MonoBehaviour:
     PowerupStringLengthJitter: 2
   - Name: Really?
     StartSegment: 40
-    ApproxSegmentLength: 45
-    SegmentLengthJitter: 5
-    Curviness: 5
-    MinHeightDifference: 1
-    MaxHeightDifference: 5
+    ApproxSegmentLength: 40
+    SegmentLengthJitter: 10
+    Curviness: 2
+    MinHeightDifference: 0
+    MaxHeightDifference: 2
     AscendOnly: 0
     ChanceOfDoodad: 1
     MaxDoodadDifficulty: 3
@@ -182,11 +179,11 @@ MonoBehaviour:
     PowerupStringLengthJitter: 2
   - Name: Gettin Harder
     StartSegment: 50
-    ApproxSegmentLength: 40
-    SegmentLengthJitter: 5
-    Curviness: 10
+    ApproxSegmentLength: 30
+    SegmentLengthJitter: 10
+    Curviness: 3
     MinHeightDifference: 0
-    MaxHeightDifference: 15
+    MaxHeightDifference: 5
     AscendOnly: 0
     ChanceOfDoodad: .5
     MaxDoodadDifficulty: 100
@@ -197,10 +194,10 @@ MonoBehaviour:
   - Name: End Game
     StartSegment: 60
     ApproxSegmentLength: 45
-    SegmentLengthJitter: 6
-    Curviness: 12
-    MinHeightDifference: 2
-    MaxHeightDifference: 20
+    SegmentLengthJitter: 10
+    Curviness: 10
+    MinHeightDifference: 0
+    MaxHeightDifference: 11
     AscendOnly: 0
     ChanceOfDoodad: 1.5
     MaxDoodadDifficulty: 100
@@ -563,4 +560,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100000}
   m_IsPrefabParent: 1
-  m_IsExploded: 1

@@ -1,9 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/UnityTestTools/Assertions/Editor/AssertionExplorerWindow.cs">
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="../deep-sea-studios/Prototypes/Assets/Shared Assets/UI/BlurredGuiRectShader.shader">
     <Files>
-      <File FileName="Assets/Analytics/Scripts/Analytics.cs" Line="207" Column="5" />
-      <File FileName="Assets/UnityTestTools/Assertions/Editor/AssertionExplorerWindow.cs" Line="31" Column="19" />
+      <File FileName="../deep-sea-studios/Prototypes/Assets/Shared Assets/UI/BlurredGuiRectShader.shader" Line="66" Column="32" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
